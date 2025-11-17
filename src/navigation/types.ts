@@ -1,4 +1,4 @@
-import { NavigatorScreenParams } from "@react-navigation/native";
+import { NavigatorScreenParams } from '@react-navigation/native';
 
 // Root Navigation Types
 export type RootStackParamList = {
@@ -83,4 +83,3 @@ declare global {
     interface RootParamList extends RootStackParamList {}
   }
 }
-

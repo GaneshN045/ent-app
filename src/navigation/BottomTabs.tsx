@@ -1,100 +1,101 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialIcons as Icon } from "@react-native-vector-icons/material-icons";
-import DashboardHomeScreen from "../screens/Dashboard/DashboardHomeScreen";
-import FundingStack from "./FundingStack";
-import ReportsStack from "./ReportsStack";
-import SettingsStack from "./SettingsStack";
-import { useAppSelector } from "../store/hooks";
-import { getMenuForRole, Role } from "./menuConfig";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { MaterialIcons as Icon } from '@react-native-vector-icons/material-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+
+import DashboardHomeScreen from '../screens/Dashboard/DashboardHomeScreen';
+import FundingStack from './stacks/FundingStack';
+import ReportsStack from './stacks/ReportsStack';
+import SettingsStack from './stacks/SettingsStack';
+import { useAppSelector } from '../store/hooks';
+import { getMenuForRole, Role } from './menuConfig';
+import MaterialIconsGlyphs from 'react-native-vector-icons/glyphmaps/MaterialIcons.json';
+import COLORS from '../constants/colors';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabs() {
-  const userRole = useAppSelector(
-    (state) => state.auth.user?.role || "RT"
-  ) as Role;
-
+  
+  const insets = useSafeAreaInsets();
+  type IconName = keyof typeof MaterialIconsGlyphs;
+  const userRole = useAppSelector(state => state.auth.user?.role || 'RT') as Role;
   const menuItems = getMenuForRole(userRole);
+
+  // Dynamic Tabs Array
+  const TABS: {
+    screen: string;
+    component: any;
+    label: string;
+    icon: IconName;
+  }[] = [
+    {
+      screen: 'BottomTabs',
+      component: DashboardHomeScreen,
+      label: 'Dashboard',
+      icon: 'dashboard',
+    },
+    {
+      screen: 'FundingStack',
+      component: FundingStack,
+      label: 'Funding',
+      icon: 'account-balance-wallet',
+    },
+    {
+      screen: 'ReportsStack',
+      component: ReportsStack,
+      label: 'Reports',
+      icon: 'assessment',
+    },
+    {
+      screen: 'SettingsStack',
+      component: SettingsStack,
+      label: 'Settings',
+      icon: 'settings',
+    },
+  ];
+
+  // Filter by user allowed menu
+  const allowedTabs = TABS.filter(tab => menuItems.some(m => m.screen === tab.screen));
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: true,
-        headerStyle: {
-          backgroundColor: "#fff",
-          elevation: 4,
-          shadowOpacity: 0.1,
-        },
-        headerTintColor: "#000",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        tabBarActiveTintColor: "#2196f3",
-        tabBarInactiveTintColor: "#666",
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.PRIMARY_COLOR,
+        tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
-          backgroundColor: "#fff",
-          borderTopWidth: 1,
-          borderTopColor: "#e0e0e0",
-          elevation: 8,
-          shadowOpacity: 0.1,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          paddingBottom: insets.bottom + 10,
+          paddingTop: 5,
+          minHeight: 60,
         },
         tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "600",
+          marginBottom: 6,
         },
-      })}
+      }}
     >
-      <Tab.Screen
-        name="DashboardTab"
-        component={DashboardHomeScreen}
-        options={{
-          tabBarLabel: "Dashboard",
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="dashboard" size={size} color={color} />
-          ),
-        }}
-      />
-      {menuItems.some((item) => item.screen === "FundingStack") && (
+      {allowedTabs.map(tab => (
         <Tab.Screen
-          name="FundingTab"
-          component={FundingStack}
-          options={{
-            tabBarLabel: "Funding",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="account-balance-wallet" size={size} color={color} />
+          key={tab.screen}
+          name={tab.screen}
+          component={tab.component}
+          options={({ route }: any) => ({
+            tabBarLabel: tab.label,
+            tabBarIcon: ({ color, size }: any) => (
+              <Icon name={tab.icon} size={size} color={color} />
             ),
-          }}
+            // Hide tab bar when navigating away from home screens in stacks
+            tabBarStyle: (() => {
+              const routeName = getFocusedRouteNameFromRoute(route);
+              return {
+                paddingBottom: insets.bottom + 10,
+                paddingTop: 5,
+                minHeight: 60,
+              };
+            })(),
+          })}
         />
-      )}
-      {menuItems.some((item) => item.screen === "ReportsStack") && (
-        <Tab.Screen
-          name="ReportsTab"
-          component={ReportsStack}
-          options={{
-            tabBarLabel: "Reports",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="assessment" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
-      {menuItems.some((item) => item.screen === "SettingsStack") && (
-        <Tab.Screen
-          name="SettingsTab"
-          component={SettingsStack}
-          options={{
-            tabBarLabel: "Settings",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="settings" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
+      ))}
     </Tab.Navigator>
   );
 }
-

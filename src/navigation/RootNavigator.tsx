@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { RootStackParamList } from "./types";
-import AuthStack from "./AuthStack";
-import MainDrawer from "./MainDrawer";
-import { useAppSelector } from "../store/hooks";
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { RootStackParamList } from './types';
+import AuthStack from './stacks/AuthStack';
+import MainDrawer from './MainDrawer';
+import { useAppSelector } from '../store/hooks';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator();
 
 export default function RootNavigator() {
   const [isLoading, setIsLoading] = useState(true);
-  const isAuthenticated = useAppSelector(
-    (state) => state.auth.isAuthenticated
-  );
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
   useEffect(() => {
     // Simulate checking auth state (e.g., from AsyncStorage)
@@ -39,7 +37,8 @@ export default function RootNavigator() {
           headerShown: false,
         }}
       >
-        {isAuthenticated ? (
+        {true ? (
+          // {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainDrawer} />
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />
@@ -52,9 +51,8 @@ export default function RootNavigator() {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
 });
-
