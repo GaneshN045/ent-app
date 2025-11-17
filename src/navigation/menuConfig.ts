@@ -37,7 +37,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Dashboard ----------------
   {
     name: 'Dashboard',
-    screen: 'BottomTabs', // correct
+    screen: 'DashboardStack', // correct
     icon: 'dashboard',
     roles: ROLE_HIERARCHY,
   },

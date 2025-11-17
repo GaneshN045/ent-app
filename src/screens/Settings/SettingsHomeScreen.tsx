@@ -1,17 +1,12 @@
 // screens/Settings/SettingsHomeScreen.tsx
 
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Correct non-Expo import
-import SCREENS from '../../constants/screens';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import SCREENS from "../../constants/screens";
+import "../../../global.css";
 
-// Type-safe navigation (no any!)
 type SettingsNavigationProp = {
   navigate: (screen: keyof typeof SCREENS) => void;
 };
@@ -19,84 +14,54 @@ type SettingsNavigationProp = {
 export default function SettingsHomeScreen() {
   const navigation = useNavigation<SettingsNavigationProp>();
 
+  const menuItems = [
+    { title: "Create Sub User", icon: "person-add", screen: SCREENS.CREATE_SUB_USER_SCREEN },
+    { title: "Change TPIN", icon: "lock", screen: SCREENS.CHANGE_TPIN_SCREEN },
+    { title: "My Certificate", icon: "verified", screen: SCREENS.MY_CERTIFICATE_SCREEN },
+    { title: "Low Balance Alert", icon: "notifications-active", screen: SCREENS.LOW_BALANCE_ALERT_SCREEN },
+    { title: "ID Card", icon: "badge", screen: SCREENS.ID_CARD_SCREEN },
+  ];
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <View className="flex-1 bg-[#F7F8FA] px-5 pt-6">
+      {/* Title */}
+      <Text className="text-2xl font-bold text-[#34343A] mb-5">
+        Settings
+      </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(SCREENS.CREATE_SUB_USER_SCREEN)}
-      >
-        <Icon name="person-add" size={26} color="#fff" />
-        <Text style={styles.buttonText}>Create Sub User</Text>
-      </TouchableOpacity>
+      {/* Grid Layout */}
+      <View className="flex-row flex-wrap justify-between">
+        {menuItems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => navigation.navigate(item.screen)}
+            className="
+              w-[48%] mb-4
+              bg-white
+              rounded-3xl
+              px-4 py-5
+              border border-[#ECECF1]
+              shadow-sm shadow-gray-300/30
+              active:opacity-80
+              items-center
+            "
+            style={{ elevation: 2 }}
+          >
+            {/* Lighter Icon */}
+            <Icon name={item.icon} size={30} color="#6E6E76" />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(SCREENS.CHANGE_TPIN_SCREEN)}
-      >
-        <Icon name="lock" size={26} color="#fff" />
-        <Text style={styles.buttonText}>Change TPIN</Text>
-      </TouchableOpacity>
+            {/* Title */}
+            <Text className="text-lg font-semibold text-[#3A3A42] mt-3 text-center">
+              {item.title}
+            </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(SCREENS.MY_CERTIFICATE_SCREEN)}
-      >
-        <Icon name="verified" size={26} color="#fff" />
-        <Text style={styles.buttonText}>My Certificate</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(SCREENS.LOW_BALANCE_ALERT_SCREEN)}
-      >
-        <Icon name="notifications-active" size={26} color="#fff" />
-        <Text style={styles.buttonText}>Low Balance Alert</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate(SCREENS.ID_CARD_SCREEN)}
-      >
-        <Icon name="badge" size={26} color="#fff" />
-        <Text style={styles.buttonText}>ID Card</Text>
-      </TouchableOpacity>
+            {/* Subtext */}
+            <Text className="text-sm text-[#9A9AA3] mt-1 text-center leading-4">
+              Manage {item.title.split(" ")[0].toLowerCase()}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 32,
-    color: '#000',
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2196F3',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 16,
-    flex: 1,
-  },
-});

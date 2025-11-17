@@ -1,18 +1,12 @@
 // screens/Funding/FundingHomeScreen.tsx
 
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import SCREENS from '../../constants/screens';
+import React from "react";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import SCREENS from "../../constants/screens";
+import "../../../global.css";
 
-// Type-safe navigation
 type FundingNavigationProp = {
   navigate: (screen: keyof typeof SCREENS) => void;
 };
@@ -20,89 +14,100 @@ type FundingNavigationProp = {
 export default function FundingHomeScreen() {
   const navigation = useNavigation<FundingNavigationProp>();
 
+  const menuItems = [
+    { title: "Fund Request", icon: "request-quote", screen: SCREENS.FUND_REQUEST_SCREEN },
+    { title: "Wallet To Wallet", icon: "swap-horiz", screen: SCREENS.WALLET_TO_WALLET_SCREEN },
+    { title: "Fund Transfer", icon: "send", screen: SCREENS.FUND_TRANSFER_SCREEN },
+    { title: "Fund Reversal", icon: "history", screen: SCREENS.FUND_REVERSAL_SCREEN },
+    { title: "Move To Bank", icon: "account-balance", screen: SCREENS.WALLET_TO_BANK_SCREEN },
+  ];
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Funding</Text>
+    <ScrollView className="flex-1 bg-[#F7F8FA]">
+      <View className="px-5 pt-6 pb-10">
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.FUND_REQUEST_SCREEN)}
-        >
-          <Icon name="request-quote" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Fund Request</Text>
-        </TouchableOpacity>
+        {/* Page Title */}
+        <Text className="text-2xl font-bold text-[#34343A] mb-4">
+          Funding
+        </Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.WALLET_TO_WALLET_SCREEN)}
+        {/* ====================== BALANCE CARD PREMIUM ====================== */}
+        <View
+          className=" rounded-3xl mb-6 bg-white shadow-md "
         >
-          <Icon name="swap-horiz" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Wallet To Wallet</Text>
-        </TouchableOpacity>
+          {/* INNER CONTENT */}
+          <View className="px-6 py-5">
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.FUND_TRANSFER_SCREEN)}
-        >
-          <Icon name="send" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Fund Transfer</Text>
-        </TouchableOpacity>
+            {/* TITLE */}
+            <Text className="text-[11px] font-semibold text-[#A0A0A8] tracking-widest mb-3">
+              AVAILABLE BALANCE
+            </Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.FUND_REVERSAL_SCREEN)}
-        >
-          <Icon name="history-toggle-off" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Fund Reversal</Text>
-        </TouchableOpacity>
+            {/* AMOUNT ROW */}
+            <View className="flex-row justify-between items-start">
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.WALLET_TO_BANK_SCREEN)}
-        >
-          <Icon name="account-balance" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Move To Bank</Text>
-        </TouchableOpacity>
+              {/* PREPAID */}
+              <View className="w-[45%]">
+                <Text className="text-[13px] font-semibold text-[#7A7A82] tracking-wide">
+                  PREPAID
+                </Text>
+                <Text className="text-[28px] font-medium text-gray-700 mt-1">
+                  1,889.52
+                </Text>
+              </View>
+
+              {/* DIVIDER */}
+              <View className="h-full w-[1px] bg-[#E6E6EC]" />
+
+              {/* POSTPAID */}
+              <View className="w-[45%] pl-4">
+                <Text className="text-[13px] font-semibold text-[#7A7A82] tracking-wide">
+                  POSTPAID
+                </Text>
+                <Text className="text-[28px] font-medium text-gray-700 mt-1">
+                  14,117.94
+                </Text>
+              </View>
+
+            </View>
+
+          </View>
+        </View>
+
+
+        {/* ====================== MENU GRID ====================== */}
+        <View className="flex-row flex-wrap justify-between">
+          {menuItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => navigation.navigate(item.screen)}
+              className="
+                w-[48%] mb-4
+                bg-white rounded-3xl
+                px-4 py-5
+                border border-[#ECECF1]
+                shadow-sm shadow-gray-300/30
+                items-center active:opacity-80
+              "
+              style={{ elevation: 2 }}
+            >
+              {/* ICON */}
+              <Icon name={item.icon} size={30} color="#6E6E76" />
+
+              {/* Title */}
+              <Text className="text-lg font-semibold text-[#3A3A42] mt-3 text-center">
+                {item.title}
+              </Text>
+
+              {/* Subtext */}
+              <Text className="text-sm text-[#9A9AA3] mt-1 text-center leading-4">
+                Manage {item.title.split(" ")[0].toLowerCase()}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  content: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 28,
-    color: '#000',
-  },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#2196F3',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 16,
-    flex: 1,
-  },
-});

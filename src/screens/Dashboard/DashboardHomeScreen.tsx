@@ -17,20 +17,10 @@ export default function DashboardHomeScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Dashboard</Text>
+        <Text className='text-red-400 flex'>Dashboard</Text>
         <Text style={styles.subtitle}>Welcome to your dashboard</Text>
 
-        {/* Test button to open drawer */}
-        <TouchableOpacity
-          style={styles.testButton}
-          onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-        >
-          <Text style={styles.testButtonText}>Open Drawer Menu</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.hint}>
-          Tap the menu icon (☰) in the top-left corner or swipe from the left edge to open the drawer
-        </Text>
+       
       </View>
     </ScrollView>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, DrawerActions } from '@react-navigation/native';
+import SCREENS from '../../constants/screens';
 
 const COMPANY_LOGO = require('../../assets/logos/im_logo_updated.png');
 const SECOND_LOGO = require('../../assets/logos/im_logo.jpg');
@@ -48,7 +49,7 @@ export default function CustomHeader() {
       {/* RIGHT: Notification Button */}
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("CommonsStack", { screen: "Notifications" })
+          navigation.navigate("CommonsStack", { screen: SCREENS.NOTIFICATIONS_SCREEN })
         }
         style={{ padding: 8 }}
       >

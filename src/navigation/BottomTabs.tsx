@@ -12,6 +12,8 @@ import { useAppSelector } from '../store/hooks';
 import { getMenuForRole, Role } from './menuConfig';
 import MaterialIconsGlyphs from 'react-native-vector-icons/glyphmaps/MaterialIcons.json';
 import COLORS from '../constants/colors';
+import ProfileScreen from '../screens/Profile/ProfileScreen';
+import ProfileStack from './stacks/ProfileStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +32,7 @@ export default function BottomTabs() {
     icon: IconName;
   }[] = [
     {
-      screen: 'BottomTabs',
+      screen: 'DashboardStack',
       component: DashboardHomeScreen,
       label: 'Dashboard',
       icon: 'dashboard',
@@ -41,22 +43,29 @@ export default function BottomTabs() {
       label: 'Funding',
       icon: 'account-balance-wallet',
     },
-    {
-      screen: 'ReportsStack',
-      component: ReportsStack,
-      label: 'Reports',
-      icon: 'assessment',
-    },
+    // {
+    //   screen: 'ReportsStack',
+    //   component: ReportsStack,
+    //   label: 'Reports',
+    //   icon: 'assessment',
+    // },
     {
       screen: 'SettingsStack',
       component: SettingsStack,
       label: 'Settings',
       icon: 'settings',
     },
+    {
+      screen: 'ProfileStack',
+      component: ProfileStack,
+      label: 'Profile',
+      icon: 'person',
+    },
+    
   ];
 
   // Filter by user allowed menu
-  const allowedTabs = TABS.filter(tab => menuItems.some(m => m.screen === tab.screen));
+  const allowedTabs = TABS.filter(tab => tab.screen === "ProfileStack" || menuItems.some(m => m.screen === tab.screen));
 
   return (
     <Tab.Navigator

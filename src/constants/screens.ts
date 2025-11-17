@@ -43,6 +43,9 @@ const SCREENS = {
     // Common / Shared Stack
     NOTIFICATIONS_SCREEN: 'NOTIFICATIONS_SCREEN',
 
+    // profile
+    PROFILE_SCREEN: "PROFILE_SCREEN"
+
 } as const;
 
 export type ScreenName = keyof typeof SCREENS;
