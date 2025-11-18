@@ -44,7 +44,29 @@ const SCREENS = {
     NOTIFICATIONS_SCREEN: 'NOTIFICATIONS_SCREEN',
 
     // profile
-    PROFILE_SCREEN: "PROFILE_SCREEN"
+    PROFILE_HOME_SCREEN: "PROFILE_HOME_SCREEN",
+
+    // products
+    PRODUCTS_HOME_SCREEN: "PRODUCTS_HOME_SCREEN",
+
+    // Payment Gateway
+    PG_SCREEN: "PG_SCREEN",
+
+    // Payout
+    PAYOUT_SCREEN: "PAYOUT_SCREEN",
+
+    // DMT
+    DMT_SCREEN: "DMT_SCREEN",
+
+    // MPOS
+    MPOS_SCREEN: "MPOS_SCREEN",
+
+    // AEPS
+    AEPS_SCREEN: "AEPS_SCREEN",
+
+    // Bill Payment / BBPS
+    BBPS_SCREEN: "BBPS_SCREEN",
+
 
 } as const;
 

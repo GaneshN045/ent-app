@@ -2,14 +2,9 @@
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
-import ProfileScreen from '../../screens/Profile/ProfileScreen';
-
-// Custom Header
 import CustomHeader from '../../components/headers/CustomHeader';
-
-// Screens constant
 import SCREENS from '../../constants/screens';
+import ProfileHomeScreen from '../../screens/Profile/ProfileHomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,8 +21,8 @@ export default function ProfileStack() {
     >
       {/* Profile Home Screen (with Custom Header) */}
       <Stack.Screen
-        name={SCREENS.PROFILE_SCREEN}
-        component={ProfileScreen}
+        name={SCREENS.PROFILE_HOME_SCREEN}
+        component={ProfileHomeScreen}
         options={{
           headerShown: true,
           headerTitle: () => <CustomHeader />,

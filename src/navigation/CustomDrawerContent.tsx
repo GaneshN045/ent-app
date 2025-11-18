@@ -4,23 +4,44 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
+  Image,
 } from "react-native";
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import { NavigationProp } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { MenuItem, getMenuForRole, Role } from "../navigation/menuConfig";
 
 const USER_ROLE: Role = "RT";
 
+// Colors
+const COLORS = {
+  PRIMARY: '#EB4335',
+  PRIMARY_GRAY: '#3A3A42',
+  SECONDARY_GRAY: '#9A9AA3',
+  GRAY_ICON: '#6E6E76',
+};
+
+// Mock user data - replace with actual user data from your state/context
+const userData = {
+  name: "John Doe",
+  memberId: "RT12345",
+  prepaidBalance: "₹15,250.00",
+  postpaidBalance: "₹5,000.00",
+  profileImage: "https://via.placeholder.com/80", // Replace with actual image URL
+};
+
 export default function CustomDrawerContent({
   navigation,
 }: DrawerContentComponentProps) {
   const menu: MenuItem[] = getMenuForRole(USER_ROLE);
+
+  // Filter only Settings, Support, and Reports
+  const filteredMenu = menu.filter(item =>
+    ['Reports', 'Support'].includes(item.name)
+  );
 
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -28,19 +49,53 @@ export default function CustomDrawerContent({
     setExpanded((prev) => (prev === name ? null : name));
   };
 
+  const handleLogout = () => {
+    // Add your logout logic here
+    console.log("Logout pressed");
+    // navigation.navigate('Login'); // or your logout flow
+  };
+
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>My App Menu</Text>
-      </View>
+      {/* User Profile Section */}
 
-      <DrawerContentScrollView contentContainerStyle={styles.scrollView}>
-        {menu.map((item: MenuItem, index: number) => (
-          <View key={index}>
-            {/* Main Menu */}
+      {/* Menu Items */}
+      <DrawerContentScrollView
+        contentContainerStyle={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.profileSection}>
+          <View style={styles.profileImageContainer}>
+            <Image
+              source={{ uri: userData.profileImage }}
+              style={styles.profileImage}
+            />
+          </View>
+          <Text style={styles.userName}>{userData.name}</Text>
+          <Text style={styles.memberId}>{userData.memberId}</Text>
+
+          <View style={styles.balanceContainer}>
+            <View style={styles.balanceItem}>
+              <Text style={styles.balanceLabel}>Prepaid</Text>
+              <Text style={styles.balanceAmount}>{userData.prepaidBalance}</Text>
+            </View>
+            <View style={styles.balanceDivider} />
+            <View style={styles.balanceItem}>
+              <Text style={styles.balanceLabel}>Postpaid</Text>
+              <Text style={styles.balanceAmount}>{userData.postpaidBalance}</Text>
+            </View>
+          </View>
+        </View>
+
+
+        {filteredMenu.map((item: MenuItem, index: number) => (
+          <View key={index} style={styles.menuItemWrapper}>
+            {/* Main Menu Button */}
             <TouchableOpacity
-              style={styles.menuItem}
+              style={[
+                styles.menuItem,
+                expanded === item.name && styles.menuItemExpanded
+              ]}
               onPress={() => {
                 if (item.subItems && item.subItems.length > 0) {
                   toggleExpand(item.name);
@@ -53,17 +108,24 @@ export default function CustomDrawerContent({
                   });
                 }
               }}
+              activeOpacity={0.7}
             >
               <View style={styles.menuLeft}>
                 {item.icon && (
-                  <Icon
-                    name={item.icon}
-                    size={22}
-                    color="#333"
-                    style={{ marginRight: 10 }}
-                  />
+                  <View style={styles.iconContainer}>
+                    <Icon
+                      name={item.icon}
+                      size={20}
+                      color={expanded === item.name ? COLORS.PRIMARY : COLORS.GRAY_ICON}
+                    />
+                  </View>
                 )}
-                <Text style={styles.menuText}>{item.name}</Text>
+                <Text style={[
+                  styles.menuText,
+                  expanded === item.name && styles.menuTextExpanded
+                ]}>
+                  {item.name}
+                </Text>
               </View>
 
               {item.subItems && (
@@ -73,60 +135,229 @@ export default function CustomDrawerContent({
                       ? "keyboard-arrow-up"
                       : "keyboard-arrow-down"
                   }
-                  size={20}
-                  color="#555"
+                  size={22}
+                  color={expanded === item.name ? COLORS.PRIMARY : COLORS.SECONDARY_GRAY}
                 />
               )}
             </TouchableOpacity>
 
-            {/* Sub Menu */}
-            {expanded === item.name &&
-              item.subItems?.map((sub, subIndex) => (
-                <TouchableOpacity
-                  key={subIndex}
-                  style={styles.subMenuItem}
-                  onPress={() => {
-                    console.log("---- Drawer Navigation Triggered ----");
-                    console.log("Parent Stack:", "Main");
-                    console.log("Drawer Target:", "BottomTabs");
-                    console.log("Stack:", item.screen);
-                    console.log("Sub Screen:", sub.screen);
+            {/* Sub Menu with Animation */}
+            {expanded === item.name && item.subItems && (
+              <View style={styles.subMenuContainer}>
+                {item.subItems.map((sub, subIndex) => (
+                  <TouchableOpacity
+                    key={subIndex}
+                    style={styles.subMenuItem}
+                    onPress={() => {
+                      console.log("---- Drawer Navigation Triggered ----");
+                      console.log("Parent Stack:", "Main");
+                      console.log("Drawer Target:", "BottomTabs");
+                      console.log("Stack:", item.screen);
+                      console.log("Sub Screen:", sub.screen);
 
-                    navigation.navigate("Main", {
-                      screen: "BottomTabs",
-                      params: {
-                        screen: item.screen, // ex: FundingStack
+                      navigation.navigate("Main", {
+                        screen: "BottomTabs",
                         params: {
-                          screen: sub.screen, // ex: FUND_REQUEST_SCREEN
+                          screen: item.screen,
+                          params: {
+                            screen: sub.screen,
+                          },
                         },
-                      },
-                    });
-                  }}
-                >
-                  <Text style={styles.subMenuText}>• {sub.name}</Text>
-                </TouchableOpacity>
-              ))}
+                      });
+                    }}
+                    activeOpacity={0.6}
+                    className={'flex flex-row justify-between'}
+                  >
+                    <View className="flex flex-row items-center">
+                      <View style={styles.subMenuDot} />
+                      <Text style={styles.subMenuText}>{sub.name}</Text>
+                    </View>
+                    <View>
+                      <Icon
+                        name={"keyboard-arrow-right"}
+                        size={22}
+                        color={'gray'}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
           </View>
         ))}
       </DrawerContentScrollView>
+
+      {/* Logout Button */}
+      <View style={styles.logoutContainer}>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+          activeOpacity={0.8}
+        >
+          <Icon name="logout" size={20} color={COLORS.PRIMARY} />
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
-  header: { padding: 20, backgroundColor: "#1976D2" },
-  headerTitle: { color: "#fff", fontSize: 20, fontWeight: "700" },
-  scrollView: { paddingVertical: 10 },
+  container: {
+    flex: 1,
+    backgroundColor: "#FAFAFA"
+  },
+  profileSection: {
+    backgroundColor: "#fff",
+    paddingVertical: 28,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#F0F0F0",
+  },
+  profileImageContainer: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderRadius: 40,
+    marginBottom: 12,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: "#fff",
+  },
+  userName: {
+    color: COLORS.PRIMARY_GRAY,
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 4,
+  },
+  memberId: {
+    color: COLORS.SECONDARY_GRAY,
+    fontSize: 13,
+    fontWeight: "500",
+    marginBottom: 16,
+  },
+  balanceContainer: {
+    flexDirection: "row",
+    backgroundColor: "#F8F8F8",
+    borderRadius: 12,
+    padding: 14,
+    width: "100%",
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: "#EFEFEF",
+  },
+  balanceItem: {
+    flex: 1,
+    alignItems: "center",
+  },
+  balanceDivider: {
+    width: 1,
+    backgroundColor: "#E0E0E0",
+    marginHorizontal: 12,
+  },
+  balanceLabel: {
+    color: COLORS.SECONDARY_GRAY,
+    fontSize: 11,
+    fontWeight: "500",
+    marginBottom: 6,
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+  },
+  balanceAmount: {
+    color: COLORS.PRIMARY_GRAY,
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  scrollView: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  menuItemWrapper: {
+    marginBottom: 4,
+  },
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 14,
+    paddingVertical: 16,
     paddingHorizontal: 20,
     justifyContent: "space-between",
+    backgroundColor: "#fff",
   },
-  menuLeft: { flexDirection: "row", alignItems: "center" },
-  menuText: { fontSize: 16, fontWeight: "500", color: "#222" },
-  subMenuItem: { paddingLeft: 55, paddingVertical: 8 },
-  subMenuText: { fontSize: 14, color: "#444" },
+  menuItemExpanded: {
+    backgroundColor: "#fff",
+  },
+  menuLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  iconContainer: {
+    marginRight: 14,
+  },
+  menuText: {
+    fontSize: 15.5,
+    fontWeight: "600",
+    color: COLORS.PRIMARY_GRAY,
+    letterSpacing: 0.2,
+  },
+  menuTextExpanded: {
+    color: COLORS.PRIMARY_GRAY,
+  },
+  subMenuContainer: {
+    backgroundColor: "#F9F9F9",
+    paddingVertical: 6,
+    paddingLeft: 54,
+    paddingRight: 20,
+    marginLeft: 2,
+  },
+  subMenuItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  subMenuDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: COLORS.GRAY_ICON,
+    marginRight: 14,
+  },
+  subMenuText: {
+    fontSize: 14.5,
+    color: COLORS.PRIMARY_GRAY,
+    fontWeight: "500",
+    letterSpacing: 0.1,
+  },
+  logoutContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#F0F0F0",
+    marginBottom: 40
+  },
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: '#fff',
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderColor: COLORS.PRIMARY,
+    borderWidth: 1,
+    gap: 8,
+  },
+  logoutText: {
+    color: COLORS.PRIMARY,
+    fontSize: 15,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
 });

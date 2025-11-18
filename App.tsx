@@ -5,13 +5,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
 import RootNavigator from './src/navigation/RootNavigator';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Provider store={store}>
-        <StatusBar barStyle={'dark-content'} />
-        <RootNavigator />
+        <SafeAreaProvider>
+          <StatusBar barStyle={'dark-content'} />
+          <RootNavigator />
+        </SafeAreaProvider>
       </Provider>
     </GestureHandlerRootView>
   );

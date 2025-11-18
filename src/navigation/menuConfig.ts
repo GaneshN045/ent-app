@@ -58,7 +58,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Products ----------------
   {
     name: 'Products',
-    screen: 'ProductsScreen',
+    screen: 'ProductsStack',
     icon: 'inventory',
     roles: ['RT', 'RA'],
   },
@@ -77,6 +77,24 @@ export const allMenuItems: MenuItem[] = [
       { name: 'Move To Bank', screen: SCREENS.WALLET_TO_BANK_SCREEN },
     ],
   },
+
+ // ---------------- Reports ----------------
+ {
+  name: 'Reports',
+  screen: 'ReportsStack',
+  icon: 'assessment',
+  roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+  subItems: [
+    { name: 'Commission & Charges', screen: SCREENS.COMMISSION_CHARGES_SCREEN },
+    { name: 'Wallet Report', screen: SCREENS.WALLET_REPORT_SCREEN },
+    { name: 'Network Transaction', screen: SCREENS.NETWORK_TRANSACTION_SCREEN },
+    { name: 'Search Transaction', screen: SCREENS.SEARCH_TRANSACTION_SCREEN },
+    { name: 'Fund Loading', screen: SCREENS.FUND_LOADING_SCREEN },
+    { name: 'Pending Transaction', screen: SCREENS.PENDING_TRANSACTION_SCREEN },
+    { name: 'Debit History', screen: SCREENS.DEBIT_HISTORY_SCREEN },
+    { name: 'Down Line Balance', screen: SCREENS.DOWNLINE_BALANCE_SCREEN },
+  ],
+},
 
   // ---------------- Settings ----------------
   {
@@ -112,23 +130,7 @@ export const allMenuItems: MenuItem[] = [
     ],
   },
 
-  // ---------------- Reports ----------------
-  {
-    name: 'Reports',
-    screen: 'ReportsStack',
-    icon: 'assessment',
-    roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
-    subItems: [
-      { name: 'Commission & Charges', screen: SCREENS.COMMISSION_CHARGES_SCREEN },
-      { name: 'Wallet Report', screen: SCREENS.WALLET_REPORT_SCREEN },
-      { name: 'Network Transaction', screen: SCREENS.NETWORK_TRANSACTION_SCREEN },
-      { name: 'Search Transaction', screen: SCREENS.SEARCH_TRANSACTION_SCREEN },
-      { name: 'Fund Loading', screen: SCREENS.FUND_LOADING_SCREEN },
-      { name: 'Pending Transaction', screen: SCREENS.PENDING_TRANSACTION_SCREEN },
-      { name: 'Debit History', screen: SCREENS.DEBIT_HISTORY_SCREEN },
-      { name: 'Down Line Balance', screen: SCREENS.DOWNLINE_BALANCE_SCREEN },
-    ],
-  },
+ 
 ];
 
 // ---------------------------------------------------------

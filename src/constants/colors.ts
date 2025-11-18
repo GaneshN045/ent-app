@@ -1,5 +1,10 @@
 const COLORS = {
     PRIMARY_COLOR: '#EB4335',
+    PRIMARY_GRAY: '#3A3A42',
+    SECONDARY_GRAY: '#9A9AA3',
+
+    GRAY_ICON: '#6E6E76',
+
     SECONDARY_COLOR: '#4285F4',
     SUCCESS_COLOR: '#34A853',
     WARNING_COLOR: '#FBBC04',
@@ -10,8 +15,9 @@ const COLORS = {
     LIGHT_GRAY: '#E0E0E0',
     DARK_GRAY: '#424242',
     BACKGROUND: '#F5F5F5',
-    TEXT_PRIMARY: '#212121',
-    TEXT_SECONDARY: '#757575',
+
+
+
   } as const;
   
   export default COLORS;

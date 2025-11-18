@@ -14,7 +14,7 @@ const menuItems = [
   { title: 'KYC Docs', icon: 'description', screen: 'KYCDocsScreen' },
 ]
 
-export default function ProfileScreen() {
+export default function ProfileHomeScreen() {
   const navigation = useNavigation<Nav>()
 
   const userInfo = {
@@ -36,9 +36,9 @@ export default function ProfileScreen() {
   return (
     <>
 
-      <ScrollView className="flex-1 bg-gray-50">
+      <ScrollView className="flex-1  bg-gray-50">
         {/* Profile Header with Image */}
-        <View className="items-center pt-6 pb-8 bg-white">
+        <View className="items-center pt-6  pb-8 bg-white">
           <View className="relative">
             {/* Profile Image - Replace with your actual image source later */}
             <View className="w-32 h-32 rounded-full bg-gray-200 border-4 border-white shadow-lg overflow-hidden">
@@ -51,7 +51,7 @@ export default function ProfileScreen() {
             </View>
 
             {/* Camera Icon Overlay */}
-            <TouchableOpacity className="absolute bottom-1 right-1 bg-blue-600 rounded-full p-2 shadow-md">
+            <TouchableOpacity className="absolute bottom-1 right-1 bg-primary rounded-full p-2 shadow-md">
               <MaterialIcons name="camera-alt" size={20} color="white" />
             </TouchableOpacity>
           </View>
@@ -76,7 +76,7 @@ export default function ProfileScreen() {
         </View>
 
         {/* Manage Details Section */}
-        <View className="mx-4 mt-8 pb-10">
+        <View className="mx-4 mt-8 pb-32">
           <Text className="text-xl font-bold text-[#3A3A42] mb-4 px-2">Manage Details</Text>
 
           <View className="flex-row flex-wrap justify-between">
@@ -87,7 +87,7 @@ export default function ProfileScreen() {
                 className="w-[48%] mb-5 bg-white rounded-3xl p-6 border border-[#ECECF1] shadow-sm active:opacity-70 items-center"
                 style={{ elevation: 3 }}
               >
-                <MaterialIcons name={item.icon} size={36} color="#6E6E76" />
+                <MaterialIcons name={item.icon} size={28} color="#6E6E76" />
                 <Text className="text-lg font-semibold text-[#3A3A42] mt-4 text-center">
                   {item.title}
                 </Text>
