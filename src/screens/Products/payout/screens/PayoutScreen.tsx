@@ -1,14 +1,14 @@
 // PayoutScreen.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    ScrollView,
     TouchableOpacity,
     TextInput,
     Alert,
     ActivityIndicator,
     RefreshControl,
+    StyleSheet,
 } from 'react-native';
 import BankAccountCard from '../components/BankAccountCard';
 import AddBankModal from '../components/AddBankModal';
@@ -114,11 +114,21 @@ export default function PayoutScreen() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const [filterText, setFilterText] = useState('');
     const [refreshing, setRefreshing] = useState(false);
 
     const maskAccountNo = (accNo: string) =>
         accNo.length <= 4 ? accNo : `XXXX ${accNo.slice(-4)}`;
+
+    // Simulate initial data loading
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setInitialLoading(false);
+        }, 1500);
+        
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleAddAccount = (newAcc: Omit<BankAccount, 'id' | 'verified'>) => {
         setLoading(true);
@@ -187,9 +197,18 @@ export default function PayoutScreen() {
         setRefreshing(true);
         setTimeout(() => {
             setRefreshing(false);
-            Alert.alert('Refreshed', 'List updated!');
+            // Alert.alert('Refreshed', 'List updated!');
         }, 1000);
     };
+
+    if (initialLoading) {
+        return (
+            <View className="flex-1 justify-center items-center bg-gray-50">
+                <ActivityIndicator size="large" color="#ef4444" />
+                <Text className="text-gray-600 mt-4 text-base">Loading data...</Text>
+            </View>
+        );
+    }
 
     return (
         <View className="flex-1 bg-gray-50">
@@ -210,10 +229,10 @@ export default function PayoutScreen() {
                     {/* Add Bank Button */}
                     <TouchableOpacity
                         onPress={() => setShowAddModal(true)}
-                        className="bg-green-600 px-4 py-3 rounded-lg"
+                        className="bg-white border border-primary px-4 py-3 rounded-lg"
                         activeOpacity={0.8}
                     >
-                        <Text className="text-white font-bold">+ Add Bank</Text>
+                        <Text className="text-primary font-bold">+ Add Bank</Text>
                     </TouchableOpacity>
 
                 </View>

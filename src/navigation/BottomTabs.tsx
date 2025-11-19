@@ -44,7 +44,7 @@ export default function BottomTabs() {
       screen: 'DashboardStack',
       component: DashboardHomeScreen,
       label: 'Dashboard',
-      icon: 'dashboard',
+      icon: 'widgets',
     },
     {
       screen: 'FundingStack',
@@ -109,7 +109,7 @@ export default function BottomTabs() {
                         <Icon
                           name={tab.icon}
                           size={30}
-                          color={focused ? COLORS.PRIMARY_COLOR : '#fff'}
+                          color={focused ? COLORS.PRIMARY_COLOR : COLORS.GRAY_ICON}
                         />
                       </View>
                     </View>
@@ -165,11 +165,11 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 34,
-    backgroundColor: '#2d2c2c',
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: '#ffffff',
+    borderColor: 'gray',
     ...Platform.select({
       ios: {
         shadowColor: '#000',

@@ -5,8 +5,15 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "types": ["react", "react-native", "react-navigation"]
   },
-  "include": ["src", "**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],
+  "include": [
+    "src",
+    "types",
+    "**/*.ts",
+    "**/*.tsx",
+    "nativewind-env.d.ts"
+  ],
   "exclude": ["node_modules", "Pods"]
 }

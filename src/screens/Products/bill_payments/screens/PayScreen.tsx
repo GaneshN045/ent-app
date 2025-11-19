@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import ComingSoonScreen from '../../components/other/ComingSoonScreen'
+import ComingSoonScreen from '../../../../components/other/ComingSoonScreen'
 
-export default function CreateSubUserScreen() {
+export default function PayScreen() {
   return (
     <View className='flex-1'>
-      {/* <Text>CreateSubUserScreen</Text> */}
       <ComingSoonScreen/>
     </View>
   )

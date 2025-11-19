@@ -15,12 +15,12 @@ export default function SettingsHomeScreen() {
   const navigation = useNavigation<SettingsNavigationProp>();
 
   const menuItems = [
-    {
-      title: "Create Sub User",
-      icon: "person-add",
-      subtitle: "Manage user",
-      screen: SCREENS.CREATE_SUB_USER_SCREEN,
-    },
+    // {
+    //   title: "Create Sub User",
+    //   icon: "person-add",
+    //   subtitle: "Manage user",
+    //   screen: SCREENS.CREATE_SUB_USER_SCREEN,
+    // },
     {
       title: "Change TPIN",
       icon: "lock",

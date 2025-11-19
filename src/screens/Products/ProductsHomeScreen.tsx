@@ -44,9 +44,9 @@ const productFlowConfig: any = {
     type: "modal",
     title: "Select AEPS Service",
     options: [
-      { label: "Cash Withdrawal", option_type: "AEPS_CASH_WITHDRAWAL", icon: "money", screen: SCREENS.AEPS_SCREEN },
-      { label: "Balance Enquiry", option_type: "AEPS_BALANCE_ENQUIRY", icon: "account-balance-wallet", screen: SCREENS.AEPS_SCREEN },
-      { label: "Mini Statement", option_type: "AEPS_MINI_STATEMENT", icon: "list-alt", screen: SCREENS.AEPS_SCREEN },
+      { label: "Cash Withdrawal", option_type: "AEPS_CASH_WITHDRAWAL", icon: "money", screen: SCREENS.AEPS_OPTION_SELECTION },
+      { label: "Balance Enquiry", option_type: "AEPS_BALANCE_ENQUIRY", icon: "account-balance-wallet", screen: SCREENS.AEPS_OPTION_SELECTION },
+      { label: "Mini Statement", option_type: "AEPS_MINI_STATEMENT", icon: "list-alt", screen: SCREENS.AEPS_OPTION_SELECTION },
     ],
   },
 
@@ -55,10 +55,16 @@ const productFlowConfig: any = {
     title: "Select Bill Payment",
     options: [
       {
-        label: "BBPS1  Bharat Bill Payment System",
+        label: "BBPS1",
         option_type: "BBPS_1",
         icon: "receipt",
-        screen: SCREENS.BBPS_SCREEN,
+        screen: SCREENS.BILL_PAYMENT_SCREEN,
+      },
+      {
+        label: "BBPS2",
+        option_type: "BBPS_2",
+        icon: "receipt",
+        screen: SCREENS.BILL_PAYMENT_SCREEN,
       },
     ],
   },
