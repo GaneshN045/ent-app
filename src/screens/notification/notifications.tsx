@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import ComingSoonScreen from '../../components/other/ComingSoonScreen'
 
 export default function notifications() {
   return (
-    <View>
-      <Text>notifications</Text>
+    <View className='flex-1'>
+        <ComingSoonScreen/>      
     </View>
   )
 }

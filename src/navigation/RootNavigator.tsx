@@ -6,6 +6,7 @@ import AuthStack from './stacks/AuthStack';
 import MainDrawer from './MainDrawer';
 import { useAppSelector } from '../store/hooks';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import COLORS from '../constants/colors';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +26,7 @@ export default function RootNavigator() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2196f3" />
+        <ActivityIndicator size="large" color={COLORS.PRIMARY_COLOR} />
       </View>
     );
   }
@@ -37,8 +38,8 @@ export default function RootNavigator() {
           headerShown: false,
         }}
       >
-        {true ? (
-          // {isAuthenticated ? (
+        {/* {true ? ( */}
+          {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainDrawer} />
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />

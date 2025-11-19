@@ -10,9 +10,13 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from "@react-navigation/drawer";
+import { CommonActions } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { MenuItem, getMenuForRole, Role } from "../navigation/menuConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/slices/authSlice";
 
 const USER_ROLE: Role = "RT";
 
@@ -30,13 +34,14 @@ const userData = {
   memberId: "RT12345",
   prepaidBalance: "₹15,250.00",
   postpaidBalance: "₹5,000.00",
-  profileImage: "https://via.placeholder.com/80", // Replace with actual image URL
+  profileImage: "https://via.placeholder.com/80",
 };
 
 export default function CustomDrawerContent({
   navigation,
 }: DrawerContentComponentProps) {
   const menu: MenuItem[] = getMenuForRole(USER_ROLE);
+  const dispatch = useDispatch()
 
   // Filter only Settings, Support, and Reports
   const filteredMenu = menu.filter(item =>
@@ -49,17 +54,25 @@ export default function CustomDrawerContent({
     setExpanded((prev) => (prev === name ? null : name));
   };
 
-  const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logout pressed");
-    // navigation.navigate('Login'); // or your logout flow
+  const handleLogout = async () => {
+    try {
+      console.log("Logout pressed");
+  
+      // Remove stored data
+      await AsyncStorage.multiRemove(["userRole", "userId", "token"]);
+  
+      // Reset redux state
+      dispatch(logout());
+  
+      // Navigation resets automatically because RootNavigator listens to isAuthenticated
+    } catch (e) {
+      console.log("Logout error:", e);
+    }
   };
+
 
   return (
     <View style={styles.container}>
-      {/* User Profile Section */}
-
-      {/* Menu Items */}
       <DrawerContentScrollView
         contentContainerStyle={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -87,7 +100,6 @@ export default function CustomDrawerContent({
           </View>
         </View>
 
-
         {filteredMenu.map((item: MenuItem, index: number) => (
           <View key={index} style={styles.menuItemWrapper}>
             {/* Main Menu Button */}
@@ -100,12 +112,8 @@ export default function CustomDrawerContent({
                 if (item.subItems && item.subItems.length > 0) {
                   toggleExpand(item.name);
                 } else {
-                  navigation.navigate("Main", {
-                    screen: "BottomTabs",
-                    params: {
-                      screen: item.screen,
-                    },
-                  });
+                  // For items without sub-items, navigate directly
+                  navigation.navigate(item.screen);
                 }
               }}
               activeOpacity={0.7}
@@ -150,33 +158,43 @@ export default function CustomDrawerContent({
                     style={styles.subMenuItem}
                     onPress={() => {
                       console.log("---- Drawer Navigation Triggered ----");
-                      console.log("Parent Stack:", "Main");
-                      console.log("Drawer Target:", "BottomTabs");
-                      console.log("Stack:", item.screen);
-                      console.log("Sub Screen:", sub.screen);
+                      console.log("Parent:", item.screen);
+                      console.log("Target:", sub.screen);
 
-                      navigation.navigate("Main", {
-                        screen: "BottomTabs",
-                        params: {
-                          screen: item.screen,
-                          params: {
-                            screen: sub.screen,
-                          },
-                        },
-                      });
+                      // Close drawer first
+                      navigation.closeDrawer();
+
+                      // Navigate to stack with both SupportHomeScreen and target screen
+                      // This creates a proper back stack: Dashboard -> SupportHomeScreen -> TargetScreen
+                      navigation.dispatch(
+                        CommonActions.reset({
+                          index: 0,
+                          routes: [
+                            {
+                              name: item.screen, // e.g., "SupportStack"
+                              state: {
+                                index: 1, // We want the second screen to be active
+                                routes: [
+                                  { name: 'SUPPORT_HOME_SCREEN' }, // First screen in stack
+                                  { name: sub.screen }, // Target screen (active)
+                                ],
+                              },
+                            },
+                          ],
+                        })
+                      );
                     }}
                     activeOpacity={0.6}
-                    className={'flex flex-row justify-between'}
                   >
-                    <View className="flex flex-row items-center">
+                    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
                       <View style={styles.subMenuDot} />
                       <Text style={styles.subMenuText}>{sub.name}</Text>
                     </View>
                     <View>
                       <Icon
-                        name={"keyboard-arrow-right"}
+                        name="keyboard-arrow-right"
                         size={22}
-                        color={'gray'}
+                        color="gray"
                       />
                     </View>
                   </TouchableOpacity>
@@ -321,6 +339,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 12,
+    justifyContent: "space-between",
   },
   subMenuDot: {
     width: 4,

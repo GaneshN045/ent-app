@@ -49,7 +49,7 @@ export default function CustomHeader() {
       {/* RIGHT: Notification Button */}
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("CommonsStack", { screen: SCREENS.NOTIFICATIONS_SCREEN })
+          navigation.navigate("CommonStack", { screen: SCREENS.NOTIFICATIONS_SCREEN })
         }
         style={{ padding: 8 }}
       >

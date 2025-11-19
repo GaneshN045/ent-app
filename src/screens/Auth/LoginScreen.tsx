@@ -1,98 +1,119 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useAppDispatch } from '../../store/hooks';
-import { login } from '../../store/slices/authSlice';
-import { Role } from '../../navigation/menuConfig';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppDispatch } from "../../store/hooks";
+import { login } from "../../store/slices/authSlice";
+import { Role, ROLE_HIERARCHY } from "../../navigation/menuConfig";
+
+const ROLE_LABELS: Record<Role, string> = {
+  WL: "White Label",
+  SD: "Super Distributor",
+  DT: "Distributor",
+  PT: "Partner",
+  EN: "Enterprise",
+  RT: "Retailer",
+  RA: "Retail Agent",
+};
+
+const ROLE_COLORS: Record<Role, string> = {
+  WL: "#FF6B6B",
+  SD: "#4ECDC4",
+  DT: "#45B7D1",
+  PT: "#FFA07A",
+  EN: "#98D8C8",
+  RT: "#2196F3",
+  RA: "#7C3AED",
+};
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
 
-  const handleLogin = () => {
-    // Replace with your actual login logic
-    if (username && password) {
-      // For demo purposes, using role "RT" - replace with actual role from API
+  const handleRoleSelect = async (role: Role) => {
+    try {
+      setSelectedRole(role);
+      setIsLoading(true);
+
+      const uniqueId = `user_${role}_${Date.now()}`;
+      const token = `token_${role}_${Date.now()}`;
+
+      await AsyncStorage.setItem("userRole", role);
+      await AsyncStorage.setItem("userId", uniqueId);
+
       dispatch(
         login({
           user: {
-            id: '1',
-            name: username,
-            email: `${username}@example.com`,
-            role: 'RT' as Role, // Change this based on your login response
+            id: uniqueId,
+            name: ROLE_LABELS[role],
+            email: `${role}@app.com`,
+            role,
           },
-          token: 'demo-token',
-        }),
+          token,
+        })
       );
-    } else {
-      Alert.alert('Error', 'Please enter username and password');
+
+      // Alert.alert("Success", `Logged in as ${ROLE_LABELS[role]}`);
+    } catch (e) {
+      Alert.alert("Error", "Failed to set role. Please try again.");
+      setSelectedRole(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>Login</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+    <ScrollView className="flex-1 bg-gray-100" contentContainerStyle={{ padding: 20 }}>
+      {/* Header */}
+      <View className="items-center mb-10 mt-8">
+        <Text className="text-4xl font-bold text-black">Select Your Role</Text>
+        <Text className="text-base text-gray-600 mt-1">Choose a role to continue</Text>
       </View>
-    </View>
+
+      {/* Roles Grid */}
+      <View className="flex-row flex-wrap justify-between mb-10">
+        {ROLE_HIERARCHY.map((role) => {
+          const isSelected = selectedRole === role;
+
+          return (
+            <TouchableOpacity
+              key={role}
+              disabled={isLoading}
+              onPress={() => handleRoleSelect(role)}
+              className={`w-[48%] p-6 rounded-xl mb-4 items-center justify-center 
+                shadow-md
+                ${isSelected ? "border-2 border-black" : ""}`}
+              style={{ backgroundColor: ROLE_COLORS[role] }}
+            >
+              {isSelected && isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Text className="text-white font-bold text-lg">{role}</Text>
+                  <Text className="text-white text-sm font-medium mt-1">{ROLE_LABELS[role]}</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      {/* Info Box */}
+      <View className="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500">
+        <Text className="text-yellow-800 font-semibold">
+          ⚠️ Development/Test Mode
+        </Text>
+        <Text className="text-yellow-700 text-sm mt-1 leading-5">
+          Roles are set manually for development. Production login uses real credentials.
+        </Text>
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 20,
-  },
-  formContainer: {
-    width: '100%',
-    maxWidth: 400,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    textAlign: 'center',
-    color: '#000',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    backgroundColor: '#2196f3',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
