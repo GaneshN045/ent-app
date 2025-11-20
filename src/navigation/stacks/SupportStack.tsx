@@ -24,16 +24,12 @@ export default function SupportStack() {
         headerTitleStyle: { fontWeight: 'bold' },
 
         headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ paddingHorizontal: 15 }}
-          >
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 15 }}>
             <Icon name="arrow-back" size={22} color="#000" />
           </TouchableOpacity>
         ),
       })}
     >
-
       {/* <Stack.Screen
         name={SCREENS.SUPPORT_HOME_SCREEN}
         component={SupportHomeScreen}
@@ -69,7 +65,6 @@ export default function SupportStack() {
         component={ContactUsScreen}
         options={{ title: 'Contact Us' }}
       />
-
     </Stack.Navigator>
   );
 }

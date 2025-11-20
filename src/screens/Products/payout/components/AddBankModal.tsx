@@ -5,7 +5,12 @@ import { View, Text, TextInput, TouchableOpacity, Modal, Alert } from 'react-nat
 type Props = {
   visible: boolean;
   onClose: () => void;
-  onAdd: (acc: { holderName: string; bankName: string; accountNo: string; ifscCode: string }) => void;
+  onAdd: (acc: {
+    holderName: string;
+    bankName: string;
+    accountNo: string;
+    ifscCode: string;
+  }) => void;
 };
 
 export default function AddBankModal({ visible, onClose, onAdd }: Props) {
@@ -17,7 +22,7 @@ export default function AddBankModal({ visible, onClose, onAdd }: Props) {
   });
 
   const handleSubmit = () => {
-    if (Object.values(form).some((v) => !v.trim())) {
+    if (Object.values(form).some(v => !v.trim())) {
       Alert.alert('Please fill all fields');
       return;
     }
@@ -37,39 +42,33 @@ export default function AddBankModal({ visible, onClose, onAdd }: Props) {
             className="bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg mb-4 placeholder:text-gray-500"
             placeholder="Account Holder Name"
             value={form.holderName}
-            onChangeText={(t) => setForm({ ...form, holderName: t })}
+            onChangeText={t => setForm({ ...form, holderName: t })}
           />
           <TextInput
             className="bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg mb-4 placeholder:text-gray-500"
             placeholder="Bank Name"
             value={form.bankName}
-            onChangeText={(t) => setForm({ ...form, bankName: t })}
+            onChangeText={t => setForm({ ...form, bankName: t })}
           />
           <TextInput
             className="bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg mb-4 placeholder:text-gray-500"
             placeholder="Account Number"
             keyboardType="numeric"
             value={form.accountNo}
-            onChangeText={(t) => setForm({ ...form, accountNo: t })}
+            onChangeText={t => setForm({ ...form, accountNo: t })}
           />
           <TextInput
             className="bg-gray-100 border border-gray-300 px-4 py-3 rounded-lg mb-6 placeholder:text-gray-500"
             placeholder="IFSC Code"
             value={form.ifscCode}
-            onChangeText={(t) => setForm({ ...form, ifscCode: t.toUpperCase() })}
+            onChangeText={t => setForm({ ...form, ifscCode: t.toUpperCase() })}
           />
 
           <View className="flex-row gap-4">
-            <TouchableOpacity
-              onPress={onClose}
-              className="flex-1 bg-gray-200 py-3 rounded-lg"
-            >
+            <TouchableOpacity onPress={onClose} className="flex-1 bg-gray-200 py-3 rounded-lg">
               <Text className="text-center font-bold text-gray-800">Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={handleSubmit}
-              className="flex-1 bg-primary py-3 rounded-lg"
-            >
+            <TouchableOpacity onPress={handleSubmit} className="flex-1 bg-primary py-3 rounded-lg">
               <Text className="text-center text-white font-bold">Add Account</Text>
             </TouchableOpacity>
           </View>

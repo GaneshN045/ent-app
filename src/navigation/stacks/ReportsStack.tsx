@@ -23,7 +23,7 @@ const Stack = createStackNavigator();
 export default function ReportsStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ navigation } : any) => ({
+      screenOptions={({ navigation }: any) => ({
         headerShown: true,
         headerStyle: { backgroundColor: '#fff' },
         headerTintColor: '#000',
@@ -31,17 +31,12 @@ export default function ReportsStack() {
 
         // Default back button for all inner screens
         headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ paddingHorizontal: 15 }}
-          >
+          <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 15 }}>
             <Icon name="arrow-back" size={22} color="#000" />
           </TouchableOpacity>
         ),
       })}
     >
-
-
       {/* Reports Home Screen with custom back button */}
       <Stack.Screen
         name={SCREENS.REPORTS_HOME_SCREEN}
@@ -50,9 +45,7 @@ export default function ReportsStack() {
           title: 'Reports',
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("BottomTabs", { screen: 'DashboardStack' })
-              }
+              onPress={() => navigation.navigate('BottomTabs', { screen: 'DashboardStack' })}
               style={{ paddingHorizontal: 15 }}
             >
               <Icon name="arrow-back" size={22} color="#000" />

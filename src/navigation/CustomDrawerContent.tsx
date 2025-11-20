@@ -1,24 +1,14 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-} from "@react-navigation/drawer";
-import { CommonActions } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
+import { CommonActions } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { MenuItem, getMenuForRole, Role } from "../navigation/menuConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useDispatch } from "react-redux";
-import { logout } from "../store/slices/authSlice";
+import { MenuItem } from '../navigation/menuConfig';
 
-const USER_ROLE: Role = "RT";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/slices/authSlice';
 
 // Colors
 const COLORS = {
@@ -30,46 +20,46 @@ const COLORS = {
 
 // Mock user data - replace with actual user data from your state/context
 const userData = {
-  name: "John Doe",
-  memberId: "RT12345",
-  prepaidBalance: "₹15,250.00",
-  postpaidBalance: "₹5,000.00",
-  profileImage: "https://via.placeholder.com/80",
+  name: 'John Doe',
+  memberId: 'RT12345',
+  prepaidBalance: '₹15,250.00',
+  postpaidBalance: '₹5,000.00',
+  profileImage: 'https://via.placeholder.com/80',
 };
 
-export default function CustomDrawerContent({
-  navigation,
-}: DrawerContentComponentProps) {
-  const menu: MenuItem[] = getMenuForRole(USER_ROLE);
-  const dispatch = useDispatch()
+type CustomDrawerProps = DrawerContentComponentProps & {
+  menuItems: MenuItem[];
+};
+
+export default function CustomDrawerContent({ navigation, menuItems }: CustomDrawerProps) {
+  const menu: MenuItem[] = menuItems;
+
+  const dispatch = useDispatch();
 
   // Filter only Settings, Support, and Reports
-  const filteredMenu = menu.filter(item =>
-    ['Reports', 'Support'].includes(item.name)
-  );
+  const filteredMenu = menu.filter(item => ['Reports', 'Support'].includes(item.name));
 
   const [expanded, setExpanded] = useState<string | null>(null);
 
   const toggleExpand = (name: string) => {
-    setExpanded((prev) => (prev === name ? null : name));
+    setExpanded(prev => (prev === name ? null : name));
   };
 
   const handleLogout = async () => {
     try {
-      console.log("Logout pressed");
-  
+      console.log('Logout pressed');
+
       // Remove stored data
-      await AsyncStorage.multiRemove(["userRole", "userId", "token"]);
-  
+      await AsyncStorage.multiRemove(['userRole', 'userId', 'token']);
+
       // Reset redux state
       dispatch(logout());
-  
+
       // Navigation resets automatically because RootNavigator listens to isAuthenticated
     } catch (e) {
-      console.log("Logout error:", e);
+      console.log('Logout error:', e);
     }
   };
-
 
   return (
     <View style={styles.container}>
@@ -79,10 +69,7 @@ export default function CustomDrawerContent({
       >
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
-            <Image
-              source={{ uri: userData.profileImage }}
-              style={styles.profileImage}
-            />
+            <Image source={{ uri: userData.profileImage }} style={styles.profileImage} />
           </View>
           <Text style={styles.userName}>{userData.name}</Text>
           <Text style={styles.memberId}>{userData.memberId}</Text>
@@ -104,10 +91,7 @@ export default function CustomDrawerContent({
           <View key={index} style={styles.menuItemWrapper}>
             {/* Main Menu Button */}
             <TouchableOpacity
-              style={[
-                styles.menuItem,
-                expanded === item.name && styles.menuItemExpanded
-              ]}
+              style={[styles.menuItem, expanded === item.name && styles.menuItemExpanded]}
               onPress={() => {
                 if (item.subItems && item.subItems.length > 0) {
                   toggleExpand(item.name);
@@ -128,21 +112,14 @@ export default function CustomDrawerContent({
                     />
                   </View>
                 )}
-                <Text style={[
-                  styles.menuText,
-                  expanded === item.name && styles.menuTextExpanded
-                ]}>
+                <Text style={[styles.menuText, expanded === item.name && styles.menuTextExpanded]}>
                   {item.name}
                 </Text>
               </View>
 
               {item.subItems && (
                 <Icon
-                  name={
-                    expanded === item.name
-                      ? "keyboard-arrow-up"
-                      : "keyboard-arrow-down"
-                  }
+                  name={expanded === item.name ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
                   size={22}
                   color={expanded === item.name ? COLORS.PRIMARY : COLORS.SECONDARY_GRAY}
                 />
@@ -157,9 +134,9 @@ export default function CustomDrawerContent({
                     key={subIndex}
                     style={styles.subMenuItem}
                     onPress={() => {
-                      console.log("---- Drawer Navigation Triggered ----");
-                      console.log("Parent:", item.screen);
-                      console.log("Target:", sub.screen);
+                      console.log('---- Drawer Navigation Triggered ----');
+                      console.log('Parent:', item.screen);
+                      console.log('Target:', sub.screen);
 
                       // Close drawer first
                       navigation.closeDrawer();
@@ -181,7 +158,7 @@ export default function CustomDrawerContent({
                               },
                             },
                           ],
-                        })
+                        }),
                       );
                     }}
                     activeOpacity={0.6}
@@ -191,11 +168,7 @@ export default function CustomDrawerContent({
                       <Text style={styles.subMenuText}>{sub.name}</Text>
                     </View>
                     <View>
-                      <Icon
-                        name="keyboard-arrow-right"
-                        size={22}
-                        color="gray"
-                      />
+                      <Icon name="keyboard-arrow-right" size={22} color="gray" />
                     </View>
                   </TouchableOpacity>
                 ))}
@@ -207,11 +180,7 @@ export default function CustomDrawerContent({
 
       {/* Logout Button */}
       <View style={styles.logoutContainer}>
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={handleLogout}
-          activeOpacity={0.8}
-        >
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
           <Icon name="logout" size={20} color={COLORS.PRIMARY} />
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
@@ -223,18 +192,18 @@ export default function CustomDrawerContent({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFAFA"
+    backgroundColor: '#FAFAFA',
   },
   profileSection: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     paddingVertical: 28,
     paddingHorizontal: 20,
-    alignItems: "center",
+    alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
+    borderBottomColor: '#F0F0F0',
   },
   profileImageContainer: {
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
@@ -247,51 +216,51 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 40,
     borderWidth: 3,
-    borderColor: "#fff",
+    borderColor: '#fff',
   },
   userName: {
     color: COLORS.PRIMARY_GRAY,
     fontSize: 18,
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 4,
   },
   memberId: {
     color: COLORS.SECONDARY_GRAY,
     fontSize: 13,
-    fontWeight: "500",
+    fontWeight: '500',
     marginBottom: 16,
   },
   balanceContainer: {
-    flexDirection: "row",
-    backgroundColor: "#F8F8F8",
+    flexDirection: 'row',
+    backgroundColor: '#F8F8F8',
     borderRadius: 12,
     padding: 14,
-    width: "100%",
+    width: '100%',
     marginTop: 8,
     borderWidth: 1,
-    borderColor: "#EFEFEF",
+    borderColor: '#EFEFEF',
   },
   balanceItem: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   balanceDivider: {
     width: 1,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: '#E0E0E0',
     marginHorizontal: 12,
   },
   balanceLabel: {
     color: COLORS.SECONDARY_GRAY,
     fontSize: 11,
-    fontWeight: "500",
+    fontWeight: '500',
     marginBottom: 6,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   balanceAmount: {
     color: COLORS.PRIMARY_GRAY,
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   scrollView: {
     paddingVertical: 12,
@@ -301,19 +270,19 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 16,
     paddingHorizontal: 20,
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
   },
   menuItemExpanded: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
   },
   menuLeft: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1,
   },
   iconContainer: {
@@ -321,7 +290,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 15.5,
-    fontWeight: "600",
+    fontWeight: '600',
     color: COLORS.PRIMARY_GRAY,
     letterSpacing: 0.2,
   },
@@ -329,17 +298,17 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY_GRAY,
   },
   subMenuContainer: {
-    backgroundColor: "#F9F9F9",
+    backgroundColor: '#F9F9F9',
     paddingVertical: 6,
     paddingLeft: 54,
     paddingRight: 20,
     marginLeft: 2,
   },
   subMenuItem: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 12,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   subMenuDot: {
     width: 4,
@@ -351,21 +320,21 @@ const styles = StyleSheet.create({
   subMenuText: {
     fontSize: 14.5,
     color: COLORS.PRIMARY_GRAY,
-    fontWeight: "500",
+    fontWeight: '500',
     letterSpacing: 0.1,
   },
   logoutContainer: {
     paddingHorizontal: 16,
     paddingVertical: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
-    marginBottom: 40
+    borderTopColor: '#F0F0F0',
+    marginBottom: 40,
   },
   logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#fff',
     paddingVertical: 14,
     borderRadius: 12,
@@ -376,7 +345,7 @@ const styles = StyleSheet.create({
   logoutText: {
     color: COLORS.PRIMARY,
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: '700',
     letterSpacing: 0.5,
   },
 });

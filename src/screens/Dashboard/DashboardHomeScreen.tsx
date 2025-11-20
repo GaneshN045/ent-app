@@ -1,9 +1,9 @@
-import React from "react";
-import { View, Text, ScrollView } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import CustomHeader from "../../components/headers/CustomHeader";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import COLORS from "../../constants/colors";
+import React from 'react';
+import { View, Text, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import CustomHeader from '../../components/headers/CustomHeader';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import COLORS from '../../constants/colors';
 
 export default function DashboardHomeScreen() {
   const navigation = useNavigation<any>();
@@ -16,11 +16,9 @@ export default function DashboardHomeScreen() {
   }, [navigation]);
 
   return (
-    <ScrollView className="bg-gray-50 flex-1" contentContainerStyle={{ paddingBottom: 40 }} >
+    <ScrollView className="bg-gray-50 flex-1" contentContainerStyle={{ paddingBottom: 40 }}>
       {/* Page Title */}
-      <Text className="text-xl font-bold px-5 mt-5 text-primary_gray">
-        Dashboard
-      </Text>
+      <Text className="text-xl font-bold px-5 mt-5 text-primary_gray">Dashboard</Text>
 
       {/* ===== TOP SUMMARY CARD (Premium Big Card) ===== */}
       <View
@@ -30,9 +28,7 @@ export default function DashboardHomeScreen() {
         "
         style={{ elevation: 3 }}
       >
-        <Text className="text-base font-semibold text-primary_gray">
-          Total Overview
-        </Text>
+        <Text className="text-base font-semibold text-primary_gray">Total Overview</Text>
 
         <View className="flex-row justify-between mt-4">
           <View>
@@ -59,7 +55,6 @@ export default function DashboardHomeScreen() {
 
       {/* ===== INDIVIDUAL METRIC CARDS ===== */}
       <View className="px-5">
-
         {/* CARD - Funds Received */}
         <View
           className="
@@ -131,10 +126,9 @@ export default function DashboardHomeScreen() {
           </View>
           <Icon name="pending-actions" size={40} color={COLORS.GRAY_ICON} />
         </View>
-
       </View>
 
-      <View style={{height: 80}}></View>
+      <View style={{ height: 80 }}></View>
     </ScrollView>
   );
 }

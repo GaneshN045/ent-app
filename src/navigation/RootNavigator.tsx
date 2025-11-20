@@ -39,7 +39,7 @@ export default function RootNavigator() {
         }}
       >
         {/* {true ? ( */}
-          {isAuthenticated ? (
+        {isAuthenticated ? (
           <Stack.Screen name="Main" component={MainDrawer} />
         ) : (
           <Stack.Screen name="Auth" component={AuthStack} />

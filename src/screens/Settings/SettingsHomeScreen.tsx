@@ -1,11 +1,13 @@
 // screens/Settings/SettingsHomeScreen.tsx
 
-import React from "react";
-import { View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import SCREENS from "../../constants/screens";
-import "../../../global.css";
-import HomeScreenButton from "../../components/buttons/HomeScreenButton";
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import SCREENS from '../../constants/screens';
+import '../../../global.css';
+import HomeScreenButton from '../../components/buttons/HomeScreenButton';
+import { useAppSelector } from '../../store/hooks';
+import { Role, canAccess, allMenuItems } from '../../navigation/menuConfig';
 
 type SettingsNavigationProp = {
   navigate: (screen: keyof typeof SCREENS) => void;
@@ -13,46 +15,42 @@ type SettingsNavigationProp = {
 
 export default function SettingsHomeScreen() {
   const navigation = useNavigation<SettingsNavigationProp>();
+  const userRole = (useAppSelector(state => state.auth.user?.role) || 'RT') as Role;
 
-  const menuItems = [
-    // {
-    //   title: "Create Sub User",
-    //   icon: "person-add",
-    //   subtitle: "Manage user",
-    //   screen: SCREENS.CREATE_SUB_USER_SCREEN,
-    // },
-    {
-      title: "Change TPIN",
-      icon: "lock",
-      subtitle: "Manage TPIN",
-      screen: SCREENS.CHANGE_TPIN_SCREEN,
-    },
-    {
-      title: "My Certificate",
-      icon: "verified",
-      subtitle: "View certificate",
-      screen: SCREENS.MY_CERTIFICATE_SCREEN,
-    },
-    {
-      title: "Low Balance Alert",
-      icon: "notifications-active",
-      subtitle: "Configure alerts",
-      screen: SCREENS.LOW_BALANCE_ALERT_SCREEN,
-    },
-    {
-      title: "ID Card",
-      icon: "badge",
-      subtitle: "View ID",
-      screen: SCREENS.ID_CARD_SCREEN,
-    },
-  ];
+  const settingsMenu = allMenuItems.find(item => item.screen === 'SettingsStack');
+
+  const menuItems = (settingsMenu?.subItems || [])
+    .filter(sub => canAccess(sub.roles, userRole))
+    .map(sub => ({
+      title: sub.name,
+      // simple icon mapping; keep existing icons for known screens
+      icon:
+        sub.screen === SCREENS.CHANGE_TPIN_SCREEN
+          ? 'lock'
+          : sub.screen === SCREENS.MY_CERTIFICATE_SCREEN
+            ? 'verified'
+            : sub.screen === SCREENS.LOW_BALANCE_ALERT_SCREEN
+              ? 'notifications-active'
+              : sub.screen === SCREENS.ID_CARD_SCREEN
+                ? 'badge'
+                : 'settings',
+      subtitle:
+        sub.screen === SCREENS.CHANGE_TPIN_SCREEN
+          ? 'Manage TPIN'
+          : sub.screen === SCREENS.MY_CERTIFICATE_SCREEN
+            ? 'View certificate'
+            : sub.screen === SCREENS.LOW_BALANCE_ALERT_SCREEN
+              ? 'Configure alerts'
+              : sub.screen === SCREENS.ID_CARD_SCREEN
+                ? 'View ID'
+                : '',
+      screen: sub.screen as keyof typeof SCREENS,
+    }));
 
   return (
     <View className="flex-1 bg-[#F7F8FA] px-5 pt-6">
       {/* Title */}
-      <Text className="text-2xl font-bold text-[#34343A] mb-5">
-        Settings
-      </Text>
+      <Text className="text-2xl font-bold text-[#34343A] mb-5">Settings</Text>
 
       {/* Grid */}
       <View className="flex-row flex-wrap justify-between">

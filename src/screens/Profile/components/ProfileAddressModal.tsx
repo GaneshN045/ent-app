@@ -1,13 +1,7 @@
 // ProfileAddressModal.tsx
-import React from "react";
-import {
-  Modal,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from "react-native";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import React from 'react';
+import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
   visible: boolean;
@@ -16,7 +10,13 @@ type Props = {
 
 export default function ProfileAddressModal({ visible, onClose }: Props) {
   return (
-    <Modal visible={visible} transparent statusBarTranslucent animationType="slide">
+    <Modal
+      visible={visible}
+      onRequestClose={onClose}
+      transparent
+      statusBarTranslucent
+      animationType="slide"
+    >
       {/* BACKDROP (tap to close) */}
       <TouchableOpacity
         activeOpacity={1}
@@ -27,7 +27,6 @@ export default function ProfileAddressModal({ visible, onClose }: Props) {
         <TouchableWithoutFeedback>
           {/* MODAL CONTENT */}
           <View className="bg-white rounded-t-3xl pt-6 pb-10 px-6 shadow-2xl">
-
             {/* TOP HANDLE BAR */}
             <View className="w-14 h-1.5 bg-gray-300 rounded-full self-center mb-5" />
 
@@ -63,7 +62,6 @@ export default function ProfileAddressModal({ visible, onClose }: Props) {
                 Close
               </Text>
             </TouchableOpacity>
-
           </View>
         </TouchableWithoutFeedback>
       </TouchableOpacity>
@@ -71,17 +69,9 @@ export default function ProfileAddressModal({ visible, onClose }: Props) {
   );
 }
 
-const PremiumField = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+const PremiumField = ({ label, value }: { label: string; value: string }) => (
   <View className="p-4 rounded-2xl border-b border-gray-200">
     <Text className="text-[13px] text-gray-500">{label}</Text>
-    <Text className="text-[17px] font-semibold text-gray-900 mt-1">
-      {value}
-    </Text>
+    <Text className="text-[17px] font-semibold text-gray-900 mt-1">{value}</Text>
   </View>
 );

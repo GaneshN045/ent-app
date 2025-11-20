@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import "../../../global.css";
-import COLORS from "../../constants/colors";
+import React from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import '../../../global.css';
+import COLORS from '../../constants/colors';
 
 interface HomeScreenButtonProps {
   title: string;
@@ -36,15 +36,11 @@ export default function HomeScreenButton({
       <Icon name={icon} size={28} color={COLORS.GRAY_ICON} />
 
       {/* Title */}
-      <Text className="text-lg font-semibold text-primary_gray mt-3 text-center">
-        {title}
-      </Text>
+      <Text className="text-lg font-semibold text-primary_gray mt-3 text-center">{title}</Text>
 
       {/* Subtitle */}
       {subtitle && (
-        <Text className="text-sm text-secondary_gray mt-1 text-center leading-4">
-          {subtitle}
-        </Text>
+        <Text className="text-sm text-secondary_gray mt-1 text-center leading-4">{subtitle}</Text>
       )}
     </TouchableOpacity>
   );

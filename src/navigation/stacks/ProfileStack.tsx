@@ -41,7 +41,6 @@ export default function ProfileStack() {
           options={{ headerShown: true, title: "Edit Profile" }}
         />
       */}
-
     </Stack.Navigator>
   );
 }

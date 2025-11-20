@@ -1,4 +1,4 @@
-import SCREENS from "../constants/screens";
+import SCREENS from '../constants/screens';
 
 // ---------------------------------------------------------
 // TYPES
@@ -7,7 +7,7 @@ export type Role = 'WL' | 'SD' | 'DT' | 'PT' | 'EN' | 'RT' | 'RA';
 
 export interface MenuItem {
   name: string;
-  screen: string;  // parent stack name OR dashboard screen
+  screen: string; // parent stack name OR dashboard screen
   icon?: string;
   roles?: Role[];
   subItems?: {
@@ -78,23 +78,23 @@ export const allMenuItems: MenuItem[] = [
     ],
   },
 
- // ---------------- Reports ----------------
- {
-  name: 'Reports',
-  screen: 'ReportsStack',
-  icon: 'assessment',
-  roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
-  subItems: [
-    { name: 'Commission & Charges', screen: SCREENS.COMMISSION_CHARGES_SCREEN },
-    { name: 'Wallet Report', screen: SCREENS.WALLET_REPORT_SCREEN },
-    { name: 'Network Transaction', screen: SCREENS.NETWORK_TRANSACTION_SCREEN },
-    { name: 'Search Transaction', screen: SCREENS.SEARCH_TRANSACTION_SCREEN },
-    { name: 'Fund Loading', screen: SCREENS.FUND_LOADING_SCREEN },
-    { name: 'Pending Transaction', screen: SCREENS.PENDING_TRANSACTION_SCREEN },
-    { name: 'Debit History', screen: SCREENS.DEBIT_HISTORY_SCREEN },
-    { name: 'Down Line Balance', screen: SCREENS.DOWNLINE_BALANCE_SCREEN },
-  ],
-},
+  // ---------------- Reports ----------------
+  {
+    name: 'Reports',
+    screen: 'ReportsStack',
+    icon: 'assessment',
+    roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+    subItems: [
+      { name: 'Commission & Charges', screen: SCREENS.COMMISSION_CHARGES_SCREEN },
+      { name: 'Wallet Report', screen: SCREENS.WALLET_REPORT_SCREEN },
+      { name: 'Network Transaction', screen: SCREENS.NETWORK_TRANSACTION_SCREEN },
+      { name: 'Search Transaction', screen: SCREENS.SEARCH_TRANSACTION_SCREEN },
+      { name: 'Fund Loading', screen: SCREENS.FUND_LOADING_SCREEN },
+      { name: 'Pending Transaction', screen: SCREENS.PENDING_TRANSACTION_SCREEN },
+      { name: 'Debit History', screen: SCREENS.DEBIT_HISTORY_SCREEN },
+      { name: 'Down Line Balance', screen: SCREENS.DOWNLINE_BALANCE_SCREEN },
+    ],
+  },
 
   // ---------------- Settings ----------------
   {
@@ -129,8 +129,6 @@ export const allMenuItems: MenuItem[] = [
       { name: 'Payment Banks', screen: SCREENS.PAYMENT_BANKS_SCREEN },
     ],
   },
-
- 
 ];
 
 // ---------------------------------------------------------

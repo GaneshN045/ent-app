@@ -13,20 +13,18 @@ import CommonStack from './stacks/CommonStack';
 const Drawer = createDrawerNavigator();
 
 export default function MainDrawer() {
-  const userRole: Role = useAppSelector(
-    (state: any) => (state.auth.user?.role as Role) || 'RT'
-  );
+  const userRole: Role = useAppSelector((state: any) => (state.auth.user?.role as Role) || 'RT');
 
   const menuItems: any[] = getMenuForRole(userRole);
+
+  const hasMenuScreen = (screen: string) => menuItems.some(item => item.screen === screen);
 
   return (
     <Drawer.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      drawerContent={(props: any) => (
-        <CustomDrawerContent {...props} menuItems={menuItems} />
-      )}
+      drawerContent={(props: any) => <CustomDrawerContent {...props} menuItems={menuItems} />}
     >
       {/* IMPORTANT: THIS IS YOUR MAIN SCREEN NAME */}
       <Drawer.Screen
@@ -36,18 +34,13 @@ export default function MainDrawer() {
           drawerLabel: 'Dashboard',
         }}
       />
-      <Drawer.Screen
-        name="SupportStack"
-        component={SupportStack}
-      />
-      <Drawer.Screen
-        name="ReportsStack"
-        component={ReportsStack}
-      />
-      <Drawer.Screen
-        name="CommonStack"
-        component={CommonStack}
-      />
+      {hasMenuScreen('SupportStack') && (
+        <Drawer.Screen name="SupportStack" component={SupportStack} />
+      )}
+      {hasMenuScreen('ReportsStack') && (
+        <Drawer.Screen name="ReportsStack" component={ReportsStack} />
+      )}
+      <Drawer.Screen name="CommonStack" component={CommonStack} />
     </Drawer.Navigator>
   );
 }

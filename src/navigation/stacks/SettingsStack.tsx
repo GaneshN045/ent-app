@@ -25,7 +25,7 @@ export default function SettingsStack() {
         headerStyle: { backgroundColor: '#fff' },
         headerTintColor: '#000',
         headerTitleStyle: { fontWeight: 'bold' },
-        headerBackTitleVisible: false,
+        // headerBackTitleVisible: false,
       }}
     >
       {/* Settings Home with Custom Header */}

@@ -1,14 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import COLORS from "../../constants/colors";
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import COLORS from '../../constants/colors';
 
 export default function FundReversalScreen() {
-  const [reverseAccount, setReverseAccount] = useState("");
-  const [walletType, setWalletType] = useState("");
-  const [amount, setAmount] = useState("");
-  const [confirmAmount, setConfirmAmount] = useState("");
-  const [narration, setNarration] = useState("");
+  const [reverseAccount, setReverseAccount] = useState('');
+  const [walletType, setWalletType] = useState('');
+  const [amount, setAmount] = useState('');
+  const [confirmAmount, setConfirmAmount] = useState('');
+  const [narration, setNarration] = useState('');
 
   return (
     <ScrollView
@@ -16,10 +16,8 @@ export default function FundReversalScreen() {
       contentContainerStyle={{ padding: 20 }}
       showsVerticalScrollIndicator={false}
     >
-
       {/* Main Card */}
       <View className="bg-white rounded-3xl px-5 py-6 shadow-sm border border-[#ECECF1]">
-
         {/* Reverse Account */}
         <Text className="text-sm text-primary_gray mb-1">Reverse Account *</Text>
         <TextInput
@@ -81,11 +79,8 @@ export default function FundReversalScreen() {
           style={{ backgroundColor: COLORS.PRIMARY_COLOR }}
         >
           <Icon name="check-circle" size={20} color="#FFF" />
-          <Text className="text-white font-semibold text-base ml-2">
-            Submit
-          </Text>
+          <Text className="text-white font-semibold text-base ml-2">Submit</Text>
         </TouchableOpacity>
-
       </View>
     </ScrollView>
   );

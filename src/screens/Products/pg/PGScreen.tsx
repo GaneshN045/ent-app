@@ -1,31 +1,23 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/native";
-import COLORS from "../../../constants/colors";
-import PGScreenForm from "./PGScreenForm";
+import React, { useState } from 'react';
+import { View, Text, Modal, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+import COLORS from '../../../constants/colors';
+import PGScreenForm from './PGScreenForm';
 
 export default function PGScreen() {
   const navigation = useNavigation();
 
   const [modalVisible, setModalVisible] = useState(true);
-  const [selectedOption, setSelectedOption] =
-    useState<"card" | "other" | null>(null);
-  const [cardNumber, setCardNumber] = useState("");
+  const [selectedOption, setSelectedOption] = useState<'card' | 'other' | null>(null);
+  const [cardNumber, setCardNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
 
-  const handleOptionSelect = (option: "card" | "other") => {
+  const handleOptionSelect = (option: 'card' | 'other') => {
     setSelectedOption(option);
 
-    if (option === "other") {
+    if (option === 'other') {
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
@@ -49,12 +41,7 @@ export default function PGScreen() {
   return (
     <View className="flex-1 bg-[#F8F8FB] px-5">
       {/* --------------------- MODAL --------------------- */}
-      <Modal
-        transparent
-        visible={modalVisible}
-        animationType="slide"
-        statusBarTranslucent={true}
-      >
+      <Modal transparent visible={modalVisible} animationType="slide" statusBarTranslucent={true}>
         <View className="flex-1 bg-black/40 justify-center items-center">
           <View
             className="
@@ -78,7 +65,7 @@ export default function PGScreen() {
                     bg-gray-50 p-4 rounded-2xl mb-3
                     border border-gray-200
                   "
-                  onPress={() => handleOptionSelect("card")}
+                  onPress={() => handleOptionSelect('card')}
                 >
                   <Icon name="credit-card" size={26} color={COLORS.GRAY_ICON} />
                   <Text className="text-gray-700 text-lg ml-3">Card</Text>
@@ -91,7 +78,7 @@ export default function PGScreen() {
                     bg-gray-50 p-4 rounded-2xl
                     border border-gray-200
                   "
-                  onPress={() => handleOptionSelect("other")}
+                  onPress={() => handleOptionSelect('other')}
                 >
                   <Icon name="apps" size={26} color={COLORS.GRAY_ICON} />
                   <Text className="text-gray-700 text-lg ml-3">Other</Text>
@@ -100,7 +87,7 @@ export default function PGScreen() {
             )}
 
             {/* Card Input */}
-            {selectedOption === "card" && !loading && (
+            {selectedOption === 'card' && !loading && (
               <View className="mt-6">
                 <Text className="text-gray-600 mb-2">Enter Card Number</Text>
                 <TextInput
@@ -123,9 +110,7 @@ export default function PGScreen() {
                     mt-5 bg-black py-3 rounded-2xl
                   "
                 >
-                  <Text className="text-white text-center text-lg font-semibold">
-                    Continue
-                  </Text>
+                  <Text className="text-white text-center text-lg font-semibold">Continue</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -133,10 +118,7 @@ export default function PGScreen() {
             {/* Loader */}
             {loading && (
               <View className="mt-6 items-center">
-                <ActivityIndicator
-                  size="large"
-                  color={COLORS.PRIMARY_COLOR}
-                />
+                <ActivityIndicator size="large" color={COLORS.PRIMARY_COLOR} />
                 <Text className="text-gray-500 mt-3">Please wait...</Text>
               </View>
             )}
@@ -150,9 +132,7 @@ export default function PGScreen() {
                   rounded-2xl border border-gray-300
                 "
               >
-                <Text className="text-gray-700 text-center text-lg font-medium">
-                  Cancel
-                </Text>
+                <Text className="text-gray-700 text-center text-lg font-medium">Cancel</Text>
               </TouchableOpacity>
             )}
           </View>

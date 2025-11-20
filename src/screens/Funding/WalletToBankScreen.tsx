@@ -1,14 +1,14 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import COLORS from "../../constants/colors"; // your color file
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import COLORS from '../../constants/colors'; // your color file
 
 export default function WalletToBankScreen() {
-  const [walletType, setWalletType] = useState("");
-  const [bank, setBank] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
-  const [amount, setAmount] = useState("");
-  const [confirmAmount, setConfirmAmount] = useState("");
+  const [walletType, setWalletType] = useState('');
+  const [bank, setBank] = useState('');
+  const [paymentMode, setPaymentMode] = useState('');
+  const [amount, setAmount] = useState('');
+  const [confirmAmount, setConfirmAmount] = useState('');
 
   return (
     <ScrollView
@@ -22,7 +22,6 @@ export default function WalletToBankScreen() {
 
       {/* Main Card */}
       <View className="bg-white rounded-3xl px-5 py-6 shadow-sm border border-[#ECECF1]">
-
         {/* Wallet Type */}
         <Text className="text-sm text-primary_gray mb-1">Wallet Type *</Text>
         <TextInput
@@ -82,11 +81,8 @@ export default function WalletToBankScreen() {
           style={{ backgroundColor: COLORS.PRIMARY_COLOR }}
         >
           <Icon name="send" size={20} color="#FFF" />
-          <Text className="text-white font-semibold text-base ml-2">
-            Submit
-          </Text>
+          <Text className="text-white font-semibold text-base ml-2">Submit</Text>
         </TouchableOpacity>
-
       </View>
     </ScrollView>
   );

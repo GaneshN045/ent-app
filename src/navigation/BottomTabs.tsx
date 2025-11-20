@@ -72,8 +72,8 @@ export default function BottomTabs() {
     },
   ];
 
-  const allowedTabs = TABS.filter(tab =>
-    tab.screen === 'ProfileStack' || menuItems.some(m => m.screen === tab.screen)
+  const allowedTabs = TABS.filter(
+    tab => tab.screen === 'ProfileStack' || menuItems.some(m => m.screen === tab.screen),
   );
 
   return (
@@ -99,12 +99,7 @@ export default function BottomTabs() {
               if (tab.screen === 'ProductsStack') {
                 return (
                   <View style={styles.floatingContainer}>
-                    <View
-                      style={[
-                        styles.floatingButton,
-                        focused && styles.floatingButtonActive,
-                      ]}
-                    >
+                    <View style={[styles.floatingButton, focused && styles.floatingButtonActive]}>
                       <View style={styles.iconContainer}>
                         <Icon
                           name={tab.icon}

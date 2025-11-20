@@ -1,27 +1,20 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Platform,
-} from "react-native";
-import React, { useState } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function FundRequestScreen() {
-  const [depositType, setDepositType] = useState("");
-  const [transactionId, setTransactionId] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [accountNo, setAccountNo] = useState("");
-  const [holderName, setHolderName] = useState("");
-  const [paymentMode, setPaymentMode] = useState("");
-  const [amount, setAmount] = useState("");
-  const [confirmAmount, setConfirmAmount] = useState("");
-  const [date, setDate] = useState("");
+  const [depositType, setDepositType] = useState('');
+  const [transactionId, setTransactionId] = useState('');
+  const [bankName, setBankName] = useState('');
+  const [accountNo, setAccountNo] = useState('');
+  const [holderName, setHolderName] = useState('');
+  const [paymentMode, setPaymentMode] = useState('');
+  const [amount, setAmount] = useState('');
+  const [confirmAmount, setConfirmAmount] = useState('');
+  const [date, setDate] = useState('');
   const [slip, setSlip] = useState<any>(null);
-  const [narration, setNarration] = useState("");
+  const [narration, setNarration] = useState('');
 
   return (
     <View className="flex-1 bg-white">
@@ -43,7 +36,6 @@ export default function FundRequestScreen() {
         <View className="p-5">
           {/* Card */}
           <View className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
-
             {/* Deposit Type */}
             <Text className="text-gray-700 font-semibold mb-1">Deposit Type *</Text>
             <TextInput
@@ -75,9 +67,7 @@ export default function FundRequestScreen() {
             />
 
             {/* Account Number */}
-            <Text className="text-gray-700 font-semibold mb-1">
-              Bank Account Number *
-            </Text>
+            <Text className="text-gray-700 font-semibold mb-1">Bank Account Number *</Text>
             <TextInput
               value={accountNo}
               onChangeText={setAccountNo}
@@ -88,9 +78,7 @@ export default function FundRequestScreen() {
             />
 
             {/* Holder Name */}
-            <Text className="text-gray-700 font-semibold mb-1">
-              Bank Account Holder Name *
-            </Text>
+            <Text className="text-gray-700 font-semibold mb-1">Bank Account Holder Name *</Text>
             <TextInput
               value={holderName}
               onChangeText={setHolderName}
@@ -137,7 +125,7 @@ export default function FundRequestScreen() {
               className="bg-gray-100 px-4 py-3 rounded-xl mb-4 flex-row items-center justify-between"
               activeOpacity={0.8}
             >
-              <Text className="text-gray-600">{date || "Choose Date"}</Text>
+              <Text className="text-gray-600">{date || 'Choose Date'}</Text>
               <Icon name="date-range" size={24} color="#555" />
             </TouchableOpacity>
 
@@ -148,9 +136,7 @@ export default function FundRequestScreen() {
               activeOpacity={0.9}
               className="bg-gray-100 px-4 py-4 rounded-xl border border-gray-200 flex-row justify-between items-center mb-1"
             >
-              <Text className="text-gray-600">
-                {slip ? slip.name : "No File Chosen"}
-              </Text>
+              <Text className="text-gray-600">{slip ? slip.name : 'No File Chosen'}</Text>
               <Icon name="upload-file" size={24} color="#555" />
             </TouchableOpacity>
 
@@ -175,11 +161,8 @@ export default function FundRequestScreen() {
               activeOpacity={0.9}
               className="bg-red-500 rounded-xl py-3 px-6 mt-4 shadow-md"
             >
-              <Text className="text-white font-semibold text-center text-base">
-                SUBMIT
-              </Text>
+              <Text className="text-white font-semibold text-center text-base">SUBMIT</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </KeyboardAwareScrollView>

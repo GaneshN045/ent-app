@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import ComingSoonScreen from '../../components/other/ComingSoonScreen'
+import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import ComingSoonScreen from '../../components/other/ComingSoonScreen';
 
 export default function LowBalanceAlertScreen() {
   return (
-    <View className=' flex-1'>
-      <ComingSoonScreen/>
+    <View className=" flex-1">
+      <ComingSoonScreen />
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

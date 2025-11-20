@@ -1,16 +1,13 @@
 // screens/Reports/ReportsHomeScreen.tsx
 
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Correct import (non-Expo)
 import SCREENS from '../../constants/screens';
+import { useAppSelector } from '../../store/hooks';
+import { Role, canAccess, allMenuItems } from '../../navigation/menuConfig';
 
 // Type-safe navigation prop (no `any`)
 type ReportsNavigationProp = {
@@ -19,75 +16,51 @@ type ReportsNavigationProp = {
 
 export default function ReportsHomeScreen() {
   const navigation = useNavigation<ReportsNavigationProp>();
+  const userRole = (useAppSelector(state => state.auth.user?.role) || 'RT') as Role;
+
+  const reportsMenu = allMenuItems.find(item => item.screen === 'ReportsStack');
+
+  const items = (reportsMenu?.subItems || [])
+    .filter(sub => canAccess(sub.roles, userRole))
+    .map(sub => ({
+      key: sub.screen,
+      title: sub.name,
+      icon:
+        sub.screen === SCREENS.COMMISSION_CHARGES_SCREEN
+          ? 'account-balance-wallet'
+          : sub.screen === SCREENS.WALLET_REPORT_SCREEN
+            ? 'wallet'
+            : sub.screen === SCREENS.NETWORK_TRANSACTION_SCREEN
+              ? 'swap-horiz'
+              : sub.screen === SCREENS.SEARCH_TRANSACTION_SCREEN
+                ? 'search'
+                : sub.screen === SCREENS.FUND_LOADING_SCREEN
+                  ? 'upload'
+                  : sub.screen === SCREENS.PENDING_TRANSACTION_SCREEN
+                    ? 'pending-actions'
+                    : sub.screen === SCREENS.DEBIT_HISTORY_SCREEN
+                      ? 'history'
+                      : sub.screen === SCREENS.DOWNLINE_BALANCE_SCREEN
+                        ? 'account-tree'
+                        : 'insert-chart',
+      screen: sub.screen as keyof typeof SCREENS,
+    }));
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Reports</Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.COMMISSION_CHARGES_SCREEN)}
-        >
-          <Icon name="account-balance-wallet" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Commission & Charges</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.WALLET_REPORT_SCREEN)}
-        >
-          <Icon name="wallet" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Wallet Report</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.NETWORK_TRANSACTION_SCREEN)}
-        >
-          <Icon name="swap-horiz" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Network Transaction</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.SEARCH_TRANSACTION_SCREEN)}
-        >
-          <Icon name="search" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Search Transaction</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.FUND_LOADING_SCREEN)}
-        >
-          <Icon name="upload" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Fund Loading</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.PENDING_TRANSACTION_SCREEN)}
-        >
-          <Icon name="pending-actions" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Pending Transaction</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.DEBIT_HISTORY_SCREEN)}
-        >
-          <Icon name="history" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Debit History</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate(SCREENS.DOWNLINE_BALANCE_SCREEN)}
-        >
-          <Icon name="account-tree" size={26} color="#fff" />
-          <Text style={styles.buttonText}>Down Line Balance</Text>
-        </TouchableOpacity>
+        {items.map(item => (
+          <TouchableOpacity
+            key={item.key}
+            style={styles.button}
+            onPress={() => navigation.navigate(item.screen)}
+          >
+            <Icon name={item.icon} size={26} color="#fff" />
+            <Text style={styles.buttonText}>{item.title}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );

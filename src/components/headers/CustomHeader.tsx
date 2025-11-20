@@ -19,12 +19,11 @@ export default function CustomHeader() {
         paddingHorizontal: 1,
         // paddingVertical: 8,
         paddingTop: 0,
-        justifyContent: 'space-between',   // <-- THIS FIXES EVERYTHING
+        justifyContent: 'space-between', // <-- THIS FIXES EVERYTHING
       }}
     >
       {/* LEFT: MENU + LOGOS */}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        
         {/* Menu Button */}
         <TouchableOpacity
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
@@ -48,9 +47,7 @@ export default function CustomHeader() {
 
       {/* RIGHT: Notification Button */}
       <TouchableOpacity
-        onPress={() =>
-          navigation.navigate("CommonStack", { screen: SCREENS.NOTIFICATIONS_SCREEN })
-        }
+        onPress={() => navigation.navigate('CommonStack', { screen: SCREENS.NOTIFICATIONS_SCREEN })}
         style={{ padding: 8 }}
       >
         <MaterialIcons name="notifications" size={28} color="#666261" />

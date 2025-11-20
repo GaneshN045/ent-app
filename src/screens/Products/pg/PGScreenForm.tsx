@@ -1,18 +1,13 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function PGScreenForm() {
   return (
     <KeyboardAwareScrollView
       showsVerticalScrollIndicator={false}
       enableOnAndroid={true}
-      extraScrollHeight={60}   // pushes input above keyboard
+      extraScrollHeight={60} // pushes input above keyboard
       contentContainerStyle={{ padding: 5, paddingBottom: 100 }}
     >
       <View
@@ -101,9 +96,7 @@ export default function PGScreenForm() {
 
         {/* OPEN DEVICE BUTTON */}
         <TouchableOpacity className="mt-6 bg-white border border-primary p-4 rounded-2xl">
-          <Text className="text-center text-primary font-semibold">
-            Open Device
-          </Text>
+          <Text className="text-center text-primary font-semibold">Open Device</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAwareScrollView>

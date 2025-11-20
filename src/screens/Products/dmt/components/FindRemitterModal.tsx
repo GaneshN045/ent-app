@@ -1,6 +1,6 @@
 // components/FindRemitterModal.tsx
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
   View,
@@ -11,8 +11,8 @@ import {
   ScrollView,
   TextInput,
   Animated,
-} from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
   visible: boolean;
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export default function FindRemitterModal({ visible, onClose, onSearch }: Props) {
-  const [mobile, setMobile] = useState("");
+  const [mobile, setMobile] = useState('');
   const inputRef = useRef<TextInput>(null);
   const slideAnim = useRef(new Animated.Value(300)).current;
 
@@ -43,7 +43,7 @@ export default function FindRemitterModal({ visible, onClose, onSearch }: Props)
         useNativeDriver: true,
       }).start();
 
-      setMobile("");
+      setMobile('');
     }
   }, [visible]);
 
@@ -53,9 +53,9 @@ export default function FindRemitterModal({ visible, onClose, onSearch }: Props)
   };
 
   return (
-    <Modal visible={visible} transparent animationType="none"  >
+    <Modal visible={visible} transparent animationType="none">
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         className="flex-1 justify-end"
       >
         {/* BACKDROP */}
@@ -75,18 +75,13 @@ export default function FindRemitterModal({ visible, onClose, onSearch }: Props)
           </Pressable>
 
           {/* HEADER */}
-          <Text className="text-xl font-bold text-gray-900 mb-1">
-            Find Remitter
-          </Text>
+          <Text className="text-xl font-bold text-gray-900 mb-1">Find Remitter</Text>
           <Text className="text-sm text-gray-500 mb-4">
             Enter registered mobile number to search
           </Text>
 
           {/* INPUT SECTION */}
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
             <View className="flex-row items-center bg-gray-100 rounded-2xl px-4 py-3 border border-gray-200">
               <Icon name="phone" size={22} color="#666" />
 
@@ -101,9 +96,7 @@ export default function FindRemitterModal({ visible, onClose, onSearch }: Props)
               />
             </View>
 
-            <Text className="mt-2 text-xs text-gray-400">
-              Mobile number must be 10 digits.
-            </Text>
+            <Text className="mt-2 text-xs text-gray-400">Mobile number must be 10 digits.</Text>
           </ScrollView>
 
           {/* SEARCH BUTTON */}
@@ -111,11 +104,9 @@ export default function FindRemitterModal({ visible, onClose, onSearch }: Props)
             onPress={handleSearch}
             disabled={mobile.length !== 10}
             className={`mt-6 py-4 rounded-2xl 
-              ${mobile.length === 10 ? "bg-gray-900" : "bg-gray-400"}`}
+              ${mobile.length === 10 ? 'bg-gray-900' : 'bg-gray-400'}`}
           >
-            <Text className="text-center text-white font-semibold text-base">
-              Search Remitter
-            </Text>
+            <Text className="text-center text-white font-semibold text-base">Search Remitter</Text>
           </Pressable>
         </Animated.View>
       </KeyboardAvoidingView>

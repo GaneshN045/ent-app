@@ -1,19 +1,19 @@
 // navigation/stacks/ProductsStack.tsx
 
-import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import ProductsHomeScreen from "../../screens/Products/ProductsHomeScreen";
-import CustomHeader from "../../components/headers/CustomHeader";
-import SCREENS from "../../constants/screens";
-import PGScreen from "../../screens/Products/pg/PGScreen";
-import PayoutScreen from "../../screens/Products/payout/screens/PayoutScreen";
-import DMTScreen from "../../screens/Products/dmt/screens/DMTScreen";
-import AddRemitterScreen from "../../screens/Products/dmt/screens/AddRemitterScreen";
-import MPOSScreen from "../../screens/Products/mpos/screens/MPOSScreen";
-import AEPSOptionSelectionScreen from "../../screens/Products/aeps/screens/AEPSOptionSelectionScreen";
-import AEPSScreen from "../../screens/Products/aeps/screens/AEPSScreen";
-import BillPaymentScreen from "../../screens/Products/bill_payments/screens/BillPaymentScreen";
-import PayScreen from "../../screens/Products/bill_payments/screens/PayScreen";
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import ProductsHomeScreen from '../../screens/Products/ProductsHomeScreen';
+import CustomHeader from '../../components/headers/CustomHeader';
+import SCREENS from '../../constants/screens';
+import PGScreen from '../../screens/Products/pg/PGScreen';
+import PayoutScreen from '../../screens/Products/payout/screens/PayoutScreen';
+import DMTScreen from '../../screens/Products/dmt/screens/DMTScreen';
+import AddRemitterScreen from '../../screens/Products/dmt/screens/AddRemitterScreen';
+import MPOSScreen from '../../screens/Products/mpos/screens/MPOSScreen';
+import AEPSOptionSelectionScreen from '../../screens/Products/aeps/screens/AEPSOptionSelectionScreen';
+import AEPSScreen from '../../screens/Products/aeps/screens/AEPSScreen';
+import BillPaymentScreen from '../../screens/Products/bill_payments/screens/BillPaymentScreen';
+import PayScreen from '../../screens/Products/bill_payments/screens/PayScreen';
 
 const Stack = createStackNavigator();
 
@@ -22,9 +22,9 @@ export default function ProductsStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        headerStyle: { backgroundColor: "#fff" },
-        headerTintColor: "#000",
-        headerTitleStyle: { fontWeight: "bold" },
+        headerStyle: { backgroundColor: '#fff' },
+        headerTintColor: '#000',
+        headerTitleStyle: { fontWeight: 'bold' },
         headerBackTitleVisible: false,
       }}
     >
@@ -46,7 +46,7 @@ export default function ProductsStack() {
         component={PGScreen}
         options={{
           headerShown: true,
-          headerTitle: "Payment Gateway"
+          headerTitle: 'Payment Gateway',
         }}
       />
 
@@ -55,7 +55,7 @@ export default function ProductsStack() {
         component={PayoutScreen}
         options={{
           headerShown: true,
-          headerTitle: "Payout Screen"
+          headerTitle: 'Payout Screen',
         }}
       />
 
@@ -64,7 +64,7 @@ export default function ProductsStack() {
         component={DMTScreen}
         options={{
           headerShown: true,
-          headerTitle: "Payout Screen"
+          headerTitle: 'Payout Screen',
         }}
       />
 
@@ -73,7 +73,7 @@ export default function ProductsStack() {
         component={AddRemitterScreen}
         options={{
           headerShown: true,
-          headerTitle: "Add New Remitter"
+          headerTitle: 'Add New Remitter',
         }}
       />
 
@@ -82,7 +82,7 @@ export default function ProductsStack() {
         component={MPOSScreen}
         options={{
           headerShown: true,
-          headerTitle: "MPOS"
+          headerTitle: 'MPOS',
         }}
       />
 
@@ -91,7 +91,7 @@ export default function ProductsStack() {
         component={AEPSOptionSelectionScreen}
         options={{
           headerShown: true,
-          headerTitle: "AEPS Vendor Selection"
+          headerTitle: 'AEPS Vendor Selection',
         }}
       />
 
@@ -100,7 +100,7 @@ export default function ProductsStack() {
         component={AEPSScreen}
         options={{
           headerShown: true,
-          headerTitle: "AEPS"
+          headerTitle: 'AEPS',
         }}
       />
 
@@ -109,7 +109,7 @@ export default function ProductsStack() {
         component={BillPaymentScreen}
         options={{
           headerShown: true,
-          headerTitle: "Bill Payment"
+          headerTitle: 'Bill Payment',
         }}
       />
 
@@ -118,10 +118,9 @@ export default function ProductsStack() {
         component={PayScreen}
         options={{
           headerShown: true,
-          headerTitle: "Pay the Payment"
+          headerTitle: 'Pay the Payment',
         }}
       />
-
     </Stack.Navigator>
   );
 }

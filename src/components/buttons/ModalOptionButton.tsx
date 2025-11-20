@@ -1,8 +1,8 @@
 // components/buttons/ModalOptionButton.tsx
-import React from "react";
-import { TouchableOpacity, Text, View } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import COLORS from "../../constants/colors";
+import React from 'react';
+import { TouchableOpacity, Text, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import COLORS from '../../constants/colors';
 
 export default function ModalOptionButton({ title, icon, onPress }: any) {
   return (
