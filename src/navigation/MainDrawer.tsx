@@ -9,6 +9,7 @@ import { useAppSelector } from '../store/hooks';
 import SupportStack from './stacks/SupportStack';
 import ReportsStack from './stacks/ReportsStack';
 import CommonStack from './stacks/CommonStack';
+import SCREENS from '../constants/screens';
 
 const Drawer = createDrawerNavigator();
 
@@ -28,19 +29,19 @@ export default function MainDrawer() {
     >
       {/* IMPORTANT: THIS IS YOUR MAIN SCREEN NAME */}
       <Drawer.Screen
-        name="BottomTabs"
+        name={SCREENS.BOTTOM_STACK}
         component={BottomTabs}
         options={{
           drawerLabel: 'Dashboard',
         }}
       />
-      {hasMenuScreen('SupportStack') && (
-        <Drawer.Screen name="SupportStack" component={SupportStack} />
+      {hasMenuScreen(SCREENS.SUPPORT_STACK) && (
+        <Drawer.Screen name={SCREENS.SUPPORT_STACK} component={SupportStack} />
       )}
-      {hasMenuScreen('ReportsStack') && (
-        <Drawer.Screen name="ReportsStack" component={ReportsStack} />
+      {hasMenuScreen(SCREENS.REPORTS_STACK) && (
+        <Drawer.Screen name={SCREENS.REPORTS_STACK} component={ReportsStack} />
       )}
-      <Drawer.Screen name="CommonStack" component={CommonStack} />
+      <Drawer.Screen name={SCREENS.COMMON_STACK} component={CommonStack} />
     </Drawer.Navigator>
   );
 }

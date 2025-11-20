@@ -7,6 +7,7 @@ import MainDrawer from './MainDrawer';
 import { useAppSelector } from '../store/hooks';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import COLORS from '../constants/colors';
+import SCREENS from '../constants/screens';
 
 const Stack = createStackNavigator();
 
@@ -40,9 +41,9 @@ export default function RootNavigator() {
       >
         {/* {true ? ( */}
         {isAuthenticated ? (
-          <Stack.Screen name="Main" component={MainDrawer} />
+          <Stack.Screen name={SCREENS.ROOT_MAIN} component={MainDrawer} />
         ) : (
-          <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Screen name={SCREENS.ROOT_AUTH} component={AuthStack} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

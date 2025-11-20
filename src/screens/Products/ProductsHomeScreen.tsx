@@ -42,7 +42,7 @@ const productFlowConfig: any = {
     title: 'Select DMT Service',
     options: [
       {
-        label: 'PaySprint DMT',
+        label: 'DMT',
         option_type: 'DMT_PAYSPRINT',
         icon: 'swap-horiz',
         screen: SCREENS.DMT_SCREEN,

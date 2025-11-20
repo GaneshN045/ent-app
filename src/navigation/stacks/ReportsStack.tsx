@@ -45,7 +45,9 @@ export default function ReportsStack() {
           title: 'Reports',
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate('BottomTabs', { screen: 'DashboardStack' })}
+              onPress={() =>
+                navigation.navigate(SCREENS.BOTTOM_STACK, { screen: SCREENS.DASHBOARD_STACK })
+              }
               style={{ paddingHorizontal: 15 }}
             >
               <Icon name="arrow-back" size={22} color="#000" />

@@ -1,6 +1,27 @@
 // constants/screens.ts
 
 const SCREENS = {
+  // Root navigator routes
+  ROOT_AUTH: 'Auth',
+  ROOT_MAIN: 'Main',
+
+  // Drawer / main routes
+  BOTTOM_STACK: 'BottomTabs',
+  COMMON_STACK: 'CommonStack',
+
+  // Stack routes
+  DASHBOARD_STACK: 'DashboardStack',
+  FUNDING_STACK: 'FundingStack',
+  PRODUCTS_STACK: 'ProductsStack',
+  SETTINGS_STACK: 'SettingsStack',
+  PROFILE_STACK: 'ProfileStack',
+  SUPPORT_STACK: 'SupportStack',
+  REPORTS_STACK: 'ReportsStack',
+  MANAGE_USER_STACK: 'ManageUserStack',
+
+  // Auth Stack
+  LOGIN_SCREEN: 'LoginScreen',
+
   // Support Stack Screens
   SUPPORT_HOME_SCREEN: 'SUPPORT_HOME_SCREEN',
   BIOMETRIC_DEVICE_SCREEN: 'BIOMETRIC_DEVICE_SCREEN',
@@ -45,6 +66,9 @@ const SCREENS = {
 
   // profile
   PROFILE_HOME_SCREEN: 'PROFILE_HOME_SCREEN',
+
+  // dashboard
+  DASHBOARD_HOME_SCREEN: 'DashboardHomeScreen',
 
   // products
   PRODUCTS_HOME_SCREEN: 'PRODUCTS_HOME_SCREEN',

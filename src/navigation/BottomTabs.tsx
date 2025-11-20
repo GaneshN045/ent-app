@@ -14,6 +14,7 @@ import ProductsStack from './stacks/ProductsStack';
 import { useAppSelector } from '../store/hooks';
 import { getMenuForRole, Role } from './menuConfig';
 import COLORS from '../constants/colors';
+import SCREENS from '../constants/screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,12 +24,12 @@ const Tab = createBottomTabNavigator();
 function shouldShowTabBar(route: any) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? '';
 
-  const allowed = [
-    'FUNDING_HOME_SCREEN',
-    'SETTINGS_HOME_SCREEN',
-    'PROFILE_HOME_SCREEN',
-    'PRODUCTS_HOME_SCREEN',
-    'DashboardHomeScreen',
+  const allowed: string[] = [
+    SCREENS.FUNDING_HOME_SCREEN,
+    SCREENS.SETTINGS_HOME_SCREEN,
+    SCREENS.PROFILE_HOME_SCREEN,
+    SCREENS.PRODUCTS_HOME_SCREEN,
+    SCREENS.DASHBOARD_HOME_SCREEN,
   ];
 
   return allowed.includes(routeName) || routeName === '';
@@ -41,31 +42,31 @@ export default function BottomTabs() {
 
   const TABS = [
     {
-      screen: 'DashboardStack',
+      screen: SCREENS.DASHBOARD_STACK,
       component: DashboardHomeScreen,
       label: 'Dashboard',
       icon: 'widgets',
     },
     {
-      screen: 'FundingStack',
+      screen: SCREENS.FUNDING_STACK,
       component: FundingStack,
       label: 'Funding',
       icon: 'account-balance-wallet',
     },
     {
-      screen: 'ProductsStack',
+      screen: SCREENS.PRODUCTS_STACK,
       component: ProductsStack,
       label: 'Products',
       icon: 'apps',
     },
     {
-      screen: 'SettingsStack',
+      screen: SCREENS.SETTINGS_STACK,
       component: SettingsStack,
       label: 'Settings',
       icon: 'settings',
     },
     {
-      screen: 'ProfileStack',
+      screen: SCREENS.PROFILE_STACK,
       component: ProfileStack,
       label: 'Profile',
       icon: 'person',
@@ -73,7 +74,7 @@ export default function BottomTabs() {
   ];
 
   const allowedTabs = TABS.filter(
-    tab => tab.screen === 'ProfileStack' || menuItems.some(m => m.screen === tab.screen),
+    tab => tab.screen === SCREENS.PROFILE_STACK || menuItems.some(m => m.screen === tab.screen),
   );
 
   return (
@@ -96,7 +97,7 @@ export default function BottomTabs() {
                ICON STYLE (Floating button for Products)
                --------------------------------------------------------- */
             tabBarIcon: ({ color, focused }: any) => {
-              if (tab.screen === 'ProductsStack') {
+              if (tab.screen === SCREENS.PRODUCTS_STACK) {
                 return (
                   <View style={styles.floatingContainer}>
                     <View style={[styles.floatingButton, focused && styles.floatingButtonActive]}>

@@ -38,7 +38,7 @@ export default function SupportStack() {
           headerLeft: () => (
             <TouchableOpacity
               onPress={() =>
-                navigation.navigate("BottomTabs", { screen: 'DashboardStack' })
+                navigation.navigate(SCREENS.BOTTOM_STACK, { screen: SCREENS.DASHBOARD_STACK })
               }
               style={{ paddingHorizontal: 15 }}
             >

@@ -37,7 +37,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Dashboard ----------------
   {
     name: 'Dashboard',
-    screen: 'DashboardStack', // correct
+    screen: SCREENS.DASHBOARD_STACK, // correct
     icon: 'dashboard',
     roles: ROLE_HIERARCHY,
   },
@@ -45,10 +45,12 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Manage User ----------------
   {
     name: 'Manage User',
-    screen: 'ManageUserStack',
+    screen: SCREENS.MANAGE_USER_STACK,
     icon: 'people',
     roles: ['DT', 'SD', 'WL', 'PT'],
     subItems: [
+      // These route names come from ManageUserStack (string-based),
+      // so we keep them as raw strings instead of SCREENS.*
       { name: 'Create User', screen: 'CreateUserScreen' },
       { name: 'Debit & Credit User', screen: 'DebitCreditUserScreen' },
       { name: 'View User', screen: 'ViewUserScreen' },
@@ -58,7 +60,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Products ----------------
   {
     name: 'Products',
-    screen: 'ProductsStack',
+    screen: SCREENS.PRODUCTS_STACK,
     icon: 'inventory',
     roles: ['RT', 'RA'],
   },
@@ -66,7 +68,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Funding ----------------
   {
     name: 'Funding',
-    screen: 'FundingStack',
+    screen: SCREENS.FUNDING_STACK,
     icon: 'account-balance-wallet',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
@@ -81,7 +83,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Reports ----------------
   {
     name: 'Reports',
-    screen: 'ReportsStack',
+    screen: SCREENS.REPORTS_STACK,
     icon: 'assessment',
     roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
@@ -99,7 +101,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Settings ----------------
   {
     name: 'Settings',
-    screen: 'SettingsStack',
+    screen: SCREENS.SETTINGS_STACK,
     icon: 'settings',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
@@ -114,7 +116,7 @@ export const allMenuItems: MenuItem[] = [
   // ---------------- Support ----------------
   {
     name: 'Support',
-    screen: 'SupportStack',
+    screen: SCREENS.SUPPORT_STACK,
     icon: 'support-agent',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [

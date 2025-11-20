@@ -70,7 +70,7 @@ export default function DashboardHomeScreen() {
             <Text className="text-2xl font-bold text-primary_gray mt-1">₹ 1,24,500</Text>
             <Text className="text-green-600 text-xs mt-1">↑ 5.6% this week</Text>
           </View>
-          <Icon name="account-balance-wallet" size={40} color={COLORS.GRAY_ICON} />
+          <Icon name="account-balance-wallet" size={36} color={COLORS.GRAY_ICON} />
         </View>
 
         {/* CARD - Transaction Volume */}
@@ -88,7 +88,7 @@ export default function DashboardHomeScreen() {
             <Text className="text-2xl font-bold text-primary_gray mt-1">865</Text>
             <Text className="text-blue-600 text-xs mt-1">Active users ↑ 9%</Text>
           </View>
-          <Icon name="swap-horiz" size={40} color={COLORS.GRAY_ICON} />
+          <Icon name="swap-horiz" size={36} color={COLORS.GRAY_ICON} />
         </View>
 
         {/* CARD - Commission Earned */}
@@ -106,7 +106,7 @@ export default function DashboardHomeScreen() {
             <Text className="text-2xl font-bold text-primary_gray mt-1">₹ 6,480</Text>
             <Text className="text-purple-600 text-xs mt-1">+ ₹820 this week</Text>
           </View>
-          <Icon name="payments" size={40} color={COLORS.GRAY_ICON} />
+          <Icon name="payments" size={36} color={COLORS.GRAY_ICON} />
         </View>
 
         {/* CARD - Pending Transactions */}
@@ -124,7 +124,7 @@ export default function DashboardHomeScreen() {
             <Text className="text-2xl font-bold text-primary_gray mt-1">12</Text>
             <Text className="text-orange-600 text-xs mt-1">3 require review</Text>
           </View>
-          <Icon name="pending-actions" size={40} color={COLORS.GRAY_ICON} />
+          <Icon name="pending-actions" size={36} color={COLORS.GRAY_ICON} />
         </View>
       </View>
 
