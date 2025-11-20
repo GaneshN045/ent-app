@@ -49,11 +49,9 @@ export const allMenuItems: MenuItem[] = [
     icon: 'people',
     roles: ['DT', 'SD', 'WL', 'PT'],
     subItems: [
-      // These route names come from ManageUserStack (string-based),
-      // so we keep them as raw strings instead of SCREENS.*
-      { name: 'Create User', screen: 'CreateUserScreen' },
-      { name: 'Debit & Credit User', screen: 'DebitCreditUserScreen' },
-      { name: 'View User', screen: 'ViewUserScreen' },
+      { name: 'Create User', screen: SCREENS.CREATE_USER_SCREEN },
+      { name: 'Debit & Credit User', screen: SCREENS.DEBIT_CREDIT_USER_SCREEN },
+      { name: 'View User', screen: SCREENS.VIEW_USER_SCREEN },
     ],
   },
 

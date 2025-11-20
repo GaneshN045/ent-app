@@ -22,6 +22,12 @@ const SCREENS = {
   // Auth Stack
   LOGIN_SCREEN: 'LoginScreen',
 
+  // Manage User Stack
+  MANAGE_USER_HOME_SCREEN: 'ManageUserHomeScreen',
+  CREATE_USER_SCREEN: 'CreateUserScreen',
+  DEBIT_CREDIT_USER_SCREEN: 'DebitCreditUserScreen',
+  VIEW_USER_SCREEN: 'ViewUserScreen',
+
   // Support Stack Screens
   SUPPORT_HOME_SCREEN: 'SUPPORT_HOME_SCREEN',
   BIOMETRIC_DEVICE_SCREEN: 'BIOMETRIC_DEVICE_SCREEN',

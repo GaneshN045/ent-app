@@ -5,6 +5,7 @@ import ManageUserHomeScreen from '../screens/ManageUser/ManageUserHomeScreen';
 import CreateUserScreen from '../screens/ManageUser/CreateUserScreen';
 import DebitCreditUserScreen from '../screens/ManageUser/DebitCreditUserScreen';
 import ViewUserScreen from '../screens/ManageUser/ViewUserScreen';
+import SCREENS from '../constants/screens';
 
 const Stack = createStackNavigator<ManageUserStackParamList>();
 
@@ -23,22 +24,22 @@ export default function ManageUserStack() {
       }}
     >
       <Stack.Screen
-        name="ManageUserHomeScreen"
+        name={SCREENS.MANAGE_USER_HOME_SCREEN}
         component={ManageUserHomeScreen}
         options={{ title: 'Manage User' }}
       />
       <Stack.Screen
-        name="CreateUserScreen"
+        name={SCREENS.CREATE_USER_SCREEN}
         component={CreateUserScreen}
         options={{ title: 'Create User' }}
       />
       <Stack.Screen
-        name="DebitCreditUserScreen"
+        name={SCREENS.DEBIT_CREDIT_USER_SCREEN}
         component={DebitCreditUserScreen}
         options={{ title: 'Debit & Credit User' }}
       />
       <Stack.Screen
-        name="ViewUserScreen"
+        name={SCREENS.VIEW_USER_SCREEN}
         component={ViewUserScreen}
         options={{ title: 'View User' }}
       />

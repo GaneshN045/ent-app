@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Modal, TouchableOpacity } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import '../../../global.css';
 
@@ -7,7 +8,25 @@ import SCREENS from '../../constants/screens';
 import HomeScreenButton from '../../components/buttons/HomeScreenButton';
 import ModalOptionButton from '../../components/buttons/ModalOptionButton';
 
-const productFlowConfig: any = {
+type ProductOption = {
+  label: string;
+  option_type: string;
+  icon: string;
+  screen: keyof typeof SCREENS;
+};
+
+type ProductFlowItem =
+  | {
+      type: 'direct';
+      screen: keyof typeof SCREENS;
+    }
+  | {
+      type: 'modal';
+      title: string;
+      options: ProductOption[];
+    };
+
+const productFlowConfig: Record<string, ProductFlowItem> = {
   'Payment Gateway': {
     type: 'modal',
     title: 'Select Payment Gateway',
@@ -57,27 +76,8 @@ const productFlowConfig: any = {
 
   AEPS: {
     type: 'modal',
-    title: 'Select AEPS Service',
-    options: [
-      {
-        label: 'Cash Withdrawal',
-        option_type: 'AEPS_CASH_WITHDRAWAL',
-        icon: 'money',
-        screen: SCREENS.AEPS_OPTION_SELECTION,
-      },
-      {
-        label: 'Balance Enquiry',
-        option_type: 'AEPS_BALANCE_ENQUIRY',
-        icon: 'account-balance-wallet',
-        screen: SCREENS.AEPS_OPTION_SELECTION,
-      },
-      {
-        label: 'Mini Statement',
-        option_type: 'AEPS_MINI_STATEMENT',
-        icon: 'list-alt',
-        screen: SCREENS.AEPS_OPTION_SELECTION,
-      },
-    ],
+    title: 'Select AEPS Vendor',
+    options: [], // filled later from AEPS_OPTIONS
   },
 
   'Bill Payment': {
@@ -111,6 +111,31 @@ const iconsMap: any = {
 
 const productTitles = Object.keys(productFlowConfig);
 
+type AepsVendorType = 'AEPS1' | 'AEPS2' | 'AEPS3' | 'AEPS4' | 'AEPS5' | 'AEPS6';
+
+type AepsVendorOption = {
+  label: AepsVendorType;
+  icon: string;
+};
+
+const AEPS_OPTIONS: AepsVendorOption[] = [
+  { label: 'AEPS1', icon: 'fingerprint' },
+  { label: 'AEPS2', icon: 'fingerprint' },
+  { label: 'AEPS3', icon: 'fingerprint' },
+  { label: 'AEPS4', icon: 'fingerprint' },
+  { label: 'AEPS5', icon: 'fingerprint' },
+  { label: 'AEPS6', icon: 'fingerprint' },
+];
+
+// Inject AEPS vendor options into productFlowConfig
+const aepsFlow = productFlowConfig.AEPS as Extract<ProductFlowItem, { type: 'modal' }>;
+aepsFlow.options = AEPS_OPTIONS.map<ProductOption>(opt => ({
+  label: opt.label,
+  option_type: opt.label,
+  icon: opt.icon,
+  screen: SCREENS.AEPS_OPTION_SELECTION,
+}));
+
 type NavProp = {
   navigate: (screen: keyof typeof SCREENS, params?: any) => void;
 };
@@ -118,7 +143,9 @@ type NavProp = {
 export default function ProductsHomeScreen() {
   const navigation = useNavigation<NavProp>();
 
-  const [modalData, setModalData] = useState<any>(null);
+  const [modalData, setModalData] = useState<Extract<ProductFlowItem, { type: 'modal' }> | null>(
+    null,
+  );
 
   const handleProductPress = (title: string) => {
     const flow = productFlowConfig[title];
@@ -133,7 +160,7 @@ export default function ProductsHomeScreen() {
     }
   };
 
-  const handleModalOptionPress = (option: any) => {
+  const handleModalOptionPress = (option: ProductOption) => {
     setModalData(null);
     navigation.navigate(option.screen, {
       option_type: option.option_type,

@@ -8,7 +8,8 @@ export default function AEPSScreen() {
   const navigation = useNavigation();
 
   const aepsServiceType = route.params?.aeps_service_type;
-  const aepsOption = route.params?.aeps_option;
+  const aepsServiceLabel = route.params?.aeps_service_label ?? aepsServiceType;
+  const aepsVendor = route.params?.aeps_vendor;
 
   const [aadhaar, setAadhaar] = useState('');
   const [device, setDevice] = useState('');
@@ -47,10 +48,10 @@ export default function AEPSScreen() {
         {/* Route Info */}
         <View className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 mb-5">
           <Text className="text-gray-600 font-medium">
-            Service Type: <Text className="font-semibold">{aepsServiceType}</Text>
+            AEPS Vendor: <Text className="font-semibold">{aepsVendor}</Text>
           </Text>
           <Text className="text-gray-600 font-medium mt-1">
-            Selected Option: <Text className="font-semibold">{aepsOption}</Text>
+            Service: <Text className="font-semibold">{aepsServiceLabel}</Text>
           </Text>
         </View>
 

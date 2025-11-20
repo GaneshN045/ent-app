@@ -25,7 +25,7 @@ export default function ProductsStack() {
         headerStyle: { backgroundColor: '#fff' },
         headerTintColor: '#000',
         headerTitleStyle: { fontWeight: 'bold' },
-        headerBackTitleVisible: false,
+        // headerBackTitleVisible: false,
       }}
     >
       {/* Products Home */}
@@ -55,7 +55,7 @@ export default function ProductsStack() {
         component={PayoutScreen}
         options={{
           headerShown: true,
-          headerTitle: 'Payout Screen',
+          headerTitle: 'Payout',
         }}
       />
 
@@ -64,7 +64,7 @@ export default function ProductsStack() {
         component={DMTScreen}
         options={{
           headerShown: true,
-          headerTitle: 'Payout Screen',
+          headerTitle: 'DMT',
         }}
       />
 
@@ -91,7 +91,7 @@ export default function ProductsStack() {
         component={AEPSOptionSelectionScreen}
         options={{
           headerShown: true,
-          headerTitle: 'AEPS Vendor Selection',
+          headerTitle: 'AEPS Service',
         }}
       />
 

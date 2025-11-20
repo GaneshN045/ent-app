@@ -93,6 +93,12 @@ export default function BottomTabs() {
           options={({ route }: any) => ({
             tabBarLabel: tab.label,
 
+            /* ---------- move Products label a little upward ---------- */
+            tabBarLabelStyle:
+              tab.screen === SCREENS.PRODUCTS_STACK
+                ? { bottom: 0 } // ← adjust this value to taste
+                : undefined,
+
             /* ---------------------------------------------------------
                ICON STYLE (Floating button for Products)
                --------------------------------------------------------- */
@@ -104,7 +110,7 @@ export default function BottomTabs() {
                       <View style={styles.iconContainer}>
                         <Icon
                           name={tab.icon}
-                          size={30}
+                          size={36}
                           color={focused ? COLORS.PRIMARY_COLOR : COLORS.GRAY_ICON}
                         />
                       </View>
@@ -151,7 +157,7 @@ export default function BottomTabs() {
 const styles = StyleSheet.create({
   floatingContainer: {
     position: 'relative',
-    top: -25,
+    top: -10,
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
@@ -165,21 +171,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: 'gray',
+    borderColor: 'white',
+    borderTopColor: '#fff',
+    // borderTopColor: 'gray',
+    borderLeftColor: '#fff',
+    // borderLeftColor: 'gray',
+    transform: [{ rotate: '45deg' }],
     ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 12 },
-        shadowOpacity: 0.25,
-        shadowRadius: 20,
-      },
-      android: { elevation: 6 },
+      ios: {},
     }),
   },
   floatingButtonActive: {
     backgroundColor: '#ffffff',
     borderWidth: 3,
-    borderColor: COLORS.PRIMARY_COLOR,
+    borderColor: '#fff',
+    // borderColor: COLORS.PRIMARY_COLOR,
+    transform: [{ rotate: '-135deg' }],
+    borderTopColor: '#fff',
+    borderLeftColor: '#fff',
   },
   iconContainer: {
     width: 60,
@@ -187,6 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    transform: [{ rotate: '-135deg' }],
   },
   regularIconContainer: {
     justifyContent: 'center',
