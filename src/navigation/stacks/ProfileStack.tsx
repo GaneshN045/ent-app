@@ -16,7 +16,6 @@ export default function ProfileStack() {
         headerStyle: { backgroundColor: '#fff' },
         headerTintColor: '#000',
         headerTitleStyle: { fontWeight: 'bold' },
-        headerBackTitleVisible: false,
       }}
     >
       {/* Profile Home Screen (with Custom Header) */}

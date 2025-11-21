@@ -1,3 +1,4 @@
+import 'react-native-get-random-values'; // MUST be first
 import './global.css';
 import React from 'react';
 import { StatusBar, Text, View } from 'react-native';

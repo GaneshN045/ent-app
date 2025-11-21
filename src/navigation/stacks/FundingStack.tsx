@@ -32,7 +32,6 @@ export default function FundingStack({ navigation }: any) {
         headerStyle: { backgroundColor: '#fff' },
         headerTintColor: '#000',
         headerTitleStyle: { fontWeight: 'bold' },
-        headerBackTitleVisible: false,
       }}
     >
       {/* Home Screen — Custom Header */}

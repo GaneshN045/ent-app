@@ -16,9 +16,7 @@ export default function RootNavigator() {
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
 
   useEffect(() => {
-    // Simulate checking auth state (e.g., from AsyncStorage)
     const checkAuth = async () => {
-      // Add your auth check logic here
       setIsLoading(false);
     };
     checkAuth();

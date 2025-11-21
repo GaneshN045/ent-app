@@ -7,6 +7,7 @@ import SCREENS from '../../constants/screens';
 import '../../../global.css';
 import HomeScreenButton from '../../components/buttons/HomeScreenButton';
 import { useAppSelector } from '../../store/hooks';
+import type { RootState } from '../../store/store';
 import { Role, canAccess, allMenuItems } from '../../navigation/menuConfig';
 
 type SettingsNavigationProp = {
@@ -15,7 +16,7 @@ type SettingsNavigationProp = {
 
 export default function SettingsHomeScreen() {
   const navigation = useNavigation<SettingsNavigationProp>();
-  const userRole = (useAppSelector(state => state.auth.user?.role) || 'RT') as Role;
+  const userRole = (useAppSelector((state: RootState) => state.auth.user?.role) || 'RT') as Role;
 
   const settingsMenu = allMenuItems.find(item => item.screen === 'SettingsStack');
 

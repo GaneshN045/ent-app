@@ -12,6 +12,7 @@ import ProfileStack from './stacks/ProfileStack';
 import ProductsStack from './stacks/ProductsStack';
 
 import { useAppSelector } from '../store/hooks';
+import type { RootState } from '../store/store';
 import { getMenuForRole, Role } from './menuConfig';
 import COLORS from '../constants/colors';
 import SCREENS from '../constants/screens';
@@ -37,7 +38,7 @@ function shouldShowTabBar(route: any) {
 
 export default function BottomTabs() {
   const insets = useSafeAreaInsets();
-  const userRole = useAppSelector(state => state.auth.user?.role || 'RT') as Role;
+  const userRole = useAppSelector((state: RootState) => state.auth.user?.role || 'RT') as Role;
   const menuItems = getMenuForRole(userRole);
 
   const TABS = [
