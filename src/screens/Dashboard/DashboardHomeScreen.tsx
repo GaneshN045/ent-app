@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomHeader from '../../components/headers/CustomHeader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../constants/colors';
+import { storage } from '../../utils/storage';
 
 export default function DashboardHomeScreen() {
   const navigation = useNavigation<any>();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const storedToken = await storage.loadToken();
+      if (mounted) {
+        setToken(storedToken);
+        console.log('get_token : ', storedToken);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({

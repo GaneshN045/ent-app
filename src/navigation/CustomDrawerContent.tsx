@@ -9,6 +9,8 @@ import { MenuItem } from '../navigation/menuConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
+import { storage } from '../utils/storage';
+import SCREENS from '../constants/screens';
 
 // Colors
 const COLORS = {
@@ -50,12 +52,11 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
       console.log('Logout pressed');
 
       // Remove stored data
-      await AsyncStorage.multiRemove(['userRole', 'userId', 'token']);
+      await storage.clearToken();
+      await AsyncStorage.multiRemove(['userRole', 'userId']);
 
-      // Reset redux state
+      // Reset redux state so RootNavigator will redirect automatically
       dispatch(logout());
-
-      // Navigation resets automatically because RootNavigator listens to isAuthenticated
     } catch (e) {
       console.log('Logout error:', e);
     }

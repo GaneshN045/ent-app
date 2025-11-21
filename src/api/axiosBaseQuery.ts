@@ -1,7 +1,7 @@
 // custom baseQuery using axios with interceptors
 import axios, { AxiosRequestConfig } from 'axios';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
-import type { RootState } from '../app/store';
+import type { RootState } from '../store/store';
 
 interface Args {
   url: string;
