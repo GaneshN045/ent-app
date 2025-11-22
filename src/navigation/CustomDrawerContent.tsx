@@ -35,7 +35,7 @@ type CustomDrawerProps = DrawerContentComponentProps & {
 
 export default function CustomDrawerContent({ navigation, menuItems }: CustomDrawerProps) {
   const menu: MenuItem[] = menuItems;
-  const [logoutLoading, setLogoutLoading] = useState(false)
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -185,11 +185,14 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
       {/* Logout Button */}
       <View style={styles.logoutContainer}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
-        { logoutLoading ? <ActivityIndicator size={'small'} color={COLORS.PRIMARY}></ActivityIndicator> : <>
-         <Icon name="logout" size={20} color={COLORS.PRIMARY} />
-          <Text style={styles.logoutText}>Logout</Text>
-          </>
-          }
+          {logoutLoading ? (
+            <ActivityIndicator size={'small'} color={COLORS.PRIMARY}></ActivityIndicator>
+          ) : (
+            <>
+              <Icon name="logout" size={20} color={COLORS.PRIMARY} />
+              <Text style={styles.logoutText}>Logout</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
     </View>

@@ -1,5 +1,5 @@
-import CryptoJS from "crypto-js";
-import { ENCRYPTION_CONFIG } from "../config/encryption.config";
+import CryptoJS from 'crypto-js';
+import { ENCRYPTION_CONFIG } from '../config/encryption.config';
 
 console.log('[ENCRYPT] Initializing encryption module...');
 const INIT_START = Date.now();
@@ -28,7 +28,7 @@ console.log('[ENCRYPT] Encryption module ready in:', Date.now() - INIT_START, 'm
  */
 export function encryptText(text: string) {
   const encryptStart = Date.now();
-  
+
   const encrypted = CryptoJS.AES.encrypt(text, KEY, {
     iv: IV,
     mode: CryptoJS.mode.CBC,
@@ -51,7 +51,7 @@ export function encryptText(text: string) {
  */
 export function decryptText(cipher: string) {
   const decryptStart = Date.now();
-  
+
   const bytes = CryptoJS.AES.decrypt(cipher, KEY, {
     iv: IV,
     mode: CryptoJS.mode.CBC,
@@ -60,7 +60,7 @@ export function decryptText(cipher: string) {
 
   const result = bytes.toString(CryptoJS.enc.Utf8);
   console.log('[DECRYPT] Text decrypted in:', Date.now() - decryptStart, 'ms');
-  
+
   return result;
 }
 

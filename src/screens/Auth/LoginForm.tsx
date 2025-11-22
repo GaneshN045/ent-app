@@ -1,15 +1,9 @@
-// components/auth/LoginForm.tsx - ULTIMATE DIAGNOSTIC VERSION
-const MODULE_START = Date.now();
-console.log('[LOGINFORM-0] Module execution started');
+// components/auth/LoginForm.tsx
 
 // Import React
-const REACT_START = Date.now();
 import React, { useRef } from 'react';
 
-console.log('[LOGINFORM-1] React imported in:', Date.now() - REACT_START, 'ms');
-
 // Import RN components
-const RN_START = Date.now();
 import {
   View,
   Text,
@@ -21,19 +15,12 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-console.log('[LOGINFORM-2] React Native components imported in:', Date.now() - RN_START, 'ms');
 
 // Import API
-const API_START = Date.now();
 import { useSendOtpMutation } from '../../services/api/authApi';
-console.log('[LOGINFORM-3] API imported in:', Date.now() - API_START, 'ms');
 
 // Import encryption
-const ENCRYPT_START = Date.now();
 import { encryptText } from '../../utils/encryption';
-console.log('[LOGINFORM-4] Encryption imported in:', Date.now() - ENCRYPT_START, 'ms');
-
-console.log('[LOGINFORM-5] Total module load time:', Date.now() - MODULE_START, 'ms');
 
 interface LoginFormProps {
   mobile: string;
@@ -58,25 +45,17 @@ export function LoginForm({
   onOtpSent,
   onLoadingChange,
 }: LoginFormProps) {
-  const RENDER_START = Date.now();
-  console.log('[LOGINFORM-6] LoginForm component render started');
-
   const [sendOtpMutation] = useSendOtpMutation();
   const isMountedRef = useRef(true);
   const isLoadingRef = useRef(false);
 
-  console.log('[LOGINFORM-12] LoginForm render completed in:', Date.now() - RENDER_START, 'ms');
-
   React.useEffect(() => {
-    console.log('[LOGINFORM-13] LoginForm mounted');
     return () => {
       isMountedRef.current = false;
     };
   }, []);
 
   const handleSendOtp = async () => {
-    console.log('[LOGINFORM-14] handleSendOtp called');
-    
     if (!mobile || mobile.length < 10) {
       Alert.alert('Validation Error', 'Please enter a valid 10-digit mobile number.');
       return;
@@ -89,9 +68,10 @@ export function LoginForm({
 
     isLoadingRef.current = true;
     onLoadingChange(true);
+    // Let React Native update the button state before running the CPU-intensive encryption.
+    await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
+
     Keyboard.dismiss();
-    // Let React Native paint the loading state before starting the synchronous encryption work
-    await new Promise(resolve => requestAnimationFrame(() => resolve(null)));
 
     try {
       const encryptedUsernameData = encryptText(mobile);
@@ -105,22 +85,13 @@ export function LoginForm({
         url: 'https://uat.decipay.in/',
       };
 
-      console.log('[LOGINFORM-15] Sending OTP request');
       const apiStart = Date.now();
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error('OTP request timed out after 30 seconds')),
-          30000
-        )
+        setTimeout(() => reject(new Error('OTP request timed out after 30 seconds')), 30000),
       );
 
-      const json: any = await Promise.race([
-        sendOtpMutation(payload).unwrap(),
-        timeoutPromise,
-      ]);
-
-      console.log('[LOGINFORM-16] OTP response received in:', Date.now() - apiStart, 'ms');
+      const json: any = await Promise.race([sendOtpMutation(payload).unwrap(), timeoutPromise]);
 
       if (!json || json.statusCode !== 200 || !json.data || !json.data.otp) {
         const errorMsg = json?.message || 'Failed to send OTP. Please try again.';
@@ -151,7 +122,8 @@ export function LoginForm({
     }
   };
 
-  const isLoginDisabled = isSendingOtp || !mobile || !password || mobile.length < 10 || password.length < 6;
+  const isLoginDisabled =
+    isSendingOtp || !mobile || !password || mobile.length < 10 || password.length < 6;
 
   console.log('[LOGINFORM-17] Returning JSX');
 
@@ -177,7 +149,7 @@ export function LoginForm({
                 style={styles.input}
                 keyboardType="phone-pad"
                 value={mobile}
-                onChangeText={(text) => onMobileChange(text.replace(/[^0-9]/g, ''))}
+                onChangeText={text => onMobileChange(text.replace(/[^0-9]/g, ''))}
                 placeholder="Enter 10-digit mobile number"
                 placeholderTextColor="#9CA3AF"
                 maxLength={10}
@@ -220,7 +192,7 @@ export function LoginForm({
             disabled={isLoginDisabled}
             style={[
               styles.loginButton,
-              isLoginDisabled ? styles.loginButtonDisabled : styles.loginButtonActive
+              isLoginDisabled ? styles.loginButtonDisabled : styles.loginButtonActive,
             ]}
             activeOpacity={0.8}
           >

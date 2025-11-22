@@ -6,10 +6,13 @@ import {
   Modal,
   View,
   StyleSheet,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import { LoginForm } from './LoginForm';
 import { OtpModal } from './OtpModal';
 import { Role } from '../../navigation/menuConfig';
+import { CredentialPickerModal, CredentialItem } from '../../components/CredentialPickerModal';
 
 const SCREEN_LOAD_TIME = Date.now();
 console.log('[PERF] LoginScreen module loaded');
@@ -25,6 +28,7 @@ export default function LoginScreen() {
   const [userRole, setUserRole] = useState<Role | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
+  const [isCredentialModalVisible, setIsCredentialModalVisible] = useState(false);
 
   useEffect(() => {
     console.log('[PERF] LoginScreen rendered in:', Date.now() - SCREEN_LOAD_TIME, 'ms');
@@ -35,7 +39,7 @@ export default function LoginScreen() {
     let interval: any = null;
     if (resendTimer > 0) {
       interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
+        setResendTimer(prev => prev - 1);
       }, 1000);
     }
     return () => {
@@ -74,6 +78,12 @@ export default function LoginScreen() {
     setIsSendingOtp(false);
   };
 
+  const handleCredentialSelection = (item: CredentialItem) => {
+    setMobile(item.loginId);
+    setPassword(item.password);
+    setIsCredentialModalVisible(false);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -85,6 +95,14 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.headerActions}>
+          <TouchableOpacity
+            onPress={() => setIsCredentialModalVisible(true)}
+            style={styles.badgeButton}
+          >
+            <Text style={styles.badgeText}>Quick creds</Text>
+          </TouchableOpacity>
+        </View>
         <LoginForm
           mobile={mobile}
           onMobileChange={setMobile}
@@ -126,6 +144,12 @@ export default function LoginScreen() {
           />
         </KeyboardAvoidingView>
       </Modal>
+
+      <CredentialPickerModal
+        visible={isCredentialModalVisible}
+        onClose={() => setIsCredentialModalVisible(false)}
+        onSelect={handleCredentialSelection}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -144,5 +168,20 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  badgeButton: {
+    backgroundColor: '#2563eb',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    marginTop: 24,
+  },
+  badgeText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });

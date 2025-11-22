@@ -109,9 +109,9 @@ export const authApi = baseApi.injectEndpoints({
 });
 
 /* EXPORT HOOKS */
-export const { 
-  useLoginMutation, 
-  useGetCurrentUserQuery, 
+export const {
+  useLoginMutation,
+  useGetCurrentUserQuery,
   useSendOtpMutation,
-  useVerifyOtpMutation      // ✅ NEW EXPORT
+  useVerifyOtpMutation, // ✅ NEW EXPORT
 } = authApi;

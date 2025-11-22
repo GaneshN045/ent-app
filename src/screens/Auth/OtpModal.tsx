@@ -1,4 +1,3 @@
-
 // components/auth/OtpModal.tsx
 import React, { useRef } from 'react';
 import {
@@ -19,7 +18,6 @@ import { useAppDispatch } from '../../store/hooks';
 import { login } from '../../store/slices/authSlice';
 import { useVerifyOtpMutation } from '../../services/api/authApi';
 import { storage } from '../../utils/storage';
-
 
 interface OtpModalProps {
   mobile: string;
@@ -71,16 +69,10 @@ export function OtpModal({
       };
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(
-          () => reject(new Error('Verification timed out after 30 seconds')),
-          30000
-        )
+        setTimeout(() => reject(new Error('Verification timed out after 30 seconds')), 30000),
       );
 
-      const res: any = await Promise.race([
-        verifyOtpMutation(payload).unwrap(),
-        timeoutPromise,
-      ]);
+      const res: any = await Promise.race([verifyOtpMutation(payload).unwrap(), timeoutPromise]);
 
       if (res.statusCode !== 200) {
         Alert.alert('Error', res.message || 'Failed to verify OTP');
@@ -94,8 +86,9 @@ export function OtpModal({
       const role = userData.role;
       const token = JSON.stringify(userData.token);
 
-      console.log('set_token : ', token)
+      console.log('set_token : ', token);
 
+      console.log('ROLE :', role);
 
       await AsyncStorage.setItem('userRole', role);
       await storage.saveToken(token);
@@ -110,7 +103,7 @@ export function OtpModal({
               role,
             },
             token,
-          })
+          }),
         );
 
         onCancelPress();
@@ -120,7 +113,7 @@ export function OtpModal({
       if (isMountedRef.current) {
         Alert.alert(
           'Verification Failed',
-          err?.data?.message || err?.message || 'Unable to verify OTP'
+          err?.data?.message || err?.message || 'Unable to verify OTP',
         );
         setLocalIsVerifying(false);
         isLoadingRef.current = false;
@@ -154,9 +147,7 @@ export function OtpModal({
               </View>
 
               {/* Title and Description */}
-              <Text className="text-3xl font-bold text-center text-gray-900 mb-3">
-                Enter OTP
-              </Text>
+              <Text className="text-3xl font-bold text-center text-gray-900 mb-3">Enter OTP</Text>
               <Text className="text-sm text-center text-gray-600 mb-2">
                 We've sent a 6-digit verification code to
               </Text>
@@ -174,7 +165,10 @@ export function OtpModal({
                     className="bg-gray-50 rounded-2xl px-6 py-5 text-center text-3xl font-bold border-2 border-gray-200 focus:border-black tracking-widest"
                     keyboardType="number-pad"
                     value={otp}
-                    onChangeText={(text) =>{ onOtpChange(text.replace(/[^0-9]/g, '')); Keyboard.dismiss()}}
+                    onChangeText={text => {
+                      onOtpChange(text.replace(/[^0-9]/g, ''));
+                      Keyboard.dismiss();
+                    }}
                     placeholder="• • • • • •"
                     placeholderTextColor="#D1D5DB"
                     maxLength={6}
@@ -202,9 +196,7 @@ export function OtpModal({
                 {localIsVerifying ? (
                   <View className="flex-row items-center">
                     <ActivityIndicator color="#fff" size="small" />
-                    <Text className="text-white font-semibold text-base ml-2">
-                      Verifying...
-                    </Text>
+                    <Text className="text-white font-semibold text-base ml-2">Verifying...</Text>
                   </View>
                 ) : (
                   <Text className="text-white font-bold text-base">Verify & Login</Text>
@@ -215,8 +207,7 @@ export function OtpModal({
               <View className="items-center py-4">
                 {resendTimer > 0 ? (
                   <Text className="text-sm text-gray-500">
-                    Resend OTP in{' '}
-                    <Text className="font-semibold text-black">{resendTimer}s</Text>
+                    Resend OTP in <Text className="font-semibold text-black">{resendTimer}s</Text>
                   </Text>
                 ) : (
                   <TouchableOpacity
@@ -238,9 +229,7 @@ export function OtpModal({
                 disabled={localIsVerifying}
                 className="py-4 mt-2"
               >
-                <Text className="text-center text-gray-400 text-sm font-medium">
-                  Cancel
-                </Text>
+                <Text className="text-center text-gray-400 text-sm font-medium">Cancel</Text>
               </TouchableOpacity>
 
               {/* Bottom Spacing for Keyboard */}
