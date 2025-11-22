@@ -5,10 +5,28 @@ import CustomHeader from '../../components/headers/CustomHeader';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../constants/colors';
 import { storage } from '../../utils/storage';
+import { useAppSelector } from '../../store/hooks';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function DashboardHomeScreen() {
   const navigation = useNavigation<any>();
   const [token, setToken] = useState<string | null>(null);
+  const user = useAppSelector(state=> state.auth.user)
+
+  const [userId, setUserId] = useState<any>('')
+
+    useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const id = await AsyncStorage.getItem('USER_ID')
+      if (mounted) {
+       setUserId(id)
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -34,7 +52,10 @@ export default function DashboardHomeScreen() {
   return (
     <ScrollView className="bg-gray-50 flex-1" contentContainerStyle={{ paddingBottom: 40 }}>
       {/* Page Title */}
-      <Text className="text-xl font-bold px-5 mt-5 text-primary_gray">Dashboard</Text>
+      <View className=' flex flex-row items-center gap-2 px-5 mt-5'>
+        <Text className='text-xl font-bold text-primary_gray'>Dashboard</Text>
+        <Text className=' text-secondary_gray'>({userId})</Text>
+        </View>
 
       {/* ===== TOP SUMMARY CARD (Premium Big Card) ===== */}
       <View

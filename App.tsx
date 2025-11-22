@@ -11,10 +11,10 @@ import { useAuth as useAuthHook } from './src/hooks/useAuth';
 
 function BootstrapApp() {
   const { hydrate } = useAuthHook();
-
-  React.useEffect(() => {
+ 
+  React.useEffect(() => { 
     hydrate(() => {});
-  }, [hydrate]);
+  }, [hydrate]);  
 
   return (
     <SafeAreaProvider>

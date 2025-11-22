@@ -1,4 +1,3 @@
-// custom baseQuery using axios with interceptors
 import axios, { AxiosRequestConfig } from 'axios';
 import type { BaseQueryFn } from '@reduxjs/toolkit/query';
 import type { RootState } from '../store/store';
@@ -14,48 +13,82 @@ interface Args {
 export const axiosBaseQuery =
   ({ baseUrl }: { baseUrl: string } = { baseUrl: '' }): BaseQueryFn<Args, unknown, unknown> =>
   async (args, api, extraOptions) => {
+    const startTime = Date.now();
+    const state = api.getState() as RootState;
+    const token = state.auth?.token;
+
+    const requestUrl = baseUrl + args.url;
+
     try {
-      const state = api.getState() as RootState;
-      const token = state.auth?.token;
-
-      console.log('[API REQUEST]', {
-        url: baseUrl + args.url,
-        method: args.method ?? 'GET',
-        params: args.params,
-        data: args.data,
+      // -----------------------------
+      // 📌 Detailed Request Logging
+      // -----------------------------
+      console.log('\n════════════ API REQUEST ════════════');
+      console.log('URL:', requestUrl);
+      console.log('Method:', args.method ?? 'GET');
+      console.log('Headers:', {
+        ...(args.headers || {}),
+        Authorization: token ? `Bearer ${token}` : undefined,
+        Accept: 'application/json',
       });
+      console.log('Params:', args.params);
+      console.log('Data:', args.data);
+      console.log('──────────────────────────────────────');
 
-      const result = await axios.request({
-        url: baseUrl + args.url,
+      const response = await axios.request({
+        url: requestUrl,
         method: args.method ?? 'GET',
         data: args.data,
         params: args.params,
         headers: {
           ...(args.headers || {}),
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: token ? `Bearer ${token}` : undefined,
+          Accept: 'application/json',
         },
+        transformResponse: [(data) => data],
       });
 
-      console.log('[API RESPONSE]', {
-        url: baseUrl + args.url,
-        status: result.status,
-        data: result.data,
-      });
+      const duration = Date.now() - startTime;
 
-      return { data: result.data };
-    } catch (axiosError: any) {
-      const err = axiosError;
+      // -----------------------------
+      // 📌 Detailed Response Logging
+      // -----------------------------
+      console.log('\n════════════ API RESPONSE ════════════');
+      console.log('URL:', requestUrl);
+      console.log('Status:', response.status);
+      console.log('Response Time:', duration + 'ms');
+      console.log('Raw Data:', response.data);
+      console.log('──────────────────────────────────────');
 
-      console.log('[API ERROR]', {
-        url: baseUrl + args.url,
-        status: err.response?.status,
-        data: err.response?.data || err.message,
-      });
+      // Parse JSON only if it is a JSON string
+      let parsedData = response.data;
+      if (typeof response.data === 'string') {
+        try {
+          parsedData = JSON.parse(response.data);
+        } catch {
+          parsedData = response.data;
+        }
+      }
+
+      return { data: parsedData };
+    } catch (error: any) {
+      const duration = Date.now() - startTime;
+
+      // -----------------------------
+      // ❌ Detailed Error Logging
+      // -----------------------------
+      console.log('\n════════════ API ERROR ════════════');
+      console.log('URL:', requestUrl);
+      console.log('Response Time:', duration + 'ms');
+      console.log('Status:', error.response?.status);
+      console.log('Message:', error.message);
+      console.log('Error Data:', error.response?.data);
+      console.log('──────────────────────────────────────');
 
       return {
         error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
+          status: error.response?.status,
+          data: error.response?.data || error.message,
         },
       };
     }

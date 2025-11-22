@@ -2,13 +2,15 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import type { OutletAddress } from '../../../services/api/profileApi';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
+  outletAddress?: OutletAddress;
 };
 
-export default function OutletAddressModal({ visible, onClose }: Props) {
+export default function OutletAddressModal({ visible, onClose, outletAddress }: Props) {
   return (
     <Modal
       visible={visible}
@@ -45,10 +47,10 @@ export default function OutletAddressModal({ visible, onClose }: Props) {
 
             {/* ADDRESS FIELDS */}
             <View className="space-y-6">
-              <PremiumField label="Building / Apartment" value="Highway Road" />
-              <PremiumField label="City" value="Navi Mumbai" />
-              <PremiumField label="State" value="MH" />
-              <PremiumField label="Pincode" value="411001" />
+              <PremiumField label="Building / Apartment" value={outletAddress?.outletBuilding ?? '-'} />
+              <PremiumField label="City" value={outletAddress?.outletCity ?? '-'} />
+              <PremiumField label="State" value={outletAddress?.outletState ?? '-'} />
+              <PremiumField label="Pincode" value={outletAddress?.outletPinCode ?? '-'} />
             </View>
 
             {/* CLOSE BUTTON */}

@@ -9,73 +9,15 @@ import {
   ScrollView,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-type Bank = {
-  id: number;
-  bankName: string;
-  holderName: string;
-  accountNumber: string;
-  ifsc: string;
-  verified: boolean;
-};
+import type { Bank } from '../../../services/api/profileApi';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
+  banks?: Bank[];
 };
 
-const bankList: Bank[] = [
-  {
-    id: 1,
-    bankName: 'State Bank of India',
-    holderName: 'Amit Sharma',
-    accountNumber: '9876543210123456',
-    ifsc: 'SBIN0005678',
-    verified: true,
-  },
-  {
-    id: 8,
-    bankName: 'Axis Bank',
-    holderName: 'AKSHAY BALKRISHNA BODHARE',
-    accountNumber: '922010009904617',
-    ifsc: 'UTIB0000073',
-    verified: true,
-  },
-  {
-    id: 3,
-    bankName: 'State Bank of India',
-    holderName: 'Amit Sharma',
-    accountNumber: '9876543210123456',
-    ifsc: 'SBIN0005678',
-    verified: true,
-  },
-  {
-    id: 9,
-    bankName: 'Axis Bank',
-    holderName: 'AKSHAY BALKRISHNA BODHARE',
-    accountNumber: '922010009904617',
-    ifsc: 'UTIB0000073',
-    verified: true,
-  },
-  {
-    id: 5,
-    bankName: 'State Bank of India',
-    holderName: 'Amit Sharma',
-    accountNumber: '9876543210123456',
-    ifsc: 'SBIN0005678',
-    verified: true,
-  },
-  {
-    id: 7,
-    bankName: 'Axis Bank',
-    holderName: 'AKSHAY BALKRISHNA BODHARE',
-    accountNumber: '922010009904617',
-    ifsc: 'UTIB0000073',
-    verified: true,
-  },
-];
-
-export default function ProfileBanksModal({ visible, onClose }: Props) {
+export default function ProfileBanksModal({ visible, onClose, banks }: Props) {
   return (
     <Modal
       visible={visible}
@@ -111,7 +53,7 @@ export default function ProfileBanksModal({ visible, onClose }: Props) {
 
           {/* SCROLLABLE LIST */}
           <ScrollView showsVerticalScrollIndicator={false} className="space-y-5">
-            {bankList.map(bank => (
+            {(banks ?? []).map((bank: Bank) => (
               <BankCard key={bank.id} bank={bank} />
             ))}
           </ScrollView>
@@ -122,26 +64,26 @@ export default function ProfileBanksModal({ visible, onClose }: Props) {
 }
 
 /* BANK CARD COMPONENT */
-const BankCard = ({ bank }: { bank: any }) => {
+const BankCard = ({ bank }: { bank: Bank }) => {
   return (
     <View className="p-5 mb-3 bg-white border border-gray-200 rounded-2xl shadow-sm">
       {/* Bank Name */}
       <Text className="text-lg font-bold text-primary_gray">{bank.bankName}</Text>
 
       {/* Holder */}
-      <Text className="text-sm text-gray-500 mt-1">Holder Name</Text>
-      <Text className="text-base font-semibold text-gray-800">{bank.holderName}</Text>
+      <Text className="text-sm text-gray-500 mt-1">Account Holder</Text>
+      <Text className="text-base font-semibold text-gray-800">{bank.accountName}</Text>
 
       {/* Account Number */}
       <Text className="text-sm text-gray-500 mt-3">Account Number</Text>
       <Text className="text-base font-semibold text-primary_gray tracking-wide">
-        {'*'.repeat(bank.accountNumber.length - 4)}
-        {bank.accountNumber.slice(-4)}
+        {'*'.repeat(bank.accountNo.length - 4)}
+        {bank.accountNo.slice(-4)}
       </Text>
 
       {/* IFSC */}
       <Text className="text-sm text-gray-500 mt-3">IFSC Code</Text>
-      <Text className="text-base font-semibold text-primary_gray">{bank.ifsc}</Text>
+      <Text className="text-base font-semibold text-primary_gray">{bank.ifcscode}</Text>
 
       {/* STATUS + DELETE */}
       <View className="flex-row justify-between items-center mt-5">

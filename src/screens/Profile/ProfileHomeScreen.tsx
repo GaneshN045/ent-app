@@ -1,12 +1,22 @@
 // ProfileHomeScreen.tsx
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 import ProfileAddressModal from './components/ProfileAddressModal';
 import ProfileOutletAddressModal from './components/ProfileOutletAddressModal';
 import ProfileBanksModal from './components/ProfileBanksModal';
 import ProfileKYCDocModal from './components/ProfileKYCDocModal';
+import { useGetMemberProfileQuery } from '../../services/api/profileApi';
 
 type Nav = {
   navigate: (screen: string) => void;
@@ -28,42 +38,38 @@ export default function ProfileHomeScreen() {
   const [bankModal, setBankModal] = React.useState(false);
   const [kycModal, setKYCModal] = React.useState(false);
 
-  const kycDocs = [
-    {
-      name: 'Aadhaar Card Front',
-      url: 'https://i.imgur.com/5ZCq9bA.jpeg', // Aadhaar front placeholder
-    },
-    {
-      name: 'Aadhaar Card Back',
-      url: null, // Aadhaar back placeholder
-    },
-    {
-      name: 'PAN Card',
-      url: 'https://i.imgur.com/vKQ9S0p.jpeg', // PAN card placeholder
-    },
-    {
-      name: 'Shop Image',
-      url: 'https://images.unsplash.com/photo-1503602642458-232111445657?w=1080', // shop front photo
-    },
-    {
-      name: 'Business Proof',
-      url: 'https://i.imgur.com/cpGQxYP.jpeg', // business license placeholder
-    },
-  ];
+  const MEMBER_ID = 'BZT-RT-001';
+  const { data, error, isLoading, refetch } = useGetMemberProfileQuery(MEMBER_ID);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const userInfo = {
-    name: 'Anurag Chauhan',
-    memberNo: 'BZT-RT-001',
-    mobile: '8355847323',
-    email: 'anurag@gmail.com',
-    dob: '1990-02-03',
-    outletName: 'Turbhe',
-    isBlacklisted: false,
-    isBlocked: false,
-  };
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
+  const profile = data?.data;
+  const info = profile?.info;
 
-  const formatDate = (date: string) => {
+  const kycDocs = React.useMemo(() => {
+    const docs = profile?.kycDocs;
+    if (!docs) return [];
+
+    return [
+      { name: 'Aadhaar Card Front', url: docs.aadhaarCardFrontImage ?? null },
+      { name: 'Aadhaar Card Back', url: docs.aadhaarCardBackImage ?? null },
+      { name: 'PAN Card', url: docs.panCardImage ?? null },
+      { name: 'Shop Image', url: docs.shopImage ?? null },
+      { name: 'Business Proof', url: docs.businessProofImage ?? null },
+    ];
+  }, [profile?.kycDocs]);
+
+  const formatDate = (date?: string) => {
+    if (!date) return '-';
     const [y, m, d] = date.split('-');
+    if (!y || !m || !d) return date;
     return `${d}-${m}-${y}`;
   };
 
@@ -77,16 +83,17 @@ export default function ProfileHomeScreen() {
 
   return (
     <>
-      <ScrollView className="flex-1 bg-gray-50">
+      <ScrollView
+        className="flex-1 bg-gray-50"
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         {/* Profile Header */}
         <View className="items-center pt-6 pb-8 bg-white">
           <View className="relative">
             <View className="w-32 h-32 rounded-full bg-gray-200 border-4 border-white shadow-lg overflow-hidden">
-              <Image
-                source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
-                className="w-full h-full"
-                resizeMode="cover"
-              />
+              <Text className="text-[36px] font-bold text-white uppercase text-center leading-[128px]">
+                {info?.name?.[0] ?? 'U'}
+              </Text>
             </View>
 
             {/* Camera Icon */}
@@ -95,8 +102,15 @@ export default function ProfileHomeScreen() {
             </TouchableOpacity>
           </View>
 
-          <Text className="text-2xl font-bold text-[#3A3A42] mt-4">{userInfo.name}</Text>
-          <Text className="text-sm text-[#6E6E76] mt-1">Member ID: {userInfo.memberNo}</Text>
+          <Text className="text-2xl font-bold text-[#3A3A42] mt-4">{info?.name ?? 'User'}</Text>
+          <Text className="text-sm text-[#6E6E76] mt-1">
+            Member ID: {info?.memberId ?? MEMBER_ID}
+          </Text>
+          {isLoading && (
+            <View className="mt-2">
+              <ActivityIndicator size="small" color="#EB4335" />
+            </View>
+          )}
         </View>
 
         {/* Personal Info */}
@@ -107,21 +121,24 @@ export default function ProfileHomeScreen() {
           <Text className="text-xl font-bold text-[#3A3A42] mb-5">Personal Information</Text>
 
           <View className="space-y-4">
-            <InfoRow label="Mobile Number" value={userInfo.mobile} />
-            <InfoRow label="Email" value={userInfo.email} />
-            <InfoRow label="DOB" value={formatDate(userInfo.dob)} />
-            <InfoRow label="Outlet Name" value={userInfo.outletName} />
+            <InfoRow label="Mobile Number" value={info?.mobileNumber ?? '-'} />
+            <InfoRow label="Email" value={info?.email ?? '-'} />
+            <InfoRow label="DOB" value={formatDate(info?.dob ?? '')} />
+            <InfoRow label="Outlet Name" value={info?.outletName ?? '-'} />
             <InfoRow
               label="Is Blacklisted"
-              value={userInfo.isBlacklisted ? 'Yes' : 'No'}
-              bold={userInfo.isBlacklisted}
+              value={info?.isBlackList ? 'Yes' : 'No'}
+              bold={!!info?.isBlackList}
             />
             <InfoRow
               label="Is Blocked"
-              value={userInfo.isBlocked ? 'Yes' : 'No'}
-              bold={userInfo.isBlocked}
+              value={info?.isBlocked ? 'Yes' : 'No'}
+              bold={!!info?.isBlocked}
             />
           </View>
+          {error ? (
+            <Text className="text-center text-red-600 mt-4">Failed to load profile details.</Text>
+          ) : null}
         </View>
 
         {/* Manage Details */}
@@ -154,13 +171,20 @@ export default function ProfileHomeScreen() {
         key={'address'}
         visible={addressModal}
         onClose={() => setAddressModal(false)}
+        address={profile?.address}
       />
       <ProfileOutletAddressModal
         key={'outlet_address'}
         visible={outletModal}
         onClose={() => setOutletModal(false)}
+        outletAddress={profile?.outletAddress}
       />
-      <ProfileBanksModal key={'bank'} visible={bankModal} onClose={() => setBankModal(false)} />
+      <ProfileBanksModal
+        key={'bank'}
+        visible={bankModal}
+        onClose={() => setBankModal(false)}
+        banks={profile?.myBanksList}
+      />
       <ProfileKYCDocModal
         key={'kyc'}
         documents={kycDocs}

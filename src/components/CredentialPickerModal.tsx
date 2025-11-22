@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from 'react-native';
+import COLORS from '../constants/colors';
 
 export interface CredentialItem {
   title: string;
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   closeText: {
-    color: '#2563eb',
+    color: COLORS.PRIMARY_COLOR,
     fontWeight: '600',
     fontSize: 14,
   },

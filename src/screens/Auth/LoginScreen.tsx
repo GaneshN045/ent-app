@@ -13,6 +13,7 @@ import { LoginForm } from './LoginForm';
 import { OtpModal } from './OtpModal';
 import { Role } from '../../navigation/menuConfig';
 import { CredentialPickerModal, CredentialItem } from '../../components/CredentialPickerModal';
+import COLORS from '../../constants/colors';
 
 const SCREEN_LOAD_TIME = Date.now();
 console.log('[PERF] LoginScreen module loaded');
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#f9fafb',
   },
   scrollContent: {
     flexGrow: 1,
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   badgeButton: {
-    backgroundColor: '#2563eb',
+    backgroundColor: COLORS.PRIMARY_COLOR,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 16,
