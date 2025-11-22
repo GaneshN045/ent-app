@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { DrawerContentComponentProps, DrawerContentScrollView } from '@react-navigation/drawer';
 import { CommonActions } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -35,6 +35,7 @@ type CustomDrawerProps = DrawerContentComponentProps & {
 
 export default function CustomDrawerContent({ navigation, menuItems }: CustomDrawerProps) {
   const menu: MenuItem[] = menuItems;
+  const [logoutLoading, setLogoutLoading] = useState(false)
 
   const dispatch = useDispatch();
 
@@ -48,17 +49,19 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
   };
 
   const handleLogout = async () => {
-    try {
-      console.log('Logout pressed');
+    console.log('Logout pressed');
+    setLogoutLoading(true);
 
-      // Remove stored data
+    dispatch(logout());
+    navigation.closeDrawer();
+
+    try {
       await storage.clearToken();
       await AsyncStorage.multiRemove(['userRole', 'userId']);
-
-      // Reset redux state so RootNavigator will redirect automatically
-      dispatch(logout());
     } catch (e) {
       console.log('Logout error:', e);
+    } finally {
+      setLogoutLoading(false);
     }
   };
 
@@ -182,8 +185,11 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
       {/* Logout Button */}
       <View style={styles.logoutContainer}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.8}>
-          <Icon name="logout" size={20} color={COLORS.PRIMARY} />
+        { logoutLoading ? <ActivityIndicator size={'small'} color={COLORS.PRIMARY}></ActivityIndicator> : <>
+         <Icon name="logout" size={20} color={COLORS.PRIMARY} />
           <Text style={styles.logoutText}>Logout</Text>
+          </>
+          }
         </TouchableOpacity>
       </View>
     </View>

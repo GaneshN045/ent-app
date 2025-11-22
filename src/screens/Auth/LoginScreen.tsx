@@ -1,15 +1,18 @@
-
-// screens/LoginScreen.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Modal,
+  View,
+  StyleSheet,
 } from 'react-native';
 import { LoginForm } from './LoginForm';
 import { OtpModal } from './OtpModal';
 import { Role } from '../../navigation/menuConfig';
+
+const SCREEN_LOAD_TIME = Date.now();
+console.log('[PERF] LoginScreen module loaded');
 
 export default function LoginScreen() {
   const [mobile, setMobile] = useState('8355847323');
@@ -23,15 +26,21 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
 
+  useEffect(() => {
+    console.log('[PERF] LoginScreen rendered in:', Date.now() - SCREEN_LOAD_TIME, 'ms');
+  }, []);
+
   // Timer for resend OTP
   useEffect(() => {
-    let interval: any;
+    let interval: any = null;
     if (resendTimer > 0) {
       interval = setInterval(() => {
         setResendTimer((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [resendTimer]);
 
   // Auto-fill OTP when received
@@ -68,11 +77,11 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-gradient-to-b from-gray-50 to-gray-100"
+      style={styles.container}
     >
       <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ flexGrow: 1, padding: 24 }}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
@@ -102,7 +111,7 @@ export default function LoginScreen() {
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          className="flex-1"
+          style={styles.modalContainer}
         >
           <OtpModal
             mobile={mobile}
@@ -120,3 +129,20 @@ export default function LoginScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    padding: 24,
+  },
+  modalContainer: {
+    flex: 1,
+  },
+});

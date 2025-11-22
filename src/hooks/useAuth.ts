@@ -1,10 +1,10 @@
 import { useLoginMutation, useLogoutMutation } from '../api/authApi';
-import { useAppDispatch } from '../app/hooks';
+import { useAppDispatch } from '../store/hooks';
 import {
   setToken as setTokenAction,
   clearToken as clearTokenAction,
   setHydrated,
-} from '../features/auth/authSlice';
+} from '../store/slices/authSlice';
 import { storage } from '../utils/storage';
 
 export const useAuth = () => {
@@ -32,9 +32,14 @@ export const useAuth = () => {
   };
 
   const hydrate = async (_dispatchHydrate: (token: string | null) => void) => {
+    const start = Date.now();
+    console.log('hydrate start', new Date(start).toISOString());
     const t = await storage.loadToken();
+    const after = Date.now();
+    console.log('hydrate token fetched after', after - start, 'ms');
     if (t) dispatch(setTokenAction(t));
     dispatch(setHydrated(true));
+    console.log('hydrate complete after', Date.now() - start, 'ms');
   };
 
   return { login, logout, loginState, hydrate };

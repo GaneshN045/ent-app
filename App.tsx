@@ -11,22 +11,10 @@ import { useAuth as useAuthHook } from './src/hooks/useAuth';
 
 function BootstrapApp() {
   const { hydrate } = useAuthHook();
-  const [hydrated, setHydrated] = React.useState(false);
 
   React.useEffect(() => {
-    (async () => {
-      await hydrate(() => {});
-      setHydrated(true);
-    })();
+    hydrate(() => {});
   }, [hydrate]);
-
-  if (!hydrated) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
 
   return (
     <SafeAreaProvider>

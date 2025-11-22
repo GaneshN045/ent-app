@@ -12,12 +12,14 @@ interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
   token: string | null;
+  hydrated: boolean;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
   token: null,
+  hydrated: false,
 };
 
 const authSlice = createSlice({
@@ -37,8 +39,20 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
     },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+      state.isAuthenticated = true;
+    },
+    clearToken: state => {
+      state.token = null;
+      state.user = null;
+      state.isAuthenticated = false;
+    },
+    setHydrated: (state, action: PayloadAction<boolean>) => {
+      state.hydrated = action.payload;
+    },
   },
 });
 
-export const { login, logout, setUser } = authSlice.actions;
+export const { login, logout, setUser, setToken, clearToken, setHydrated } = authSlice.actions;
 export default authSlice.reducer;

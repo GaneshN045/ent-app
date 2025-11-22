@@ -1,6 +1,15 @@
-// components/auth/LoginForm.tsx
-import React, { useMemo, useRef } from 'react';
+// components/auth/LoginForm.tsx - ULTIMATE DIAGNOSTIC VERSION
+const MODULE_START = Date.now();
+console.log('[LOGINFORM-0] Module execution started');
 
+// Import React
+const REACT_START = Date.now();
+import React, { useRef } from 'react';
+
+console.log('[LOGINFORM-1] React imported in:', Date.now() - REACT_START, 'ms');
+
+// Import RN components
+const RN_START = Date.now();
 import {
   View,
   Text,
@@ -10,9 +19,21 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
+  StyleSheet,
 } from 'react-native';
+console.log('[LOGINFORM-2] React Native components imported in:', Date.now() - RN_START, 'ms');
+
+// Import API
+const API_START = Date.now();
 import { useSendOtpMutation } from '../../services/api/authApi';
+console.log('[LOGINFORM-3] API imported in:', Date.now() - API_START, 'ms');
+
+// Import encryption
+const ENCRYPT_START = Date.now();
 import { encryptText } from '../../utils/encryption';
+console.log('[LOGINFORM-4] Encryption imported in:', Date.now() - ENCRYPT_START, 'ms');
+
+console.log('[LOGINFORM-5] Total module load time:', Date.now() - MODULE_START, 'ms');
 
 interface LoginFormProps {
   mobile: string;
@@ -37,20 +58,25 @@ export function LoginForm({
   onOtpSent,
   onLoadingChange,
 }: LoginFormProps) {
+  const RENDER_START = Date.now();
+  console.log('[LOGINFORM-6] LoginForm component render started');
+
   const [sendOtpMutation] = useSendOtpMutation();
   const isMountedRef = useRef(true);
   const isLoadingRef = useRef(false);
 
-  const encryptedUsernameData = useMemo(() => encryptText(mobile), [mobile]);
-  const encryptedPasswordData = useMemo(() => encryptText(password), [password]);
+  console.log('[LOGINFORM-12] LoginForm render completed in:', Date.now() - RENDER_START, 'ms');
 
   React.useEffect(() => {
+    console.log('[LOGINFORM-13] LoginForm mounted');
     return () => {
       isMountedRef.current = false;
     };
   }, []);
 
   const handleSendOtp = async () => {
+    console.log('[LOGINFORM-14] handleSendOtp called');
+    
     if (!mobile || mobile.length < 10) {
       Alert.alert('Validation Error', 'Please enter a valid 10-digit mobile number.');
       return;
@@ -64,8 +90,13 @@ export function LoginForm({
     isLoadingRef.current = true;
     onLoadingChange(true);
     Keyboard.dismiss();
+    // Let React Native paint the loading state before starting the synchronous encryption work
+    await new Promise(resolve => requestAnimationFrame(() => resolve(null)));
 
     try {
+      const encryptedUsernameData = encryptText(mobile);
+      const encryptedPasswordData = encryptText(password);
+
       const payload = {
         userName: encryptedUsernameData.encrypted,
         password: encryptedPasswordData.encrypted,
@@ -73,6 +104,9 @@ export function LoginForm({
         iv: encryptedUsernameData.iv,
         url: 'https://uat.decipay.in/',
       };
+
+      console.log('[LOGINFORM-15] Sending OTP request');
+      const apiStart = Date.now();
 
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(
@@ -85,6 +119,8 @@ export function LoginForm({
         sendOtpMutation(payload).unwrap(),
         timeoutPromise,
       ]);
+
+      console.log('[LOGINFORM-16] OTP response received in:', Date.now() - apiStart, 'ms');
 
       if (!json || json.statusCode !== 200 || !json.data || !json.data.otp) {
         const errorMsg = json?.message || 'Failed to send OTP. Please try again.';
@@ -104,6 +140,7 @@ export function LoginForm({
         isLoadingRef.current = false;
       }
     } catch (e: any) {
+      console.log('[LOGINFORM-ERROR] Error:', e);
       if (isMountedRef.current) {
         const errorMessage =
           e?.data?.message || e?.message || 'Unable to send OTP. Please try again.';
@@ -116,26 +153,28 @@ export function LoginForm({
 
   const isLoginDisabled = isSendingOtp || !mobile || !password || mobile.length < 10 || password.length < 6;
 
+  console.log('[LOGINFORM-17] Returning JSX');
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View className="flex-1 justify-center">
+      <View style={styles.container}>
         {/* Logo/Header Section */}
-        <View className="items-center mb-12">
-          <View className="w-20 h-20 bg-black rounded-3xl items-center justify-center mb-6 shadow-lg">
-            <Text className="text-4xl">🔐</Text>
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.logoEmoji}>🔐</Text>
           </View>
-          <Text className="text-4xl font-bold text-gray-900 mb-2">Welcome Back</Text>
-          <Text className="text-base text-gray-500">Sign in to continue to your account</Text>
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.subtitle}>Sign in to continue to your account</Text>
         </View>
 
         {/* Login Form */}
-        <View className="mb-6">
+        <View style={styles.formContainer}>
           {/* Mobile Input */}
-          <View className="mb-5">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">Mobile Number</Text>
-            <View className="relative">
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Mobile Number</Text>
+            <View style={styles.inputWrapper}>
               <TextInput
-                className="bg-white rounded-2xl px-5 py-4 text-base text-gray-900 border-2 border-gray-200 focus:border-black"
+                style={styles.input}
                 keyboardType="phone-pad"
                 value={mobile}
                 onChangeText={(text) => onMobileChange(text.replace(/[^0-9]/g, ''))}
@@ -145,19 +184,19 @@ export function LoginForm({
                 editable={!isSendingOtp}
               />
               {mobile.length === 10 && (
-                <View className="absolute right-4 top-4">
-                  <Text className="text-green-500 text-xl">✓</Text>
+                <View style={styles.checkmark}>
+                  <Text style={styles.checkmarkText}>✓</Text>
                 </View>
               )}
             </View>
           </View>
 
           {/* Password Input */}
-          <View className="mb-6">
-            <Text className="text-sm font-semibold text-gray-700 mb-2">Password</Text>
-            <View className="relative">
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Password</Text>
+            <View style={styles.inputWrapper}>
               <TextInput
-                className="bg-white rounded-2xl px-5 py-4 pr-14 text-base text-gray-900 border-2 border-gray-200 focus:border-black"
+                style={styles.passwordInput}
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={onPasswordChange}
@@ -167,10 +206,10 @@ export function LoginForm({
               />
               <TouchableOpacity
                 onPress={onToggleShowPassword}
-                className="absolute right-4 top-4"
+                style={styles.eyeIcon}
                 disabled={isSendingOtp}
               >
-                <Text className="text-gray-400 text-lg">{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
+                <Text style={styles.eyeIconText}>{showPassword ? '👁️' : '👁️‍🗨️'}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -179,24 +218,25 @@ export function LoginForm({
           <TouchableOpacity
             onPress={handleSendOtp}
             disabled={isLoginDisabled}
-            className={`rounded-2xl py-4 items-center justify-center shadow-lg ${
-              isLoginDisabled ? 'bg-gray-300' : 'bg-black'
-            }`}
+            style={[
+              styles.loginButton,
+              isLoginDisabled ? styles.loginButtonDisabled : styles.loginButtonActive
+            ]}
             activeOpacity={0.8}
           >
             {isSendingOtp ? (
-              <View className="flex-row items-center">
+              <View style={styles.loadingContainer}>
                 <ActivityIndicator color="#fff" size="small" />
-                <Text className="text-white font-semibold text-base ml-2">Sending OTP...</Text>
+                <Text style={styles.loadingText}>Sending OTP...</Text>
               </View>
             ) : (
-              <Text className="text-white font-bold text-base">Continue with OTP</Text>
+              <Text style={styles.loginButtonText}>Continue with OTP</Text>
             )}
           </TouchableOpacity>
 
           {/* Help Text */}
-          <View className="mt-6 items-center">
-            <Text className="text-sm text-gray-500">
+          <View style={styles.helpTextContainer}>
+            <Text style={styles.helpText}>
               By continuing, you agree to our Terms & Privacy Policy
             </Text>
           </View>
@@ -205,3 +245,137 @@ export function LoginForm({
     </TouchableWithoutFeedback>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 48,
+  },
+  logoContainer: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#000',
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  logoEmoji: {
+    fontSize: 36,
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#111827',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+  },
+  formContainer: {
+    marginBottom: 24,
+  },
+  inputGroup: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8,
+  },
+  inputWrapper: {
+    position: 'relative',
+  },
+  input: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    fontSize: 16,
+    color: '#111827',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+  },
+  passwordInput: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingRight: 56,
+    fontSize: 16,
+    color: '#111827',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+  },
+  checkmark: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+  },
+  checkmarkText: {
+    color: '#10B981',
+    fontSize: 20,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+  },
+  eyeIconText: {
+    color: '#9CA3AF',
+    fontSize: 18,
+  },
+  loginButton: {
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  loginButtonActive: {
+    backgroundColor: '#000',
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  helpTextContainer: {
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  helpText: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+});
+
+console.log('[LOGINFORM-18] Module fully defined');

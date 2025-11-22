@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamList } from './types';
@@ -9,37 +9,36 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import COLORS from '../constants/colors';
 import SCREENS from '../constants/screens';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
+const APP_BOOT_TIME = Date.now();
 
 export default function RootNavigator() {
-  const [isLoading, setIsLoading] = useState(true);
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  const reportedLogin = useRef(false);
 
   useEffect(() => {
-    // Simulate checking auth state (e.g., from AsyncStorage)
-    const checkAuth = async () => {
-      // Add your auth check logic here
-      setIsLoading(false);
-    };
-    checkAuth();
+    console.log('[PERF] RootNavigator mounted:', Date.now() - APP_BOOT_TIME, 'ms');
   }, []);
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={COLORS.PRIMARY_COLOR} />
-      </View>
-    );
-  }
+  useEffect(() => {
+    if (!isAuthenticated && !reportedLogin.current) {
+      console.log('[PERF] Login screen shown after', Date.now() - APP_BOOT_TIME, 'ms');
+      reportedLogin.current = true;
+    }
+  }, [isAuthenticated]);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      onReady={() => {
+        console.log('[PERF] Navigation ready:', Date.now() - APP_BOOT_TIME, 'ms');
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          cardStyle: { backgroundColor: '#fff' },
         }}
       >
-        {/* {true ? ( */}
         {isAuthenticated ? (
           <Stack.Screen name={SCREENS.ROOT_MAIN} component={MainDrawer} />
         ) : (

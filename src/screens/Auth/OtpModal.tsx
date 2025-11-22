@@ -174,7 +174,7 @@ export function OtpModal({
                     className="bg-gray-50 rounded-2xl px-6 py-5 text-center text-3xl font-bold border-2 border-gray-200 focus:border-black tracking-widest"
                     keyboardType="number-pad"
                     value={otp}
-                    onChangeText={(text) => onOtpChange(text.replace(/[^0-9]/g, ''))}
+                    onChangeText={(text) =>{ onOtpChange(text.replace(/[^0-9]/g, '')); Keyboard.dismiss()}}
                     placeholder="• • • • • •"
                     placeholderTextColor="#D1D5DB"
                     maxLength={6}
