@@ -1,5 +1,6 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, type TextInputProps } from 'react-native';
+import React, { useState, type ReactNode } from 'react';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
@@ -9,8 +10,7 @@ import * as Yup from 'yup';
 // Validation Schema
 const validationSchema = Yup.object().shape({
   depositType: Yup.string()
-    .required('Deposit Type is required')
-    .min(2, 'Deposit Type must be at least 2 characters'),
+    .required('Deposit Type is required'),
   transactionId: Yup.string()
     .required('Transaction ID is required')
     .min(5, 'Transaction ID must be at least 5 characters'),
@@ -48,6 +48,9 @@ const validationSchema = Yup.object().shape({
     .max(500, 'Narration must not exceed 500 characters'),
 });
 
+const DEPOSIT_TYPE_OPTIONS = ['Cash', 'Online'];
+const PAYMENT_MODE_OPTIONS = ['IMPS', 'NEFT'];
+
 type FundRequestValues = {
   depositType: string;
   transactionId: string;
@@ -62,8 +65,141 @@ type FundRequestValues = {
   narration: string;
 };
 
+type DropdownModalProps = {
+  visible: boolean;
+  options: string[];
+  onSelect: (value: string) => void;
+  onClose: () => void;
+};
+
+function DropdownModal({ visible, options, onSelect, onClose }: DropdownModalProps) {
+  return (
+    <Modal
+      transparent
+      visible={visible}
+      animationType="fade"
+      statusBarTranslucent={true}
+      onRequestClose={onClose}
+    >
+      <TouchableOpacity
+        activeOpacity={1}
+        className="flex-1 bg-black/50 justify-center items-center"
+        onPress={onClose}
+      >
+        <TouchableOpacity activeOpacity={1} className="bg-white rounded-2xl p-0 w-[80%] shadow-lg">
+          <View className="border-b border-gray-200 px-6 py-4">
+            <Text className="text-gray-800 font-semibold text-lg">Select Option</Text>
+          </View>
+          <FlatList
+            data={options}
+            keyExtractor={(item) => item}
+            scrollEnabled={false}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity
+                className={`py-4 px-6 ${index !== options.length - 1 ? 'border-b border-gray-100' : ''}`}
+                onPress={() => {
+                  onSelect(item);
+                  onClose();
+                }}
+              >
+                <Text className="text-gray-700 text-base">{item}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          <TouchableOpacity
+            className="border-t border-gray-200 py-5 px-6"
+            onPress={onClose}
+          >
+            <Text className="text-center text-red-500 font-semibold">Cancel</Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
+  );
+}
+
+type FieldWrapperProps = {
+  label: string;
+  children: ReactNode;
+  error?: string;
+  helper?: ReactNode;
+  space?: boolean;
+};
+
+const FieldWrapper = ({ label, children, error, helper, space = true }: FieldWrapperProps) => (
+  <View className="mb-3">
+    <Text className="text-gray-700 font-semibold mb-1">{label}</Text>
+    {children}
+    {helper}
+    {error ? (
+      <Text className="text-red-500 text-xs mt-1">{error}</Text>
+    ) : (
+      space && <View className="mb-3" />
+    )}
+  </View>
+);
+
+type FieldInputProps = TextInputProps & {
+  value: string;
+  onChangeText: (text: string) => void;
+  className?: string;
+};
+
+const FieldInput = ({ value, onChangeText, className, multiline = false, ...rest }: FieldInputProps) => {
+  const baseClass = 'bg-gray-100 px-4 py-3 rounded-xl text-gray-800';
+  return (
+    <TextInput
+      value={value}
+      onChangeText={onChangeText}
+      multiline={multiline}
+      textAlignVertical={multiline ? 'top' : 'center'}
+      placeholderTextColor="#A0A0A0"
+      className={`${className ? `${className} ` : ''}${baseClass}`}
+      {...rest}
+    />
+  );
+};
+
+type SelectionFieldProps = {
+  value?: string;
+  placeholder: string;
+  onPress: () => void;
+  iconName: string;
+  containerClassName?: string;
+  accentColor?: string;
+  activeOpacity?: number;
+};
+
+const SelectionField = ({
+  value,
+  placeholder,
+  onPress,
+  iconName,
+  containerClassName,
+  accentColor = '#555',
+  activeOpacity = 0.8,
+}: SelectionFieldProps) => (
+  <TouchableOpacity
+    activeOpacity={activeOpacity}
+    className={`bg-gray-100 px-4 py-3 rounded-xl flex-row items-center justify-between ${containerClassName ?? ''}`}
+    onPress={onPress}
+  >
+    {(() => {
+      const hasValue = Boolean(value?.trim());
+      return (
+        <Text className={hasValue ? 'text-gray-800' : 'text-gray-400'}>
+          {hasValue ? value : placeholder}
+        </Text>
+      );
+    })()}
+    <Icon name={iconName} size={24} color={accentColor} />
+  </TouchableOpacity>
+);
+
 export default function FundRequestScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showDepositTypeModal, setShowDepositTypeModal] = useState(false);
+  const [showPaymentModeModal, setShowPaymentModeModal] = useState(false);
 
   const initialValues: FundRequestValues = {
     depositType: '',
@@ -82,7 +218,6 @@ export default function FundRequestScreen() {
   const handleSubmit = (values: FundRequestValues, helpers: FormikHelpers<FundRequestValues>) => {
     console.log('Form submitted:', values);
     helpers.setSubmitting(false);
-    console.log('Form submitted:', values);
     // Add your submission logic here
   };
 
@@ -93,223 +228,192 @@ export default function FundRequestScreen() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, setFieldTouched }) => (
-          <KeyboardAwareScrollView
-            enableOnAndroid
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={{ paddingBottom: 40 }}
-          >
-            <View className="p-5">
-              <View className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
-                
-                {/* Deposit Type */}
-                <Text className="text-gray-700 font-semibold mb-1">Deposit Type *</Text>
-                <TextInput
-                  value={values.depositType}
-                  onChangeText={handleChange('depositType')}
-                  onBlur={handleBlur('depositType')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.depositType && errors.depositType && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.depositType}</Text>
-                )}
-                {!errors.depositType && <View className="mb-3" />}
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          setFieldTouched,
+        }) => {
+          const getError = (field: keyof FundRequestValues) => (touched[field] ? errors[field] : undefined);
+          return (
+            <View>
+              <KeyboardAwareScrollView
+                enableOnAndroid
+                keyboardShouldPersistTaps="handled"
+                contentContainerStyle={{ paddingBottom: 40 }}
+              >
+                <View className="p-5">
+                  <View className="bg-white rounded-2xl shadow-md border border-gray-100 p-5">
+                    <FieldWrapper label="Deposit Type *" error={getError('depositType')}>
+                      <SelectionField
+                        value={values.depositType}
+                        placeholder="Select Deposit Type"
+                        onPress={() => {
+                          setShowDepositTypeModal(true);
+                          setFieldTouched('depositType', true);
+                        }}
+                        iconName="arrow-drop-down"
+                      />
+                    </FieldWrapper>
 
-                {/* Transaction ID */}
-                <Text className="text-gray-700 font-semibold mb-1">Transaction ID *</Text>
-                <TextInput
-                  value={values.transactionId}
-                  onChangeText={handleChange('transactionId')}
-                  onBlur={handleBlur('transactionId')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.transactionId && errors.transactionId && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.transactionId}</Text>
-                )}
-                {!errors.transactionId && <View className="mb-3" />}
+                    <FieldWrapper label="Transaction ID *" error={getError('transactionId')}>
+                      <FieldInput
+                        value={values.transactionId}
+                        onChangeText={handleChange('transactionId')}
+                        onBlur={handleBlur('transactionId')}
+                        placeholder="Enter"
+                      />
+                    </FieldWrapper>
 
-                {/* Bank Name */}
-                <Text className="text-gray-700 font-semibold mb-1">Bank Name *</Text>
-                <TextInput
-                  value={values.bankName}
-                  onChangeText={handleChange('bankName')}
-                  onBlur={handleBlur('bankName')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.bankName && errors.bankName && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.bankName}</Text>
-                )}
-                {!errors.bankName && <View className="mb-3" />}
+                    <FieldWrapper label="Bank Name *" error={getError('bankName')}>
+                      <FieldInput
+                        value={values.bankName}
+                        onChangeText={handleChange('bankName')}
+                        onBlur={handleBlur('bankName')}
+                        placeholder="Enter"
+                      />
+                    </FieldWrapper>
 
-                {/* Account Number */}
-                <Text className="text-gray-700 font-semibold mb-1">Bank Account Number *</Text>
-                <TextInput
-                  value={values.accountNo}
-                  onChangeText={handleChange('accountNo')}
-                  onBlur={handleBlur('accountNo')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  keyboardType="number-pad"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.accountNo && errors.accountNo && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.accountNo}</Text>
-                )}
-                {!errors.accountNo && <View className="mb-3" />}
+                    <FieldWrapper label="Bank Account Number *" error={getError('accountNo')}>
+                      <FieldInput
+                        value={values.accountNo}
+                        onChangeText={handleChange('accountNo')}
+                        onBlur={handleBlur('accountNo')}
+                        placeholder="Enter"
+                        keyboardType="number-pad"
+                      />
+                    </FieldWrapper>
 
-                {/* Holder Name */}
-                <Text className="text-gray-700 font-semibold mb-1">Bank Account Holder Name *</Text>
-                <TextInput
-                  value={values.holderName}
-                  onChangeText={handleChange('holderName')}
-                  onBlur={handleBlur('holderName')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.holderName && errors.holderName && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.holderName}</Text>
-                )}
-                {!errors.holderName && <View className="mb-3" />}
+                    <FieldWrapper label="Bank Account Holder Name *" error={getError('holderName')}>
+                      <FieldInput
+                        value={values.holderName}
+                        onChangeText={handleChange('holderName')}
+                        onBlur={handleBlur('holderName')}
+                        placeholder="Enter"
+                      />
+                    </FieldWrapper>
 
-                {/* Payment Mode */}
-                <Text className="text-gray-700 font-semibold mb-1">Payment Mode *</Text>
-                <TextInput
-                  value={values.paymentMode}
-                  onChangeText={handleChange('paymentMode')}
-                  onBlur={handleBlur('paymentMode')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.paymentMode && errors.paymentMode && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.paymentMode}</Text>
-                )}
-                {!errors.paymentMode && <View className="mb-3" />}
+                    <FieldWrapper label="Payment Mode *" error={getError('paymentMode')}>
+                      <SelectionField
+                        value={values.paymentMode}
+                        placeholder="Select Payment Mode"
+                        onPress={() => {
+                          setShowPaymentModeModal(true);
+                          setFieldTouched('paymentMode', true);
+                        }}
+                        iconName="arrow-drop-down"
+                      />
+                    </FieldWrapper>
 
-                {/* Amount */}
-                <Text className="text-gray-700 font-semibold mb-1">Amount *</Text>
-                <TextInput
-                  value={values.amount}
-                  onChangeText={handleChange('amount')}
-                  onBlur={handleBlur('amount')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  keyboardType="numeric"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.amount && errors.amount && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.amount}</Text>
-                )}
-                {!errors.amount && <View className="mb-3" />}
+                    <FieldWrapper label="Amount *" error={getError('amount')}>
+                      <FieldInput
+                        value={values.amount}
+                        onChangeText={handleChange('amount')}
+                        onBlur={handleBlur('amount')}
+                        placeholder="Enter"
+                        keyboardType="numeric"
+                      />
+                    </FieldWrapper>
 
-                {/* Confirm Amount */}
-                <Text className="text-gray-700 font-semibold mb-1">Confirm Amount *</Text>
-                <TextInput
-                  value={values.confirmAmount}
-                  onChangeText={handleChange('confirmAmount')}
-                  onBlur={handleBlur('confirmAmount')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  keyboardType="numeric"
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                />
-                {touched.confirmAmount && errors.confirmAmount && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.confirmAmount}</Text>
-                )}
-                {!errors.confirmAmount && <View className="mb-3" />}
+                    <FieldWrapper label="Confirm Amount *" error={getError('confirmAmount')}>
+                      <FieldInput
+                        value={values.confirmAmount}
+                        onChangeText={handleChange('confirmAmount')}
+                        onBlur={handleBlur('confirmAmount')}
+                        placeholder="Enter"
+                        keyboardType="numeric"
+                      />
+                    </FieldWrapper>
 
-                {/* Select Date */}
-                <Text className="text-gray-700 font-semibold mb-1">Select a Date *</Text>
-                <TouchableOpacity
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 flex-row items-center justify-between"
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    setShowDatePicker(true);
-                    setFieldTouched('date', true);
-                  }}
-                >
-                  <Text className="text-gray-600">
-                    {values.date ? values.date.toLocaleDateString('en-IN') : 'Choose Date'}
-                  </Text>
-                  <Icon name="date-range" size={24} color="#555" />
-                </TouchableOpacity>
-                {touched.date && errors.date && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.date}</Text>
-                )}
-                {!errors.date && <View className="mb-3" />}
+                    <FieldWrapper label="Select a Date *" error={getError('date')}>
+                      <SelectionField
+                        value={values.date ? values.date.toLocaleDateString('en-IN') : undefined}
+                        placeholder="Choose Date"
+                        onPress={() => {
+                          setShowDatePicker(true);
+                          setFieldTouched('date', true);
+                        }}
+                        iconName="date-range"
+                      />
+                    </FieldWrapper>
 
-                <DatePicker
-                  modal
-                  mode="date"
-                  open={showDatePicker}
-                  date={values.date ?? new Date()}
-                  onConfirm={(selectedDate: Date) => {
-                    setShowDatePicker(false);
-                    setFieldValue('date', selectedDate);
-                  }}
-                  onCancel={() => setShowDatePicker(false)}
-                />
+                    <DatePicker
+                      modal
+                      mode="date"
+                      open={showDatePicker}
+                      date={values.date ?? new Date()}
+                      onConfirm={(selectedDate: Date) => {
+                        setShowDatePicker(false);
+                        setFieldValue('date', selectedDate);
+                      }}
+                      onCancel={() => setShowDatePicker(false)}
+                    />
 
-                {/* Deposit Slip Upload */}
-                <Text className="text-gray-700 font-semibold mb-2">Deposit Slip *</Text>
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  className="bg-gray-100 px-4 py-4 rounded-xl border border-gray-200 flex-row justify-between items-center mb-1"
-                  onPress={() => {
-                    // Add file picker logic here
-                    setFieldTouched('slip', true);
-                  }}
-                >
-                  <Text className="text-gray-600">
-                    {values.slip ? values.slip.name : 'No File Chosen'}
-                  </Text>
-                  <Icon name="upload-file" size={24} color="#555" />
-                </TouchableOpacity>
-                <Text className="text-gray-400 text-xs mb-1">
-                  PNG, JPEG, JPG, PDF files (max 1.5MB)
-                </Text>
-                {touched.slip && errors.slip && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.slip}</Text>
-                )}
-                {!errors.slip && <View className="mb-3" />}
+                    <FieldWrapper
+                      label="Deposit Slip *"
+                      error={getError('slip')}
+                      helper={
+                        <Text className="text-gray-400 text-xs mb-1">
+                          PNG, JPEG, JPG, PDF files (max 1.5MB)
+                        </Text>
+                      }
+                      space={false}
+                    >
+                      <SelectionField
+                        value={values.slip?.name}
+                        placeholder="No File Chosen"
+                        onPress={() => {
+                          setFieldTouched('slip', true);
+                          // Add file picker logic here
+                        }}
+                        iconName="upload-file"
+                        activeOpacity={0.9}
+                        containerClassName="border border-gray-200 py-4"
+                      />
+                    </FieldWrapper>
 
-                {/* Narration */}
-                <Text className="text-gray-700 font-semibold mb-1">Narration *</Text>
-                <TextInput
-                  value={values.narration}
-                  onChangeText={handleChange('narration')}
-                  onBlur={handleBlur('narration')}
-                  placeholder="Enter"
-                  placeholderTextColor="#A0A0A0"
-                  multiline
-                  numberOfLines={4}
-                  className="bg-gray-100 px-4 py-3 rounded-xl mb-1 text-gray-800"
-                  textAlignVertical="top"
-                />
-                {touched.narration && errors.narration && (
-                  <Text className="text-red-500 text-xs mb-3">{errors.narration}</Text>
-                )}
-                {!errors.narration && <View className="mb-3" />}
+                    <FieldWrapper label="Narration *" error={getError('narration')}>
+                      <FieldInput
+                        value={values.narration}
+                        onChangeText={handleChange('narration')}
+                        onBlur={handleBlur('narration')}
+                        placeholder="Enter"
+                        multiline
+                        numberOfLines={4}
+                      />
+                    </FieldWrapper>
 
-                {/* Submit Button */}
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  className="bg-red-500 rounded-xl py-3 px-6 mt-4 shadow-md"
-                  onPress={() => handleSubmit()}
-                >
-                  <Text className="text-white font-semibold text-center text-base">SUBMIT</Text>
-                </TouchableOpacity>
-              </View>
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      className="bg-red-500 rounded-xl py-3 px-6 mt-4 shadow-md"
+                      onPress={() => handleSubmit()}
+                    >
+                      <Text className="text-white font-semibold text-center text-base">SUBMIT</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </KeyboardAwareScrollView>
+
+              <DropdownModal
+                visible={showDepositTypeModal}
+                options={DEPOSIT_TYPE_OPTIONS}
+                onSelect={(value) => setFieldValue('depositType', value)}
+                onClose={() => setShowDepositTypeModal(false)}
+              />
+
+              <DropdownModal
+                visible={showPaymentModeModal}
+                options={PAYMENT_MODE_OPTIONS}
+                onSelect={(value) => setFieldValue('paymentMode', value)}
+                onClose={() => setShowPaymentModeModal(false)}
+              />
             </View>
-          </KeyboardAwareScrollView>
-        )}
+          );
+        }}
       </Formik>
     </View>
   );
