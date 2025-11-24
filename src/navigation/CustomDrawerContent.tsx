@@ -10,7 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { storage } from '../utils/storage';
-import SCREENS from '../constants/screens';
 import { useAppSelector } from '../store/hooks';
 import { useGetWalletBalanceQuery } from '../services/api/profileApi';
 import { useUserId } from '../hooks/useUserId';

@@ -1,21 +1,49 @@
 // screens/Funding/FundingHomeScreen.tsx
 
-import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { View, Text, ScrollView, RefreshControl, Animated, Easing } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SCREENS from '../../constants/screens';
 import '../../../global.css';
 import HomeScreenButton from '../../components/buttons/HomeScreenButton';
 import { useAppSelector } from '../../store/hooks';
 import { Role, canAccess, allMenuItems } from '../../navigation/menuConfig';
+import { useUserId } from '../../hooks/useUserId';
+import { useGetWalletBalanceQuery } from '../../services/api/profileApi';
 
-type FundingNavigationProp = {
+type FundingNavigationProp = { 
   navigate: (screen: keyof typeof SCREENS) => void;
 };
 
 export default function FundingHomeScreen() {
   const navigation = useNavigation<FundingNavigationProp>();
   const userRole = (useAppSelector(state => state.auth.user?.role) || 'RT') as Role;
+  const { userId: persistedUserId } = useUserId();
+  const memberId = persistedUserId;
+  const { data: walletResponse, isFetching: walletFetching, refetch } =
+    useGetWalletBalanceQuery(memberId ?? '', {
+      skip: !Boolean(memberId),
+    });
+  const walletData = walletResponse?.data;
+  const [refreshing, setRefreshing] = useState(false);
+
+  const formatCurrency = (value?: number) =>
+    value == null
+      ? '—'
+      : `₹${value.toLocaleString('en-IN', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+
+  const onRefresh = useCallback(async () => {
+    if (!refetch) return;
+    setRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetch]);
 
   const fundingMenu = allMenuItems.find(item => item.screen === 'FundingStack');
 
@@ -50,8 +78,32 @@ export default function FundingHomeScreen() {
       screen: sub.screen as keyof typeof SCREENS,
     }));
 
+  const prepaidLabel = formatCurrency(walletData?.prepaidBalance);
+  const postpaidLabel = formatCurrency(walletData?.postpaidBalance);
+
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(shimmerAnim, {
+        toValue: 1,
+        duration: 800,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }),
+    ).start();
+  }, [shimmerAnim]);
+
+  const shimmerOpacity = shimmerAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.25, 0.65, 0.25],
+  });
+
   return (
-    <ScrollView className="flex-1 bg-[#F7F8FA]">
+    <ScrollView
+      className="flex-1 bg-[#F7F8FA]"
+      refreshControl={<RefreshControl refreshing={refreshing || walletFetching} onRefresh={onRefresh} />}
+    >
       <View className="px-5 pt-6 pb-10">
         {/* Page Title */}
         <Text className="text-2xl font-bold text-[#34343A] mb-4">Funding</Text>
@@ -69,7 +121,15 @@ export default function FundingHomeScreen() {
                 <Text className="text-[13px] font-semibold text-[#7A7A82] tracking-wide">
                   PREPAID
                 </Text>
-                <Text className="text-[28px] font-medium text-gray-700 mt-1">1,889.52</Text>
+                {walletFetching && (
+                  <Animated.View
+                    className="mt-4 h-8 w-28 rounded-lg bg-gray-200"
+                    style={{ opacity: shimmerOpacity }}
+                  />
+                )}
+                {!walletFetching && (
+                  <Text className="text-[28px] font-medium text-gray-700 mt-1">{prepaidLabel}</Text>
+                )}
               </View>
 
               {/* Divider */}
@@ -80,7 +140,15 @@ export default function FundingHomeScreen() {
                 <Text className="text-[13px] font-semibold text-[#7A7A82] tracking-wide">
                   POSTPAID
                 </Text>
-                <Text className="text-[28px] font-medium text-gray-700 mt-1">14,117.94</Text>
+                {walletFetching && (
+                  <Animated.View
+                    className="mt-4 h-8 w-28 rounded-lg bg-gray-200"
+                    style={{ opacity: shimmerOpacity }}
+                  />
+                )}
+                {!walletFetching && (
+                  <Text className="text-[28px] font-medium text-gray-700 mt-1">{postpaidLabel}</Text>
+                )}
               </View>
             </View>
           </View>

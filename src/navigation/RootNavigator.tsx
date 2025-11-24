@@ -14,6 +14,7 @@ const APP_BOOT_TIME = Date.now();
 
 export default function RootNavigator() {
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  const isHydrated = useAppSelector(state => state.auth.hydrated);
   const reportedLogin = useRef(false);
 
   useEffect(() => {
@@ -26,6 +27,14 @@ export default function RootNavigator() {
       reportedLogin.current = true;
     }
   }, [isAuthenticated]);
+
+  if (!isHydrated) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.PRIMARY_COLOR} />
+      </View>
+    );
+  }
 
   return (
     <NavigationContainer

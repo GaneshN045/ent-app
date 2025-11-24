@@ -97,9 +97,9 @@ export default function ProfileHomeScreen() {
             </View>
 
             {/* Camera Icon */}
-            <TouchableOpacity className="absolute bottom-1 right-1 bg-primary rounded-full p-2 shadow-md">
+            {/* <TouchableOpacity className="absolute bottom-1 right-1 bg-primary rounded-full p-2 shadow-md">
               <MaterialIcons name="camera-alt" size={20} color="white" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <Text className="text-2xl font-bold text-[#3A3A42] mt-4">{info?.name ?? 'User'}</Text>
