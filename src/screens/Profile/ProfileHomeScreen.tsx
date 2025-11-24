@@ -91,7 +91,7 @@ export default function ProfileHomeScreen() {
         <View className="items-center pt-6 pb-8 bg-white">
           <View className="relative">
             <View className="w-32 h-32 rounded-full bg-gray-200 border-4 border-white shadow-lg overflow-hidden">
-              <Text className="text-[36px] font-bold text-white uppercase text-center leading-[128px]">
+              <Text className="text-[44px] font-bold text-white uppercase text-center leading-[100px]">
                 {info?.name?.[0] ?? 'U'}
               </Text>
             </View>

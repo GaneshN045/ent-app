@@ -1,75 +1,39 @@
-import { baseApi } from './baseApi';
-import type { Role } from '../../navigation/menuConfig';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-}
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  token: string;
-  user: User;
-}
-
-export interface SendOtpRequest {
-  userName: string;
-  password: string;
-  salt: string;
-  iv: string;
-  url: string;
-}
-
-export interface SendOtpResponse {
-  statusCode: number;
-  message?: string;
-  data?: {
-    otp?: string | number;
-    [key: string]: any;
-  } | null;
-}
-
-/* ✅ NEW: VERIFY OTP REQUEST & RESPONSE */
-export interface VerifyOtpRequest {
-  userName: string;
-  otp: string | number;
-}
-
-export interface VerifyOtpResponse {
-  statusCode: number;
-  message: string;
-  data: {
-    outletName?: string;
-    role: Role;
-    role_id: string;
-    sub_role_id: string;
-    hierarchyId: string;
-    mobileNumber: string;
-    emailId: string;
-    token: string;
-    products: any[];
-  };
-}
+// ============================================
+// authApi.ts
+// ============================================
+import { baseApi } from '../baseApi';
+import type {
+  SendOtpRequest,
+  SendOtpResponse,
+  VerifyOtpRequest,
+  VerifyOtpResponse,
+  User,
+} from '../types/authApiTypes';
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: builder => ({
-    /* SEND OTP API */
+    /* ✅ FIXED: Correct endpoint path */
     sendOtp: builder.mutation<SendOtpResponse, SendOtpRequest>({
       query: body => ({
-        url: 'https://uat.decipay.in/enterprises/auth/login',
+        url: '/auth/login',
         method: 'POST',
         body,
       }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        console.log('Send OTP called with payload:', arg);
+        try {
+          const { data } = await queryFulfilled;
+          console.log('Send OTP success:', data);
+        } catch (error) {
+          console.log('Send OTP error:', error);
+        }
+      },
+      invalidatesTags: ['Auth'],
     }),
 
-    /* LOCAL LOGIN (NOT NEEDED FOR OTP FLOW) */
-    login: builder.mutation<LoginResponse, LoginRequest>({
+    /* ✅ ALIAS: Keep useLoginMutation for backward compatibility */
+    login: builder.mutation<SendOtpResponse, SendOtpRequest>({
       query: body => ({
         url: '/auth/login',
         method: 'POST',
@@ -87,31 +51,32 @@ export const authApi = baseApi.injectEndpoints({
       invalidatesTags: ['Auth'],
     }),
 
-    /* GET AUTH USER */
-    getCurrentUser: builder.query<User, void>({
-      query: () => ({
-        url: '/auth/me',
-        method: 'GET',
-      }),
-      providesTags: ['Auth'],
-    }),
-
-    /* ✅ NEW VERIFY OTP API */
+    /* ✅ FIXED: Correct endpoint path (relative, not full URL) */
     verifyOtp: builder.mutation<VerifyOtpResponse, VerifyOtpRequest>({
       query: body => ({
-        url: 'https://uat.decipay.in/enterprises/auth/verify-otp',
+        url: '/auth/verify-otp',
         method: 'POST',
         body,
       }),
+      onQueryStarted: async (arg, { queryFulfilled }) => {
+        console.log('Verify OTP called with payload:', arg);
+        try {
+          const { data } = await queryFulfilled;
+          console.log('Verify OTP success:', data);
+        } catch (error) {
+          console.log('Verify OTP error:', error);
+        }
+      },
+      invalidatesTags: ['Auth'],
     }),
+
+    
   }),
   overrideExisting: false,
 });
 
-/* EXPORT HOOKS */
 export const {
-  useLoginMutation,
-  useGetCurrentUserQuery,
   useSendOtpMutation,
-  useVerifyOtpMutation, // ✅ NEW EXPORT
+  useLoginMutation, // ✅ EXPORTED for backward compatibility
+  useVerifyOtpMutation,
 } = authApi;

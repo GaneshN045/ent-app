@@ -1,4 +1,4 @@
-import { useLoginMutation, useLogoutMutation } from '../api/authApi';
+import { useLoginMutation } from '../services/api/authApi';
 import { useAppDispatch } from '../store/hooks';
 import {
   setToken as setTokenAction,
@@ -6,28 +6,30 @@ import {
   setHydrated,
 } from '../store/slices/authSlice';
 import { storage } from '../utils/storage';
+import type { SendOtpRequest, SendOtpResponse } from '../services/types/authApiTypes';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
   const [loginMutation, loginState] = useLoginMutation();
-  const [logoutMutation] = useLogoutMutation();
 
-  const login = async (credentials: { email: string; password: string }) => {
+  const login = async (credentials: SendOtpRequest): Promise<SendOtpResponse> => {
     const res = await loginMutation(credentials).unwrap();
-    if (res?.token) {
-      await storage.saveToken(res.token);
-      dispatch(setTokenAction(res.token));
+    const token = res?.data?.token;
+    if (token) {
+      await storage.saveToken(token);
+      dispatch(setTokenAction(token));
     }
     return res;
   };
 
   const logout = async () => {
     try {
-      await logoutMutation(undefined).unwrap();
+      // await logoutMutation(undefined).unwrap();
     } catch (e) {
       // ignore server logout errors
     }
     await storage.clearToken();
+    await storage.clearUserId();
     dispatch(clearTokenAction());
   };
 

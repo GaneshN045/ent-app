@@ -1,73 +1,27 @@
-import { baseApi } from './baseApi';
-
-export interface ProfileInfo {
-  name: string;
-  memberId: string;
-  mobileNumber: string;
-  email: string;
-  dob: string;
-  outletName: string;
-  isBlackList: boolean | null;
-  isBlocked: boolean;
-  status?: string | null;
-}
-
-export interface Address {
-  building: string;
-  city: string;
-  state: string;
-  pinCode: string;
-}
-
-export interface OutletAddress {
-  outletBuilding: string;
-  outletCity: string;
-  outletState: string;
-  outletPinCode: string;
-}
-
-export interface Bank {
-  id: number;
-  bankName: string;
-  accountName: string;
-  accountNo: string;
-  ifcscode: string;
-  verified: boolean;
-}
-
-export interface KycDocs {
-  aadhaarCardFrontImage?: string | null;
-  aadhaarCardBackImage?: string | null;
-  panCardImage?: string | null;
-  shopImage?: string | null;
-  businessProofImage?: string | null;
-}
-
-export interface MemberProfileData {
-  info: ProfileInfo;
-  address: Address;
-  outletAddress: OutletAddress;
-  myBanksList: Bank[];
-  kycDocs: KycDocs;
-}
-
-export interface MemberProfileResponse {
-  statusCode: number;
-  message: string;
-  data: MemberProfileData;
-}
+// ============================================
+// profileApi.ts
+// ============================================
+import { baseApi } from '../baseApi';
+import type { MemberProfileResponse, WalletBalanceResponse } from '../types/profileApiTypes';
 
 export const profileApi = baseApi.injectEndpoints({
   endpoints: builder => ({
+    /* ✅ FIXED: Correct endpoint path with /api prefix */
     getMemberProfile: builder.query<MemberProfileResponse, string>({
       query: memberId => ({
-        url: `dashboard/profile/${memberId}`,
+        url: `/api/dashboard/profile/${memberId}`,
         method: 'GET',
       }),
       providesTags: ['User'],
+    }),
+    getWalletBalance: builder.query<WalletBalanceResponse, string>({
+      query: memberId => ({
+        url: `/api/dashboard/wallet-balance/${memberId}`,
+        method: 'GET',
+      }),
     }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetMemberProfileQuery } = profileApi;
+export const { useGetMemberProfileQuery, useGetWalletBalanceQuery } = profileApi;

@@ -123,9 +123,9 @@ export default function LoginScreen() {
         animationType="slide"
         statusBarTranslucent
         onRequestClose={() => {
-          if (!isVerifyingOtp) {
+          // if (!isVerifyingOtp) {
             resetModal();
-          }
+          // }
         }}
       >
         <KeyboardAvoidingView

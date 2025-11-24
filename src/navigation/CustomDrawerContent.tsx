@@ -11,6 +11,9 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../store/slices/authSlice';
 import { storage } from '../utils/storage';
 import SCREENS from '../constants/screens';
+import { useAppSelector } from '../store/hooks';
+import { useGetWalletBalanceQuery } from '../services/api/profileApi';
+import { useUserId } from '../hooks/useUserId';
 
 // Colors
 const COLORS = {
@@ -20,14 +23,7 @@ const COLORS = {
   GRAY_ICON: '#6E6E76',
 };
 
-// Mock user data - replace with actual user data from your state/context
-const userData = {
-  name: 'John Doe',
-  memberId: 'RT12345',
-  prepaidBalance: '₹15,250.00',
-  postpaidBalance: '₹5,000.00',
-  profileImage: 'https://via.placeholder.com/80',
-};
+const PROFILE_IMAGE_PLACEHOLDER = 'https://via.placeholder.com/80';
 
 type CustomDrawerProps = DrawerContentComponentProps & {
   menuItems: MenuItem[];
@@ -36,6 +32,27 @@ type CustomDrawerProps = DrawerContentComponentProps & {
 export default function CustomDrawerContent({ navigation, menuItems }: CustomDrawerProps) {
   const menu: MenuItem[] = menuItems;
   const [logoutLoading, setLogoutLoading] = useState(false);
+
+  const user = useAppSelector(state => state.auth.user);
+  const { userId: persistedUserId, loading: userIdLoading } = useUserId();
+
+  const memberId = persistedUserId;
+  const shouldFetchWallet = Boolean(memberId);
+  const { data: walletResponse, isFetching: walletFetching } = useGetWalletBalanceQuery(memberId ?? '', {
+    skip: !shouldFetchWallet,
+  });
+  const walletData = walletResponse?.data;
+
+  const formatCurrency = (value?: number) =>
+    value == null
+      ? '—'
+      : `₹${value.toLocaleString('en-IN', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
+
+  const prepaidBalanceLabel = walletFetching ? 'Loading...' : formatCurrency(walletData?.prepaidBalance);
+  const postpaidBalanceLabel = walletFetching ? 'Loading...' : formatCurrency(walletData?.postpaidBalance);
 
   const dispatch = useDispatch();
 
@@ -73,20 +90,20 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
       >
         <View style={styles.profileSection}>
           <View style={styles.profileImageContainer}>
-            <Image source={{ uri: userData.profileImage }} style={styles.profileImage} />
+            <Image source={{ uri: PROFILE_IMAGE_PLACEHOLDER }} style={styles.profileImage} />
           </View>
-          <Text style={styles.userName}>{userData.name}</Text>
-          <Text style={styles.memberId}>{userData.memberId}</Text>
+          <Text style={styles.userName}>{user?.name ?? 'John Doe'}</Text>
+          <Text style={styles.memberId}>{user?.id ?? memberId}</Text>
 
           <View style={styles.balanceContainer}>
             <View style={styles.balanceItem}>
               <Text style={styles.balanceLabel}>Prepaid</Text>
-              <Text style={styles.balanceAmount}>{userData.prepaidBalance}</Text>
+              <Text style={styles.balanceAmount}>{prepaidBalanceLabel}</Text>
             </View>
             <View style={styles.balanceDivider} />
             <View style={styles.balanceItem}>
               <Text style={styles.balanceLabel}>Postpaid</Text>
-              <Text style={styles.balanceAmount}>{userData.postpaidBalance}</Text>
+              <Text style={styles.balanceAmount}>{postpaidBalanceLabel}</Text>
             </View>
           </View>
         </View>

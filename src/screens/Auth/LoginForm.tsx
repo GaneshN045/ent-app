@@ -256,8 +256,8 @@ export function LoginForm({
               >
                 {isSubmitting ? (
                   <View className="flex-row items-center">
-                    <ActivityIndicator color={COLORS.PRIMARY_COLOR} size="small" />
-                    <Text className="text-primary font-semibold text-base ml-2">
+                    <ActivityIndicator color={'white'} size="small" />
+                    <Text className="text-white font-semibold text-base ml-2">
                       Sending OTP...
                     </Text>
                   </View>

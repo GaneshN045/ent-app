@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TOKEN_SERVICE = 'com.demo.app.token';
 const FALLBACK_TOKEN_KEY = 'app_plain_token';
+const USER_ID_KEY = 'USER_ID';
 const isKeychainAvailable = typeof Keychain?.setGenericPassword === 'function';
 
 export const storage = {
@@ -48,6 +49,28 @@ export const storage = {
       }
     } catch (e) {
       console.warn('Failed to clear token securely', e);
+    }
+  },
+  async saveUserId(userId: string) {
+    try {
+      await AsyncStorage.setItem(USER_ID_KEY, userId);
+    } catch (e) {
+      console.warn('Failed to save USER_ID', e);
+    }
+  },
+  async loadUserId(): Promise<string | null> {
+    try {
+      return (await AsyncStorage.getItem(USER_ID_KEY)) || null;
+    } catch (e) {
+      console.warn('Failed to load USER_ID', e);
+      return null;
+    }
+  },
+  async clearUserId() {
+    try {
+      await AsyncStorage.removeItem(USER_ID_KEY);
+    } catch (e) {
+      console.warn('Failed to clear USER_ID', e);
     }
   },
 };

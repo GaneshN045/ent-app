@@ -93,7 +93,7 @@ export function OtpModal({
       console.log('userData : ', userData)
       await AsyncStorage.setItem('userRole', role);
       await storage.saveToken(token);
-      await AsyncStorage.setItem('USER_ID', userData.hierarchyId);
+      await storage.saveUserId(userData.hierarchyId);
       if (isMountedRef.current) {
         dispatch(
           login({

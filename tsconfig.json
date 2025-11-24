@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "strict": true,
-    "types": ["react", "react-native", "react-navigation"]
+    "types": ["react", "react-native", "react-navigation", "node"]
   },
   "include": ["src", "types", "**/*.ts", "**/*.tsx", "nativewind-env.d.ts"],
   "exclude": ["node_modules", "Pods"]
