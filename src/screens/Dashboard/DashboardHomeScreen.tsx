@@ -7,6 +7,7 @@ import COLORS from '../../constants/colors';
 import { storage } from '../../utils/storage';
 import { useAppSelector } from '../../store/hooks';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useProfileData } from '../../hooks/useProfileData';
 
 export default function DashboardHomeScreen() {
   const navigation = useNavigation<any>();
@@ -15,7 +16,9 @@ export default function DashboardHomeScreen() {
 
   const [userId, setUserId] = useState<any>('')
 
-    useEffect(() => {
+  const { profile } = useProfileData();
+
+  useEffect(() => {
     let mounted = true;
     (async () => {
       const id = await AsyncStorage.getItem('USER_ID')
@@ -54,7 +57,7 @@ export default function DashboardHomeScreen() {
       {/* Page Title */}
       <View className=' flex flex-row items-center gap-2 px-5 mt-5'>
         <Text className='text-xl font-bold text-primary_gray'>Dashboard</Text>
-        <Text className=' text-secondary_gray'>({userId})</Text>
+        <Text className=' text-secondary_gray'>({profile?.info?.memberId ?? userId ?? 'N/A'})</Text>
         </View>
 
       {/* ===== TOP SUMMARY CARD (Premium Big Card) ===== */}

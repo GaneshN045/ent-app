@@ -68,3 +68,15 @@ export interface WalletBalanceResponse {
   message: string;
   data: WalletBalanceData;
 }
+
+export interface SubProduct {
+  id: string;
+  subProduct_name: string;
+  subProduct_code: string | null;
+}
+
+export interface SubProductDropdownResponse {
+  statusCode: number;
+  message: string;
+  data: SubProduct[];
+}

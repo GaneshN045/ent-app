@@ -16,7 +16,7 @@ import ProfileAddressModal from './components/ProfileAddressModal';
 import ProfileOutletAddressModal from './components/ProfileOutletAddressModal';
 import ProfileBanksModal from './components/ProfileBanksModal';
 import ProfileKYCDocModal from './components/ProfileKYCDocModal';
-import { useGetMemberProfileQuery } from '../../services/api/profileApi';
+import { useProfileData } from '../../hooks/useProfileData';
 
 type Nav = {
   navigate: (screen: string) => void;
@@ -38,8 +38,7 @@ export default function ProfileHomeScreen() {
   const [bankModal, setBankModal] = React.useState(false);
   const [kycModal, setKYCModal] = React.useState(false);
 
-  const MEMBER_ID = 'BZT-RT-001';
-  const { data, error, isLoading, refetch } = useGetMemberProfileQuery(MEMBER_ID);
+  const { profile, error, isLoading, refetch, memberId } = useProfileData();
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async () => {
@@ -50,7 +49,6 @@ export default function ProfileHomeScreen() {
       setRefreshing(false);
     }
   }, [refetch]);
-  const profile = data?.data;
   const info = profile?.info;
 
   const kycDocs = React.useMemo(() => {
@@ -104,7 +102,7 @@ export default function ProfileHomeScreen() {
 
           <Text className="text-2xl font-bold text-[#3A3A42] mt-4">{info?.name ?? 'User'}</Text>
           <Text className="text-sm text-[#6E6E76] mt-1">
-            Member ID: {info?.memberId ?? MEMBER_ID}
+            Member ID: {info?.memberId ?? memberId}
           </Text>
           {isLoading && (
             <View className="mt-2">

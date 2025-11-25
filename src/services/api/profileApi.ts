@@ -2,7 +2,11 @@
 // profileApi.ts
 // ============================================
 import { baseApi } from '../baseApi';
-import type { MemberProfileResponse, WalletBalanceResponse } from '../types/profileApiTypes';
+import type {
+  MemberProfileResponse,
+  SubProductDropdownResponse,
+  WalletBalanceResponse,
+} from '../types/profileApiTypes';
 
 export const profileApi = baseApi.injectEndpoints({
   endpoints: builder => ({
@@ -20,8 +24,14 @@ export const profileApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getSubProductsDropdown: builder.query<SubProductDropdownResponse, void>({
+      query: () => ({
+        url: '/api/sub-products/dropdown',
+        method: 'GET',
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetMemberProfileQuery, useGetWalletBalanceQuery } = profileApi;
+export const { useGetMemberProfileQuery, useGetWalletBalanceQuery, useGetSubProductsDropdownQuery } = profileApi;

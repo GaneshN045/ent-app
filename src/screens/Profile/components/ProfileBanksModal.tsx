@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import type { Bank } from '../../../services/api/profileApi';
+import { Bank } from '../../../services/types/profileApiTypes';
 
 type Props = {
   visible: boolean;

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Modal, FlatList, type TextInputProps } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, type TextInputProps } from 'react-native';
 import React, { useState, type ReactNode } from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
 import { Formik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import { DropdownModal } from '../../components/dropdowns/DropdownModal';
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -64,59 +65,6 @@ type FundRequestValues = {
   slip: { name: string } | null;
   narration: string;
 };
-
-type DropdownModalProps = {
-  visible: boolean;
-  options: string[];
-  onSelect: (value: string) => void;
-  onClose: () => void;
-};
-
-function DropdownModal({ visible, options, onSelect, onClose }: DropdownModalProps) {
-  return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      statusBarTranslucent={true}
-      onRequestClose={onClose}
-    >
-      <TouchableOpacity
-        activeOpacity={1}
-        className="flex-1 bg-black/50 justify-center items-center"
-        onPress={onClose}
-      >
-        <TouchableOpacity activeOpacity={1} className="bg-white rounded-2xl p-0 w-[80%] shadow-lg">
-          <View className="border-b border-gray-200 px-6 py-4">
-            <Text className="text-gray-800 font-semibold text-lg">Select Option</Text>
-          </View>
-          <FlatList
-            data={options}
-            keyExtractor={(item) => item}
-            scrollEnabled={false}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity
-                className={`py-4 px-6 ${index !== options.length - 1 ? 'border-b border-gray-100' : ''}`}
-                onPress={() => {
-                  onSelect(item);
-                  onClose();
-                }}
-              >
-                <Text className="text-gray-700 text-base">{item}</Text>
-              </TouchableOpacity>
-            )}
-          />
-          <TouchableOpacity
-            className="border-t border-gray-200 py-5 px-6"
-            onPress={onClose}
-          >
-            <Text className="text-center text-red-500 font-semibold">Cancel</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </TouchableOpacity>
-    </Modal>
-  );
-}
 
 type FieldWrapperProps = {
   label: string;
