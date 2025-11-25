@@ -13,6 +13,7 @@ import { storage } from '../utils/storage';
 import { useAppSelector } from '../store/hooks';
 import { useGetWalletBalanceQuery } from '../services/api/profileApi';
 import { useUserId } from '../hooks/useUserId';
+import { useUserRole } from '../hooks/useUserRole';
 
 // Colors
 const COLORS = {
@@ -63,7 +64,13 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
   const dispatch = useDispatch();
 
   // Filter only Settings, Support, and Reports
-  const filteredMenu = menu.filter(item => ['Reports', 'Support'].includes(item.name));
+  const userRole = useUserRole();
+  const filteredMenu = menu.filter(item => {
+    if (item.name === 'Manage User') {
+      return item.roles?.includes(userRole ?? 'RT');
+    }
+    return ['Reports', 'Support', 'Manage User'].includes(item.name);
+  });
 
   const [expanded, setExpanded] = useState<string | null>(null);
 

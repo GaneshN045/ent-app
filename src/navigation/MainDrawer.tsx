@@ -5,17 +5,17 @@ import { Role, getMenuForRole } from './menuConfig';
 import BottomTabs from './BottomTabs';
 
 import CustomDrawerContent from './CustomDrawerContent';
-import { useAppSelector } from '../store/hooks';
 import SupportStack from './stacks/SupportStack';
 import ReportsStack from './stacks/ReportsStack';
 import CommonStack from './stacks/CommonStack';
 import SCREENS from '../constants/screens';
+import ManageUserStack from './ManageUserStack';
+import { useUserRole } from '../hooks/useUserRole';
 
 const Drawer = createDrawerNavigator();
 
 export default function MainDrawer() {
-  const userRole: Role = useAppSelector((state: any) => (state.auth.user?.role as Role) || 'RT');
-
+  const userRole: Role = useUserRole();
   const menuItems: any[] = getMenuForRole(userRole);
 
   const hasMenuScreen = (screen: string) => menuItems.some(item => item.screen === screen);
@@ -40,6 +40,9 @@ export default function MainDrawer() {
       )}
       {hasMenuScreen(SCREENS.REPORTS_STACK) && (
         <Drawer.Screen name={SCREENS.REPORTS_STACK} component={ReportsStack} />
+      )}
+      {hasMenuScreen(SCREENS.MANAGE_USER_STACK) && (
+        <Drawer.Screen name={SCREENS.MANAGE_USER_STACK} component={ManageUserStack} />
       )}
       <Drawer.Screen name={SCREENS.COMMON_STACK} component={CommonStack} />
     </Drawer.Navigator>

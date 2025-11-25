@@ -7,7 +7,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Screen Imports
 import ReportsHomeScreen from '../../screens/Reports/ReportsHomeScreen';
-import CommissionChargesScreen from '../../screens/Reports/CommissionChargesScreen';
 import WalletReportScreen from '../../screens/Reports/WalletReportScreen';
 import NetworkTransactionScreen from '../../screens/Reports/NetworkTransactionScreen';
 import SearchTransactionScreen from '../../screens/Reports/SearchTransactionScreen';
@@ -17,6 +16,7 @@ import DebitHistoryScreen from '../../screens/Reports/DebitHistoryScreen';
 import DownLineBalanceScreen from '../../screens/Reports/DownLineBalanceScreen';
 
 import SCREENS from '../../constants/screens';
+import CommissionAndCharges from '../../screens/Reports/commission_charges/CommissionAndCharges';
 
 const Stack = createStackNavigator();
 
@@ -58,7 +58,7 @@ export default function ReportsStack() {
 
       <Stack.Screen
         name={SCREENS.COMMISSION_CHARGES_SCREEN}
-        component={CommissionChargesScreen}
+        component={CommissionAndCharges}
         options={{ title: 'Commission & Charges' }}
       />
 

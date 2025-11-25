@@ -49,9 +49,21 @@ export const allMenuItems: MenuItem[] = [
     icon: 'people',
     roles: ['DT', 'SD', 'WL', 'PT'],
     subItems: [
-      { name: 'Create User', screen: SCREENS.CREATE_USER_SCREEN },
-      { name: 'Debit & Credit User', screen: SCREENS.DEBIT_CREDIT_USER_SCREEN },
-      { name: 'View User', screen: SCREENS.VIEW_USER_SCREEN },
+      {
+        name: 'Create User',
+        screen: SCREENS.CREATE_USER_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Debit & Credit User',
+        screen: SCREENS.DEBIT_CREDIT_USER_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'View User',
+        screen: SCREENS.VIEW_USER_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
     ],
   },
 
@@ -70,11 +82,31 @@ export const allMenuItems: MenuItem[] = [
     icon: 'account-balance-wallet',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
-      { name: 'Fund Request', screen: SCREENS.FUND_REQUEST_SCREEN },
-      { name: 'Wallet To Wallet', screen: SCREENS.WALLET_TO_WALLET_SCREEN },
-      { name: 'Fund Transfer', screen: SCREENS.FUND_TRANSFER_SCREEN },
-      { name: 'Fund Reversal', screen: SCREENS.FUND_REVERSAL_SCREEN },
-      { name: 'Move To Bank', screen: SCREENS.WALLET_TO_BANK_SCREEN },
+      {
+        name: 'Fund Request',
+        screen: SCREENS.FUND_REQUEST_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Wallet To Wallet',
+        screen: SCREENS.WALLET_TO_WALLET_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Fund Transfer',
+        screen: SCREENS.FUND_TRANSFER_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Fund Reversal',
+        screen: SCREENS.FUND_REVERSAL_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Move To Bank',
+        screen: SCREENS.WALLET_TO_BANK_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
     ],
   },
 
@@ -85,14 +117,46 @@ export const allMenuItems: MenuItem[] = [
     icon: 'assessment',
     roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
-      { name: 'Commission & Charges', screen: SCREENS.COMMISSION_CHARGES_SCREEN },
-      { name: 'Wallet Report', screen: SCREENS.WALLET_REPORT_SCREEN },
-      { name: 'Network Transaction', screen: SCREENS.NETWORK_TRANSACTION_SCREEN },
-      { name: 'Search Transaction', screen: SCREENS.SEARCH_TRANSACTION_SCREEN },
-      { name: 'Fund Loading', screen: SCREENS.FUND_LOADING_SCREEN },
-      { name: 'Pending Transaction', screen: SCREENS.PENDING_TRANSACTION_SCREEN },
-      { name: 'Debit History', screen: SCREENS.DEBIT_HISTORY_SCREEN },
-      { name: 'Down Line Balance', screen: SCREENS.DOWNLINE_BALANCE_SCREEN },
+      {
+        name: 'Commission & Charges',
+        screen: SCREENS.COMMISSION_CHARGES_SCREEN,
+        roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Wallet Report',
+        screen: SCREENS.WALLET_REPORT_SCREEN,
+        roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Network Transaction',
+        screen: SCREENS.NETWORK_TRANSACTION_SCREEN,
+        roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Search Transaction',
+        screen: SCREENS.SEARCH_TRANSACTION_SCREEN,
+        roles: ['DT', 'RT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Fund Loading',
+        screen: SCREENS.FUND_LOADING_SCREEN,
+        roles: ['RT', 'RA'],
+      },
+      {
+        name: 'Pending Transaction',
+        screen: SCREENS.PENDING_TRANSACTION_SCREEN,
+        roles: ['RT', 'RA'],
+      },
+      {
+        name: 'Debit History',
+        screen: SCREENS.DEBIT_HISTORY_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Down Line Balance',
+        screen: SCREENS.DOWNLINE_BALANCE_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
     ],
   },
 
@@ -103,9 +167,21 @@ export const allMenuItems: MenuItem[] = [
     icon: 'settings',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
-      { name: 'Create Sub User', screen: SCREENS.CREATE_SUB_USER_SCREEN, roles: ['RT'] },
-      { name: 'Change TPIN', screen: SCREENS.CHANGE_TPIN_SCREEN },
-      { name: 'My Certificate', screen: SCREENS.MY_CERTIFICATE_SCREEN },
+      {
+        name: 'Create Sub User',
+        screen: SCREENS.CREATE_SUB_USER_SCREEN,
+        roles: ['RT'],
+      },
+      {
+        name: 'Change TPIN',
+        screen: SCREENS.CHANGE_TPIN_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'My Certificate',
+        screen: SCREENS.MY_CERTIFICATE_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
       { name: 'Low Balance Alert', screen: SCREENS.LOW_BALANCE_ALERT_SCREEN, roles: ['RT', 'RA'] },
       { name: 'ID Card', screen: SCREENS.ID_CARD_SCREEN, roles: ['DT', 'SD', 'WL', 'PT'] },
     ],
@@ -118,15 +194,51 @@ export const allMenuItems: MenuItem[] = [
     icon: 'support-agent',
     roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
     subItems: [
-      { name: 'Bio Metric Device', screen: SCREENS.BIOMETRIC_DEVICE_SCREEN },
-      { name: 'Ticketing System', screen: SCREENS.TICKETING_SCREEN },
-      { name: 'Contact Us', screen: SCREENS.CONTACT_US_SCREEN },
-      { name: 'Top Up Request', screen: SCREENS.TOP_UP_REQUEST_SCREEN },
-      { name: 'Top Up History', screen: SCREENS.TOP_UP_HISTORY_SCREEN },
-      { name: 'Add Money', screen: SCREENS.ADD_MONEY_SCREEN },
-      { name: 'Payment Request', screen: SCREENS.PAYMENT_REQUEST_SCREEN },
-      { name: 'Payment History', screen: SCREENS.PAYMENT_HISTORY_SCREEN },
-      { name: 'Payment Banks', screen: SCREENS.PAYMENT_BANKS_SCREEN },
+      {
+        name: 'Bio Metric Device',
+        screen: SCREENS.BIOMETRIC_DEVICE_SCREEN,
+        roles: ['RT', 'RA'],
+      },
+      {
+        name: 'Ticketing System',
+        screen: SCREENS.TICKETING_SCREEN,
+        roles: ['RT', 'DT', 'SD', 'WL', 'PT', 'RA'],
+      },
+      {
+        name: 'Contact Us',
+        screen: SCREENS.CONTACT_US_SCREEN,
+        roles: ['RT', 'SD', 'WL', 'RA'],
+      },
+      {
+        name: 'Top Up Request',
+        screen: SCREENS.TOP_UP_REQUEST_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Top Up History',
+        screen: SCREENS.TOP_UP_HISTORY_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Add Money',
+        screen: SCREENS.ADD_MONEY_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Payment Request',
+        screen: SCREENS.PAYMENT_REQUEST_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Payment History',
+        screen: SCREENS.PAYMENT_HISTORY_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
+      {
+        name: 'Payment Banks',
+        screen: SCREENS.PAYMENT_BANKS_SCREEN,
+        roles: ['DT', 'SD', 'WL', 'PT'],
+      },
     ],
   },
 ];
