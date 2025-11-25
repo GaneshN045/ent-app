@@ -9,7 +9,8 @@ export function useSubProducts(subProductName?: string) {
   const subProductId = useMemo(() => {
     if (!subProductName) return undefined;
     const normalized = subProductName.trim().toLowerCase();
-    return subProducts.find(product => product.subProduct_name.trim().toLowerCase() === normalized)?.id;
+    return subProducts.find(product => product.subProduct_name.trim().toLowerCase() === normalized)
+      ?.id;
   }, [subProductName, subProducts]);
 
   return {

@@ -34,4 +34,8 @@ export const profileApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetMemberProfileQuery, useGetWalletBalanceQuery, useGetSubProductsDropdownQuery } = profileApi;
+export const {
+  useGetMemberProfileQuery,
+  useGetWalletBalanceQuery,
+  useGetSubProductsDropdownQuery,
+} = profileApi;

@@ -47,7 +47,10 @@ export default function OutletAddressModal({ visible, onClose, outletAddress }: 
 
             {/* ADDRESS FIELDS */}
             <View className="space-y-6">
-              <PremiumField label="Building / Apartment" value={outletAddress?.outletBuilding ?? '-'} />
+              <PremiumField
+                label="Building / Apartment"
+                value={outletAddress?.outletBuilding ?? '-'}
+              />
               <PremiumField label="City" value={outletAddress?.outletCity ?? '-'} />
               <PremiumField label="State" value={outletAddress?.outletState ?? '-'} />
               <PremiumField label="Pincode" value={outletAddress?.outletPinCode ?? '-'} />

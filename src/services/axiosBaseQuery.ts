@@ -31,11 +31,11 @@ export const axiosBaseQuery =
     try {
       const payload = args.data ?? args.body;
       const headers: Record<string, string> = {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
         ...(args.headers || {}),
       };
-      
+
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
@@ -54,7 +54,7 @@ export const axiosBaseQuery =
         data: payload,
         params: args.params,
         headers,
-        transformResponse: [(data) => data],
+        transformResponse: [data => data],
       });
 
       const duration = Date.now() - startTime;

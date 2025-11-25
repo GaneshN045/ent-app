@@ -10,8 +10,7 @@ import { DropdownModal } from '../../components/dropdowns/DropdownModal';
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
-  depositType: Yup.string()
-    .required('Deposit Type is required'),
+  depositType: Yup.string().required('Deposit Type is required'),
   transactionId: Yup.string()
     .required('Transaction ID is required')
     .min(5, 'Transaction ID must be at least 5 characters'),
@@ -27,8 +26,7 @@ const validationSchema = Yup.object().shape({
     .required('Account Holder Name is required')
     .min(2, 'Name must be at least 2 characters')
     .matches(/^[a-zA-Z\s]+$/, 'Name must contain only letters'),
-  paymentMode: Yup.string()
-    .required('Payment Mode is required'),
+  paymentMode: Yup.string().required('Payment Mode is required'),
   amount: Yup.number()
     .required('Amount is required')
     .positive('Amount must be positive')
@@ -41,8 +39,7 @@ const validationSchema = Yup.object().shape({
     .required('Date is required')
     .nullable()
     .max(new Date(), 'Date cannot be in the future'),
-  slip: Yup.mixed()
-    .required('Deposit Slip is required'),
+  slip: Yup.mixed().required('Deposit Slip is required'),
   narration: Yup.string()
     .required('Narration is required')
     .min(10, 'Narration must be at least 10 characters')
@@ -93,7 +90,13 @@ type FieldInputProps = TextInputProps & {
   className?: string;
 };
 
-const FieldInput = ({ value, onChangeText, className, multiline = false, ...rest }: FieldInputProps) => {
+const FieldInput = ({
+  value,
+  onChangeText,
+  className,
+  multiline = false,
+  ...rest
+}: FieldInputProps) => {
   const baseClass = 'bg-gray-100 px-4 py-3 rounded-xl text-gray-800';
   return (
     <TextInput
@@ -186,7 +189,8 @@ export default function FundRequestScreen() {
           setFieldValue,
           setFieldTouched,
         }) => {
-          const getError = (field: keyof FundRequestValues) => (touched[field] ? errors[field] : undefined);
+          const getError = (field: keyof FundRequestValues) =>
+            touched[field] ? errors[field] : undefined;
           return (
             <View>
               <KeyboardAwareScrollView
@@ -349,14 +353,14 @@ export default function FundRequestScreen() {
               <DropdownModal
                 visible={showDepositTypeModal}
                 options={DEPOSIT_TYPE_OPTIONS}
-                onSelect={(value) => setFieldValue('depositType', value)}
+                onSelect={value => setFieldValue('depositType', value)}
                 onClose={() => setShowDepositTypeModal(false)}
               />
 
               <DropdownModal
                 visible={showPaymentModeModal}
                 options={PAYMENT_MODE_OPTIONS}
-                onSelect={(value) => setFieldValue('paymentMode', value)}
+                onSelect={value => setFieldValue('paymentMode', value)}
                 onClose={() => setShowPaymentModeModal(false)}
               />
             </View>

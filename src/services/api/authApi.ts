@@ -1,4 +1,3 @@
-
 // ============================================
 // authApi.ts
 // ============================================
@@ -69,8 +68,6 @@ export const authApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ['Auth'],
     }),
-
-    
   }),
   overrideExisting: false,
 });

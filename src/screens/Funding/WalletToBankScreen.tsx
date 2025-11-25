@@ -1,4 +1,12 @@
-import { Alert, ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useCallback, useMemo, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Formik, FormikHelpers } from 'formik';
@@ -31,7 +39,7 @@ const validationSchema = Yup.object().shape({
   amount: Yup.string()
     .required('Amount is required')
     .matches(/^\d+(\.\d{1,2})?$/, 'Enter a valid amount')
-    .test('positive', 'Amount must be greater than zero', (value) => {
+    .test('positive', 'Amount must be greater than zero', value => {
       return value ? parseFloat(value) > 0 : false;
     }),
   confirmAmount: Yup.string()
@@ -59,41 +67,41 @@ const INITIAL_VALUES: FormValues = {
   subProductId: DEFAULT_SUB_PRODUCT,
 };
 
-const InputField = React.memo(({
-  label,
-  value,
-  onChangeText,
-  placeholder,
-  error,
-  touched,
-  keyboardType = 'default',
-  editable = true,
-}: {
-  label: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  placeholder?: string;
-  error?: string;
-  touched?: boolean;
-  keyboardType?: 'default' | 'numeric';
-  editable?: boolean;
-}) => (
-  <View className="mb-3">
-    <Text className="text-sm text-primary_gray mb-1 font-semibold">{label} *</Text>
-    <TextInput
-      value={value}
-      onChangeText={onChangeText}
-      placeholder={placeholder}
-      placeholderTextColor="#9CA3AF"
-      keyboardType={keyboardType}
-      editable={editable}
-      className="bg-gray-50 rounded-2xl px-4 py-3 border border-gray-200 text-primary_gray"
-    />
-    {touched && error ? (
-      <Text className="text-xs text-red-500 mt-1">{error}</Text>
-    ) : null}
-  </View>
-));
+const InputField = React.memo(
+  ({
+    label,
+    value,
+    onChangeText,
+    placeholder,
+    error,
+    touched,
+    keyboardType = 'default',
+    editable = true,
+  }: {
+    label: string;
+    value: string;
+    onChangeText: (text: string) => void;
+    placeholder?: string;
+    error?: string;
+    touched?: boolean;
+    keyboardType?: 'default' | 'numeric';
+    editable?: boolean;
+  }) => (
+    <View className="mb-3">
+      <Text className="text-sm text-primary_gray mb-1 font-semibold">{label} *</Text>
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#9CA3AF"
+        keyboardType={keyboardType}
+        editable={editable}
+        className="bg-gray-50 rounded-2xl px-4 py-3 border border-gray-200 text-primary_gray"
+      />
+      {touched && error ? <Text className="text-xs text-red-500 mt-1">{error}</Text> : null}
+    </View>
+  ),
+);
 InputField.displayName = 'InputField';
 
 export default function WalletToBankScreen() {
@@ -166,7 +174,7 @@ export default function WalletToBankScreen() {
         setShowFailure(true);
       }
     },
-    [retailerId, sendPayout]
+    [retailerId, sendPayout],
   );
 
   const handleSuccessClose = useCallback(() => setShowSuccess(false), []);
@@ -176,15 +184,16 @@ export default function WalletToBankScreen() {
   }, []);
 
   const banks = profile?.myBanksList ?? [];
-  const maskedBanks = useMemo(() =>
-    banks.map(bank => ({
-      value: bank.id.toString(),
-      label: `${bank.bankName} • ${bank.accountNo.slice(-4)}`,
-      accountNumber: bank.accountNo,
-      ifscCode: bank.ifcscode,
-      accountName: bank.accountName,
-    })),
-    [banks]
+  const maskedBanks = useMemo(
+    () =>
+      banks.map(bank => ({
+        value: bank.id.toString(),
+        label: `${bank.bankName} • ${bank.accountNo.slice(-4)}`,
+        accountNumber: bank.accountNo,
+        ifscCode: bank.ifcscode,
+        accountName: bank.accountName,
+      })),
+    [banks],
   );
 
   const derivedInitialValues = useMemo(() => {
@@ -205,7 +214,6 @@ export default function WalletToBankScreen() {
       contentContainerStyle={{ padding: 20 }}
       showsVerticalScrollIndicator={false}
     >
-      
       <View className="bg-white rounded-3xl px-5 py-6 shadow-sm border border-[#ECECF1]">
         {retailerId ? (
           <Text className="text-xs text-gray-500 mb-4">Retailer ID: {retailerId}</Text>
@@ -233,13 +241,16 @@ export default function WalletToBankScreen() {
 
                 {/* 2. Select Bank */}
                 <View className="mb-3">
-                  <Text className="text-sm text-primary_gray mb-1 font-semibold">Select Bank *</Text>
+                  <Text className="text-sm text-primary_gray mb-1 font-semibold">
+                    Select Bank *
+                  </Text>
                   <TouchableOpacity
                     onPress={() => setBankDropdownOpen(prev => !prev)}
                     className="px-4 py-3 rounded-2xl border border-gray-200 bg-gray-50 flex-row justify-between items-center"
                   >
                     <Text className="text-primary_gray">
-                      {selectedBank?.label ?? (profileLoading ? 'Loading banks...' : 'Select a bank')}
+                      {selectedBank?.label ??
+                        (profileLoading ? 'Loading banks...' : 'Select a bank')}
                     </Text>
                     <Icon
                       name={bankDropdownOpen ? 'arrow-drop-up' : 'arrow-drop-down'}
@@ -295,7 +306,9 @@ export default function WalletToBankScreen() {
 
                 {/* 5. Payment Mode */}
                 <View className="mb-3">
-                  <Text className="text-sm text-primary_gray mb-1 font-semibold">Payment Mode *</Text>
+                  <Text className="text-sm text-primary_gray mb-1 font-semibold">
+                    Payment Mode *
+                  </Text>
                   <View className="flex-row flex-wrap gap-2">
                     {PAYMENT_MODES.map(mode => {
                       const selected = values.paymentMode === mode;

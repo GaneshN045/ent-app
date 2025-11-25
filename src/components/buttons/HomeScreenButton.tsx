@@ -26,19 +26,21 @@ export default function HomeScreenButton({
         rounded-3xl
         px-4 py-6
         border border-[#ECECF1]
-        shadow-sm shadow-gray-300/30
         active:opacity-80
         items-center
       "
-      style={{ elevation: 2 }}
+      style={{
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.12,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 3 },
+      }}
     >
-      {/* Icon */}
       <Icon name={icon} size={28} color={COLORS.GRAY_ICON} />
 
-      {/* Title */}
       <Text className="text-lg font-semibold text-primary_gray mt-3 text-center">{title}</Text>
 
-      {/* Subtitle */}
       {subtitle && (
         <Text className="text-sm text-secondary_gray mt-1 text-center leading-4">{subtitle}</Text>
       )}

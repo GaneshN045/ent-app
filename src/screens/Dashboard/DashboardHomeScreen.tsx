@@ -12,18 +12,18 @@ import { useProfileData } from '../../hooks/useProfileData';
 export default function DashboardHomeScreen() {
   const navigation = useNavigation<any>();
   const [token, setToken] = useState<string | null>(null);
-  const user = useAppSelector(state=> state.auth.user)
+  const user = useAppSelector(state => state.auth.user);
 
-  const [userId, setUserId] = useState<any>('')
+  const [userId, setUserId] = useState<any>('');
 
   const { profile } = useProfileData();
 
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const id = await AsyncStorage.getItem('USER_ID')
+      const id = await AsyncStorage.getItem('USER_ID');
       if (mounted) {
-       setUserId(id)
+        setUserId(id);
       }
     })();
     return () => {
@@ -55,10 +55,10 @@ export default function DashboardHomeScreen() {
   return (
     <ScrollView className="bg-gray-50 flex-1" contentContainerStyle={{ paddingBottom: 40 }}>
       {/* Page Title */}
-      <View className=' flex flex-row items-center gap-2 px-5 mt-5'>
-        <Text className='text-xl font-bold text-primary_gray'>Dashboard</Text>
-        <Text className=' text-secondary_gray'>({profile?.info?.memberId ?? userId ?? 'N/A'})</Text>
-        </View>
+      <View className=" flex flex-row items-center gap-2 px-5 mt-5">
+        <Text className="text-xl font-bold text-primary_gray">Dashboard</Text>
+        <Text className=" text-secondary_gray">({profile?.info?.memberId ?? userId ?? 'N/A'})</Text>
+      </View>
 
       {/* ===== TOP SUMMARY CARD (Premium Big Card) ===== */}
       <View

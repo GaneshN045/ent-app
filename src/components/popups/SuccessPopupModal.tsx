@@ -107,7 +107,7 @@ export function SuccessPopup({
               onPrimaryPress?.();
               onRequestClose();
             }}
-            className='border-2  border-primary mt-12 '
+            className="border-2  border-primary mt-12 "
             style={{
               backgroundColor: 'white',
               borderRadius: 18,

@@ -11,7 +11,7 @@ import { Role, canAccess, allMenuItems } from '../../navigation/menuConfig';
 import { useUserId } from '../../hooks/useUserId';
 import { useGetWalletBalanceQuery } from '../../services/api/profileApi';
 
-type FundingNavigationProp = { 
+type FundingNavigationProp = {
   navigate: (screen: keyof typeof SCREENS) => void;
 };
 
@@ -20,10 +20,13 @@ export default function FundingHomeScreen() {
   const userRole = (useAppSelector(state => state.auth.user?.role) || 'RT') as Role;
   const { userId: persistedUserId } = useUserId();
   const memberId = persistedUserId;
-  const { data: walletResponse, isFetching: walletFetching, refetch } =
-    useGetWalletBalanceQuery(memberId ?? '', {
-      skip: !Boolean(memberId),
-    });
+  const {
+    data: walletResponse,
+    isFetching: walletFetching,
+    refetch,
+  } = useGetWalletBalanceQuery(memberId ?? '', {
+    skip: !Boolean(memberId),
+  });
   const walletData = walletResponse?.data;
   const [refreshing, setRefreshing] = useState(false);
 
@@ -102,7 +105,9 @@ export default function FundingHomeScreen() {
   return (
     <ScrollView
       className="flex-1 bg-[#F7F8FA]"
-      refreshControl={<RefreshControl refreshing={refreshing || walletFetching} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing || walletFetching} onRefresh={onRefresh} />
+      }
     >
       <View className="px-5 pt-6 pb-10">
         {/* Page Title */}
@@ -147,7 +152,9 @@ export default function FundingHomeScreen() {
                   />
                 )}
                 {!walletFetching && (
-                  <Text className="text-[28px] font-medium text-gray-700 mt-1">{postpaidLabel}</Text>
+                  <Text className="text-[28px] font-medium text-gray-700 mt-1">
+                    {postpaidLabel}
+                  </Text>
                 )}
               </View>
             </View>

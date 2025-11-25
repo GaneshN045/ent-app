@@ -71,7 +71,7 @@ export function LoginForm({
 
   const handleSubmit = async (
     values: LoginFormValues,
-    { setSubmitting }: FormikHelpers<LoginFormValues>
+    { setSubmitting }: FormikHelpers<LoginFormValues>,
   ) => {
     onLoadingChange(true);
     await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
@@ -90,13 +90,10 @@ export function LoginForm({
       };
 
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('OTP request timed out after 30 seconds')), 30000)
+        setTimeout(() => reject(new Error('OTP request timed out after 30 seconds')), 30000),
       );
 
-      const response: any = await Promise.race([
-        sendOtpMutation(payload).unwrap(),
-        timeoutPromise,
-      ]);
+      const response: any = await Promise.race([sendOtpMutation(payload).unwrap(), timeoutPromise]);
 
       if (!response || response.statusCode !== 200 || !response.data?.otp) {
         const errorMsg = response?.message || 'Failed to send OTP. Please try again.';
@@ -137,12 +134,23 @@ export function LoginForm({
       validateOnChange
       validateOnBlur
     >
-      {({ values, errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit: formikHandleSubmit }) => (
+      {({
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        handleChange,
+        handleBlur,
+        handleSubmit: formikHandleSubmit,
+      }) => (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 justify-center">
             {/* Logo/Header Section */}
             <View className="items-center mb-12">
-              <View style={{ width: 80 }} className="h-24 rounded-2xl bg-white items-center justify-center mb-6 shadow-lg">
+              <View
+                style={{ width: 80 }}
+                className="h-24 rounded-2xl bg-white items-center justify-center mb-6 shadow-lg"
+              >
                 <Image
                   source={COMPANY_LOGO}
                   style={{ width: 60, height: 70 }}
@@ -150,34 +158,28 @@ export function LoginForm({
                 />
               </View>
 
-              <Text className="text-4xl font-bold text-gray-800 mb-2">
-                Welcome Back
-              </Text>
+              <Text className="text-4xl font-bold text-gray-800 mb-2">Welcome Back</Text>
 
-              <Text className="text-base text-gray-500">
-                Sign in to continue to your account
-              </Text>
+              <Text className="text-base text-gray-500">Sign in to continue to your account</Text>
             </View>
 
             {/* Login Form */}
             <View className="mb-6">
               {/* Mobile Input */}
               <View className="mb-5">
-                <Text className="text-sm font-semibold text-gray-700 mb-2">
-                  Mobile Number
-                </Text>
+                <Text className="text-sm font-semibold text-gray-700 mb-2">Mobile Number</Text>
                 <View className="relative">
                   <TextInput
                     className={`bg-white rounded-2xl px-5 py-4 text-base text-gray-900 border ${
                       touched.mobile && errors.mobile
                         ? 'border-red-500'
                         : values.mobile.length === 10
-                        ? 'border-green-500'
-                        : 'border-gray-200'
+                          ? 'border-green-500'
+                          : 'border-gray-200'
                     }`}
                     keyboardType="phone-pad"
                     value={values.mobile}
-                    onChangeText={(text) => {
+                    onChangeText={text => {
                       const numeric = text.replace(/[^0-9]/g, '');
                       handleChange('mobile')(numeric);
                       onMobileChange(numeric);
@@ -204,12 +206,12 @@ export function LoginForm({
                       touched.password && errors.password
                         ? 'border-red-500'
                         : values.password.length > 0 && !errors.password
-                        ? 'border-green-500'
-                        : 'border-gray-200'
+                          ? 'border-green-500'
+                          : 'border-gray-200'
                     }`}
                     secureTextEntry={!showPassword}
                     value={values.password}
-                    onChangeText={(text) => {
+                    onChangeText={text => {
                       handleChange('password')(text);
                       onPasswordChange(text);
                       setApiError('');
@@ -257,9 +259,7 @@ export function LoginForm({
                 {isSubmitting ? (
                   <View className="flex-row items-center">
                     <ActivityIndicator color={'white'} size="small" />
-                    <Text className="text-white font-semibold text-base ml-2">
-                      Sending OTP...
-                    </Text>
+                    <Text className="text-white font-semibold text-base ml-2">Sending OTP...</Text>
                   </View>
                 ) : (
                   <Text

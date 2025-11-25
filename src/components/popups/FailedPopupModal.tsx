@@ -23,7 +23,7 @@ export function FailedPopup({
   if (!visible) return null;
 
   return (
-    <Modal 
+    <Modal
       visible={visible}
       transparent
       animationType="fade"

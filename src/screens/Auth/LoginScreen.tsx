@@ -124,7 +124,7 @@ export default function LoginScreen() {
         statusBarTranslucent
         onRequestClose={() => {
           // if (!isVerifyingOtp) {
-            resetModal();
+          resetModal();
           // }
         }}
       >

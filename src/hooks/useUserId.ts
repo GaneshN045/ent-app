@@ -21,4 +21,4 @@ export const useUserId = (): {
   }, [refresh]);
 
   return { userId, loading, refresh } as const;
-}
+};

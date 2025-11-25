@@ -37,9 +37,12 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
 
   const memberId = persistedUserId;
   const shouldFetchWallet = Boolean(memberId);
-  const { data: walletResponse, isFetching: walletFetching } = useGetWalletBalanceQuery(memberId ?? '', {
-    skip: !shouldFetchWallet,
-  });
+  const { data: walletResponse, isFetching: walletFetching } = useGetWalletBalanceQuery(
+    memberId ?? '',
+    {
+      skip: !shouldFetchWallet,
+    },
+  );
   const walletData = walletResponse?.data;
 
   const formatCurrency = (value?: number) =>
@@ -50,8 +53,12 @@ export default function CustomDrawerContent({ navigation, menuItems }: CustomDra
           maximumFractionDigits: 2,
         })}`;
 
-  const prepaidBalanceLabel = walletFetching ? 'Loading...' : formatCurrency(walletData?.prepaidBalance);
-  const postpaidBalanceLabel = walletFetching ? 'Loading...' : formatCurrency(walletData?.postpaidBalance);
+  const prepaidBalanceLabel = walletFetching
+    ? 'Loading...'
+    : formatCurrency(walletData?.prepaidBalance);
+  const postpaidBalanceLabel = walletFetching
+    ? 'Loading...'
+    : formatCurrency(walletData?.postpaidBalance);
 
   const dispatch = useDispatch();
 
