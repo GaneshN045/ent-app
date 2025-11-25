@@ -13,6 +13,7 @@ import COLORS from '../../constants/colors';
 import SCREENS from '../../constants/screens';
 import { FundingStackParamList } from '../../navigation/types';
 import { SuccessPopup, type SuccessPopupProps } from '../../components/popups/SuccessPopupModal';
+import { FailedPopup } from '../../components/popups/FailedPopupModal';
 
 // Types
 type WalletType = 'PREPAID' | 'POSTPAID';
@@ -124,12 +125,32 @@ export default function WalletToWalletScreen() {
   const navigation = useNavigation<StackNavigationProp<FundingStackParamList, typeof SCREENS.WALLET_TO_WALLET_SCREEN>>();
 
   const [triggerTransfer, { isLoading: isSubmitting }] = useWalletToWalletTransferMutation();
+
   const { refetch: refetchWalletBalance } = useGetWalletBalanceQuery(hierarchyId ?? '', {
     skip: !hierarchyId,
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [showFailure, setShowFailure] = useState(false);
+  const [failureMessage, setFailureMessage] = useState('');
+
+  const resolveMessage = (payload: unknown) => {
+    if (!payload) return undefined;
+    if (typeof payload === 'string') {
+      try {
+        const parsed = JSON.parse(payload);
+        if (parsed?.message) return parsed.message;
+      } catch {
+        // fallback to raw string
+      }
+      return payload;
+    }
+    if (typeof payload === 'object') {
+      return (payload as { message?: string }).message;
+    }
+    return undefined;
+  };
 
   const handleSubmit = useCallback(async (
     values: FormValues,
@@ -153,9 +174,16 @@ export default function WalletToWalletScreen() {
       refetchWalletBalance?.();
       setSuccessMessage(response?.message || 'Transfer requested successfully.');
       setShowSuccess(true);
+      setShowFailure(false);
+      setFailureMessage('');
     } catch (error: any) {
-      const errorMessage = error?.data?.message || error?.message || 'Transfer failed. Please try again.';
-      Alert.alert('Transfer Failed', errorMessage, [{ text: 'OK', style: 'cancel' }]);
+      const errorMessage =
+        resolveMessage(error?.data) ||
+        resolveMessage(error?.error) ||
+        error?.message ||
+        'Transfer failed. Please try again.';
+      setFailureMessage(errorMessage);
+      setShowFailure(true);
     }
   }, [hierarchyId, triggerTransfer, refetchWalletBalance]);
 
@@ -163,6 +191,11 @@ export default function WalletToWalletScreen() {
     setShowSuccess(false);
     navigation.navigate(SCREENS.FUNDING_HOME_SCREEN);
   }, [navigation]);
+
+  const handleFailureClose = useCallback(() => {
+    setShowFailure(false);
+    setFailureMessage('');
+  }, []);
 
   const toggleWallets = useCallback((
     setFieldValue: (field: string, value: any) => void,
@@ -282,6 +315,12 @@ export default function WalletToWalletScreen() {
         primaryLabel="Go to Funding"
         onPrimaryPress={handleSuccessClose}
         onRequestClose={handleSuccessClose}
+      />
+      <FailedPopup
+        visible={showFailure}
+        message={failureMessage || 'Transfer failed. Please try again.'}
+        onRequestClose={handleFailureClose}
+        onPrimaryPress={handleFailureClose}
       />
     </View>
   );
