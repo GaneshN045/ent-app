@@ -1,7 +1,7 @@
 // File: @src/screens/Reports/commission_charges/components/TableFilterRow.tsx
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text } from 'react-native';
-import type { TableData } from '../types';
+import type { TableData } from '../commission_charges/types';
 
 interface TableFilterRowProps {
   visibleColumns: (keyof TableData)[];

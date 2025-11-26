@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import COLORS from '../../../../../constants/colors';
+import COLORS from '../../../constants/colors';
 
 interface DatePickerInputProps {
   label: string;

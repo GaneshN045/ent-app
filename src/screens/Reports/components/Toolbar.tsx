@@ -2,8 +2,8 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, Modal, Pressable, ScrollView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import type { TableData } from '../types';
-import COLORS from '../../../../constants/colors';
+import type { TableData } from '../commission_charges/types';
+import COLORS from '../../../constants/colors';
 
 interface ToolbarProps {
   onRefresh: () => void;

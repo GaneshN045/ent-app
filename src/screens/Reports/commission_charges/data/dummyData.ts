@@ -6,6 +6,8 @@ const WALLET_TYPES = ['PREPAID', 'POSTPAID', 'CORPORATE', 'SAVINGS'];
 const TX_TYPES = ['Commission', 'Charge', 'Deduction', 'Credit'];
 const OPERATORS = ['Operator A', 'Operator B', 'Operator C', 'Operator D', 'Operator E'];
 
+const formatCurrencyValue = (value: number) => Number(value.toFixed(2));
+
 export const generateCommissionChargesData = (count: number = 100): TableData[] => {
   const data: TableData[] = [];
   const now = new Date();
@@ -22,12 +24,12 @@ export const generateCommissionChargesData = (count: number = 100): TableData[] 
     data.push({
       txId: `TXN-${String(i + 1).padStart(8, '0')}`,
       subProductName: PRODUCTS[i % PRODUCTS.length],
-      walletType: WALLET_TYPES[i % WALLET_TYPES.length],
+      walletType: WALLET_TYPES[i % WALLET_TYPES.length], 
       txType: TX_TYPES[i % TX_TYPES.length],
       operator: OPERATORS[i % OPERATORS.length],
-      balBefore: balBefore.toFixed(2),
-      amount: amount.toFixed(2),
-      balAfter: balAfter.toFixed(2),
+      balBefore: formatCurrencyValue(balBefore),
+      amount: formatCurrencyValue(amount),
+      balAfter: formatCurrencyValue(balAfter),
       transactionDate: date.toISOString().split('T')[0],
       transactionTime: new Date(date.getTime() + Math.random() * 86400000)
         .toISOString()

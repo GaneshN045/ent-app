@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
 import TableFilterRow from './TableFilterRow';
-import type { TableData } from '../types';
+import type { TableData } from '../commission_charges/types';
 
 interface GenericMasterTableProps {
   data: TableData[];

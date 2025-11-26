@@ -11,7 +11,7 @@ import WalletReportScreen from '../../screens/Reports/WalletReportScreen';
 import NetworkTransactionScreen from '../../screens/Reports/NetworkTransactionScreen';
 import SearchTransactionScreen from '../../screens/Reports/SearchTransactionScreen';
 import FundLoadingScreen from '../../screens/Reports/FundLoadingScreen';
-import PendingTransactionScreen from '../../screens/Reports/PendingTransactionScreen';
+import PendingTransactionScreen from '../../screens/Reports/pending_transactions/PendingTransactionScreen';
 import DebitHistoryScreen from '../../screens/Reports/DebitHistoryScreen';
 import DownLineBalanceScreen from '../../screens/Reports/DownLineBalanceScreen';
 
