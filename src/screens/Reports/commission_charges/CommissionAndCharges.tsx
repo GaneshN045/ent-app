@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import ReportsFilterModal from './components/ReportsFilterModal';
 import GenericMasterTable from './components/GenericMasterTable';
 import Toolbar from './components/Toolbar';
-import ShimmerTableRows from './components/ShimmerTableRows';
+import TableRowsSkeleton from './components/TableRowsSkeleton';
 import { generateCommissionChargesData } from './data/dummyData';
 import type { FilterValues, TableData } from './types';
 
@@ -240,7 +240,7 @@ const CommissionAndCharges: React.FC = () => {
 
       <ScrollView className="flex-1 px-4 py-4">
         {isLoading ? (
-          <ShimmerTableRows count={10} />
+          <TableRowsSkeleton count={10} />
         ) : (
           <GenericMasterTable
             data={filteredData}

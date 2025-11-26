@@ -2,11 +2,11 @@
 import React from 'react';
 import { View } from 'react-native';
 
-interface ShimmerTableRowsProps {
+interface TableRowsSkeletonProps {
   count: number;
 }
 
-const ShimmerTableRows: React.FC<ShimmerTableRowsProps> = ({ count }) => {
+const TableRowsSkeleton: React.FC<TableRowsSkeletonProps> = ({ count }) => {
   return (
     <View className="bg-white rounded-lg overflow-hidden">
       {Array.from({ length: count }).map((_, i) => (
@@ -21,4 +21,4 @@ const ShimmerTableRows: React.FC<ShimmerTableRowsProps> = ({ count }) => {
   );
 };
 
-export default ShimmerTableRows;
+export default TableRowsSkeleton;
