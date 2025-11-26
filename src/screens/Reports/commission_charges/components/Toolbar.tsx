@@ -1,7 +1,9 @@
 // File: @src/screens/Reports/commission_charges/components/Toolbar.tsx
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Modal, Pressable, ScrollView } from 'react-native';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import type { TableData } from '../types';
+import COLORS from '../../../../constants/colors';
 
 interface ToolbarProps {
   onRefresh: () => void;
@@ -11,6 +13,8 @@ interface ToolbarProps {
   onToggleAllColumns: () => void;
   visibleColumns: Record<keyof TableData, boolean>;
   columns: (keyof TableData)[];
+  onToggleSearch: () => void;
+  searchActive: boolean;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -21,70 +25,167 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onToggleAllColumns,
   visibleColumns,
   columns,
+  onToggleSearch,
+  searchActive,
 }) => {
-  const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const [columnModal, setColumnModal] = useState(false);
+  const [tempSelection, setTempSelection] = useState(visibleColumns);
+
+  const handleSelectAll = () => {
+    const newState: any = {};
+    columns.forEach(col => (newState[col] = true));
+    setTempSelection(newState);
+  };
+
+  const handleSubmit = () => {
+    // Apply changes
+    Object.keys(tempSelection).forEach(col => {
+      const key = col as keyof TableData;
+      if (tempSelection[key] !== visibleColumns[key]) {
+        onToggleColumns(key);
+      }
+    });
+
+    // Close modal
+    setColumnModal(false);
+  };
 
   return (
-    <View className="bg-white border-b border-gray-200">
-      <View className="flex-row items-center justify-between px-4 py-3 gap-2">
-        {/* Refresh Button */}
-        <TouchableOpacity
-          onPress={onRefresh}
-          className="px-3 py-2 bg-gray-100 rounded-lg active:bg-gray-200"
-        >
-          <Text className="text-sm font-semibold text-gray-700">🔄 Refresh</Text>
-        </TouchableOpacity>
+    <View className="bg-white border-b border-gray-200 px-4 py-4">
+      {/* TITLE */}
+      <Text className="text-base font-semibold text-gray-700 mb-3">Tools</Text>
 
-        {/* Export Button */}
-        <TouchableOpacity
-          onPress={onExport}
-          className="px-3 py-2 bg-green-100 rounded-lg active:bg-green-200"
-        >
-          <Text className="text-sm font-semibold text-green-700">📥 Export</Text>
-        </TouchableOpacity>
-
-        {/* Filter Toggle */}
-        <TouchableOpacity
-          onPress={onToggleFilters}
-          className="px-3 py-2 bg-blue-100 rounded-lg active:bg-blue-200"
-        >
-          <Text className="text-sm font-semibold text-blue-700">⚙️ Filters</Text>
-        </TouchableOpacity>
-
-        {/* Columns Menu */}
-        <View className="relative">
+      {/* --------------------- TOP ROW --------------------- */}
+      <View className="flex-row items-center justify-between">
+        {/* Left: Filters + Columns */}
+        <View className="flex-row items-center gap-3">
+          {/* Filters */}
           <TouchableOpacity
-            onPress={() => setShowColumnMenu(!showColumnMenu)}
-            className="px-3 py-2 bg-purple-100 rounded-lg active:bg-purple-200"
+            onPress={onToggleFilters}
+            className="flex-row items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 shadow-sm"
           >
-            <Text className="text-sm font-semibold text-purple-700">👁️ Columns</Text>
+            <MaterialIcons name="tune" size={20} color="#374151" />
+            <Text className="text-sm font-semibold text-gray-800">Filters</Text>
           </TouchableOpacity>
 
-          {showColumnMenu && (
-            <View className="absolute right-0 top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
-              <TouchableOpacity
-                onPress={onToggleAllColumns}
-                className="px-4 py-2 border-b border-gray-200"
-              >
-                <Text className="font-semibold text-gray-800">Toggle All</Text>
-              </TouchableOpacity>
+          {/* Columns (modal trigger) */}
+          <TouchableOpacity
+            onPress={() => {
+              setTempSelection(visibleColumns);
+              setColumnModal(true);
+            }}
+            className="flex-row items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 shadow-sm"
+          >
+            <MaterialIcons name="view-column" size={20} color="#374151" />
+            <Text className="text-sm font-semibold text-gray-800">Columns</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Right: Search */}
+        <TouchableOpacity
+          onPress={onToggleSearch}
+          className={`flex-row items-center gap-2 px-5 py-2.5 rounded-lg shadow-sm ${
+            searchActive ? 'bg-gray-700' : 'bg-gray-100'
+          }`}
+        >
+          <MaterialIcons name="search" size={20} color={searchActive ? '#fff' : '#374151'} />
+          <Text
+            className={`text-sm font-semibold ${searchActive ? 'text-white' : 'text-gray-800'}`}
+          >
+            Search
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* --------------------- DIVIDER --------------------- */}
+      <View className="h-[1px] bg-gray-200 my-4" />
+
+      {/* --------------------- BOTTOM ROW --------------------- */}
+      <View className="flex-row items-center justify-between">
+        {/* Refresh */}
+        <TouchableOpacity
+          onPress={onRefresh}
+          className="flex-row items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 shadow-sm"
+        >
+          <MaterialIcons name="refresh" size={20} color="#374151" />
+          <Text className="text-sm font-semibold text-gray-800">Refresh</Text>
+        </TouchableOpacity>
+
+        {/* Export */}
+        <TouchableOpacity
+          onPress={onExport}
+          className="flex-row items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-100 shadow-sm"
+        >
+          <MaterialIcons name="file-download" size={20} color="#374151" />
+          <Text className="text-sm font-semibold text-gray-800">Export</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* COLUMN SELECTION MODAL */}
+      {/* ---------------------------------------------------------------- */}
+      <Modal visible={columnModal} statusBarTranslucent transparent animationType="fade">
+        {/* Outside Press → close modal */}
+        <Pressable
+          onPress={() => setColumnModal(false)}
+          className="flex-1 bg-black/40 justify-center px-6"
+        >
+          <Pressable
+            onPress={e => e.stopPropagation()} // Prevent closing when clicking inside
+            className="bg-white rounded-lg p-5 shadow-2xl"
+          >
+            {/* Header */}
+            <View className="flex-row justify-between items-center mb-3">
+              <Text className="text-lg font-semibold text-gray-800">Select Columns</Text>
+
+              <Pressable onPress={() => setColumnModal(false)}>
+                <MaterialIcons name="close" size={26} color="#555" />
+              </Pressable>
+            </View>
+
+            {/* Select All */}
+            <TouchableOpacity
+              onPress={handleSelectAll}
+              className="flex-row items-center gap-2 py-3 border-b border-gray-200"
+            >
+              <MaterialIcons name="done-all" size={20} color="#374151" />
+              <Text className="font-medium text-gray-900">Select All</Text>
+            </TouchableOpacity>
+
+            {/* Column List */}
+            <ScrollView className="max-h-[80%] mt-2">
               {columns.map(col => (
                 <TouchableOpacity
                   key={col}
-                  onPress={() => {
-                    onToggleColumns(col);
-                    setShowColumnMenu(false);
-                  }}
-                  className="px-4 py-2 flex-row items-center justify-between"
+                  onPress={() =>
+                    setTempSelection(prev => ({
+                      ...prev,
+                      [col]: !prev[col],
+                    }))
+                  }
+                  className="flex-row items-center justify-between py-3"
                 >
-                  <Text className="text-gray-700 capitalize">{col}</Text>
-                  <Text>{visibleColumns[col] ? '✓' : '○'}</Text>
+                  <Text className="text-gray-800 capitalize">{col}</Text>
+
+                  <MaterialIcons
+                    name={tempSelection[col] ? 'check-box' : 'check-box-outline-blank'}
+                    size={22}
+                    color={tempSelection[col] ? COLORS.PRIMARY_COLOR : '#9CA3AF'}
+                  />
                 </TouchableOpacity>
               ))}
-            </View>
-          )}
-        </View>
-      </View>
+            </ScrollView>
+
+            {/* SUBMIT BUTTON */}
+            <TouchableOpacity
+              onPress={handleSubmit}
+              className="mt-5 bg-white border border-primary rounded-xl py-3 items-center"
+            >
+              <Text className="text-primary font-semibold text-base">Apply</Text>
+            </TouchableOpacity>
+          </Pressable>
+        </Pressable>
+      </Modal>
     </View>
   );
 };

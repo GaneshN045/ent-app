@@ -31,9 +31,9 @@ export default function HomeScreenButton({
       "
       style={{
         elevation: 6,
-        shadowColor: '#000',
+        shadowColor: 'gray',
         shadowOpacity: 0.12,
-        shadowRadius: 8,
+        shadowRadius: 4,
         shadowOffset: { width: 0, height: 3 },
       }}
     >

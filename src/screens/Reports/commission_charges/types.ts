@@ -2,6 +2,7 @@ export interface FilterValues {
   dateRange: { startDate: string; endDate: string };
   product: string;
   hierarchy: string;
+  hierarchyId: string;
   walletType: string;
   reportType: string;
 }

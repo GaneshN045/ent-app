@@ -23,6 +23,7 @@ const Stack = createStackNavigator();
 export default function ReportsStack() {
   return (
     <Stack.Navigator
+      initialRouteName={SCREENS.COMMISSION_CHARGES_SCREEN}
       screenOptions={({ navigation }: any) => ({
         headerShown: true,
         headerStyle: { backgroundColor: '#fff' },
