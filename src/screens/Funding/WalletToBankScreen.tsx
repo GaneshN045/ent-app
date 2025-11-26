@@ -339,14 +339,13 @@ export default function WalletToBankScreen() {
 
                 <TouchableOpacity
                   activeOpacity={0.85}
-                  className="rounded-2xl py-4 flex-row items-center justify-center mt-4 shadow-md"
-                  style={{ backgroundColor: COLORS.PRIMARY_COLOR }}
+                  className="rounded-2xl bg-white border border-primary py-4 flex-row items-center justify-center mt-4 shadow-md"
                   onPress={() => handleSubmit()}
                   disabled={isLoading}
                 >
-                  {isLoading && <ActivityIndicator color="#FFF" style={{ marginRight: 8 }} />}
-                  <Icon name="send" size={20} color="#FFF" />
-                  <Text className="text-white font-semibold text-base ml-2">Request Payout</Text>
+                  {isLoading && <ActivityIndicator color={COLORS.PRIMARY_COLOR} style={{ marginRight: 8 }} />}
+                  <Icon name="send" size={20} color={COLORS.PRIMARY_COLOR} />
+                  <Text className="text-primary font-semibold text-base ml-2">Request Payout</Text>
                 </TouchableOpacity>
               </>
             );

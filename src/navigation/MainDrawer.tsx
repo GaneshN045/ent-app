@@ -22,9 +22,9 @@ export default function MainDrawer() {
 
   return (
     <Drawer.Navigator
-      initialRouteName={
-        hasMenuScreen(SCREENS.REPORTS_STACK) ? SCREENS.REPORTS_STACK : SCREENS.BOTTOM_STACK
-      }
+      // initialRouteName={
+      //   hasMenuScreen(SCREENS.REPORTS_STACK) ? SCREENS.REPORTS_STACK : SCREENS.BOTTOM_STACK
+      // }
       screenOptions={{
         headerShown: false,
       }}

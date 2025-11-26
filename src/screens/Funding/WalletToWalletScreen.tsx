@@ -297,14 +297,18 @@ export default function WalletToWalletScreen() {
                 {/* Submit Button */}
                 <TouchableOpacity
                   activeOpacity={0.85}
-                  className="rounded-2xl py-4 flex-row items-center justify-center shadow-md"
-                  style={{ backgroundColor: COLORS.PRIMARY_COLOR }}
+                  className="rounded-2xl bg-white border border-primary py-4 flex-row items-center justify-center mt-4 shadow-md"
                   onPress={() => handleSubmit()}
                   disabled={isSubmitting}
                 >
-                  {isSubmitting && <ActivityIndicator color="#FFF" style={{ marginRight: 8 }} />}
-                  <Icon name="send" size={20} color="#FFF" />
-                  <Text className="text-white font-semibold text-base ml-2">Submit</Text>
+                  {isSubmitting && (
+                    <ActivityIndicator
+                      color={COLORS.PRIMARY_COLOR}
+                      style={{ marginRight: 8 }}
+                    />
+                  )}
+                  <Icon name="send" size={20} color={COLORS.PRIMARY_COLOR} />
+                  <Text className="text-primary font-semibold text-base ml-2">Submit</Text>
                 </TouchableOpacity>
               </View>
             </View>

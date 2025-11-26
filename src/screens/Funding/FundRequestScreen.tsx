@@ -1,12 +1,13 @@
-import { View, Text, TextInput, TouchableOpacity, type TextInputProps } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, type TextInputProps } from 'react-native';
 import React, { useState, type ReactNode } from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import DatePicker from 'react-native-date-picker';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik, FormikHelpers, type FormikProps } from 'formik';
 import * as Yup from 'yup';
 import { DropdownModal } from '../../components/dropdowns/DropdownModal';
+import COLORS from '../../constants/colors';
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -188,7 +189,8 @@ export default function FundRequestScreen() {
           handleSubmit,
           setFieldValue,
           setFieldTouched,
-        }) => {
+          isSubmitting,
+        }: FormikProps<FundRequestValues>) => {
           const getError = (field: keyof FundRequestValues) =>
             touched[field] ? errors[field] : undefined;
           return (
@@ -340,11 +342,18 @@ export default function FundRequestScreen() {
                     </FieldWrapper>
 
                     <TouchableOpacity
-                      activeOpacity={0.9}
-                      className="bg-red-500 rounded-xl py-3 px-6 mt-4 shadow-md"
+                      activeOpacity={0.85}
+                      className="rounded-2xl bg-white border border-primary py-4 flex-row items-center justify-center mt-4 shadow-md"
                       onPress={() => handleSubmit()}
                     >
-                      <Text className="text-white font-semibold text-center text-base">SUBMIT</Text>
+                      {isSubmitting && (
+                        <ActivityIndicator
+                          color={COLORS.PRIMARY_COLOR}
+                          style={{ marginRight: 8 }}
+                        />
+                      )}
+                      <Icon name="send" size={20} color={COLORS.PRIMARY_COLOR} />
+                      <Text className="text-primary font-semibold text-base ml-2">SUBMIT</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
