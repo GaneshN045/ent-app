@@ -343,7 +343,9 @@ export default function WalletToBankScreen() {
                   onPress={() => handleSubmit()}
                   disabled={isLoading}
                 >
-                  {isLoading && <ActivityIndicator color={COLORS.PRIMARY_COLOR} style={{ marginRight: 8 }} />}
+                  {isLoading && (
+                    <ActivityIndicator color={COLORS.PRIMARY_COLOR} style={{ marginRight: 8 }} />
+                  )}
                   <Icon name="send" size={20} color={COLORS.PRIMARY_COLOR} />
                   <Text className="text-primary font-semibold text-base ml-2">Request Payout</Text>
                 </TouchableOpacity>

@@ -80,3 +80,14 @@ export interface SubProductDropdownResponse {
   message: string;
   data: SubProduct[];
 }
+
+export interface ProductDropdownItem {
+  id: string;
+  productName: string;
+}
+
+export interface ProductDropdownResponse {
+  statusCode: number;
+  message: string;
+  data: ProductDropdownItem[];
+}

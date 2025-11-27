@@ -17,6 +17,8 @@ interface SelectInputProps {
   identifier: string;
   activeSelect?: string | null;
   onDropdownToggle?: (identifier: string | null) => void;
+  required?: boolean;
+  disabled?: boolean;
 }
 
 const SelectInput: React.FC<SelectInputProps> = ({
@@ -29,6 +31,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   identifier,
   activeSelect,
   onDropdownToggle,
+  disabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -63,6 +66,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
   };
 
   const handleToggle = () => {
+    if (disabled) return;
+
     const willOpen = !isOpen;
     setIsOpen(willOpen);
     onDropdownToggle?.(willOpen ? identifier : null);
@@ -76,11 +81,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
       {/* Input Button */}
       <TouchableOpacity
         onPress={handleToggle}
+        disabled={disabled}
         className={`
           flex-row items-center justify-between
           rounded-xl px-4 py-3.5
-          bg-white
-          ${error ? 'border border-red-400' : 'border border-gray-200'}
+          ${disabled ? 'bg-gray-100 border border-gray-200' : 'bg-white'}
+          ${error ? 'border-red-400' : 'border-gray-200'}
         `}
         style={{
           elevation: 1,

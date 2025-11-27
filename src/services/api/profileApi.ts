@@ -4,6 +4,7 @@
 import { baseApi } from '../baseApi';
 import type {
   MemberProfileResponse,
+  ProductDropdownResponse,
   SubProductDropdownResponse,
   WalletBalanceResponse,
 } from '../types/profileApiTypes';
@@ -24,9 +25,21 @@ export const profileApi = baseApi.injectEndpoints({
         method: 'GET',
       }),
     }),
+    getProductDropdown: builder.query<ProductDropdownResponse, void>({
+      query: () => ({
+        url: '/api/products/dropdown/active',
+        method: 'GET',
+      }),
+    }),
     getSubProductsDropdown: builder.query<SubProductDropdownResponse, void>({
       query: () => ({
         url: '/api/sub-products/dropdown',
+        method: 'GET',
+      }),
+    }),
+    getSubProductsDropdownByProduct: builder.query<SubProductDropdownResponse, string | void>({
+      query: productId => ({
+        url: productId ? `/api/sub-products/dropdown/${productId}` : '/api/sub-products/dropdown',
         method: 'GET',
       }),
     }),
@@ -38,4 +51,6 @@ export const {
   useGetMemberProfileQuery,
   useGetWalletBalanceQuery,
   useGetSubProductsDropdownQuery,
+  useGetProductDropdownQuery,
+  useGetSubProductsDropdownByProductQuery,
 } = profileApi;

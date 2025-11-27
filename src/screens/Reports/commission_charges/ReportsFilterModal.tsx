@@ -15,8 +15,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SCREENS from '../../../constants/screens';
 
 import { Formik, FormikHelpers } from 'formik';
-import DatePickerInput from './DatePickerInput';
-import SelectInput from './SelectInput';
+import DatePickerInput from '../components/DatePickerInput';
+import SelectInput from '../components/SelectInput';
 import type { FilterValues } from '../commission_charges/types';
 
 interface ReportsFilterModalProps {

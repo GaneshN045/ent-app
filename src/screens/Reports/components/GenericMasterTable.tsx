@@ -1,22 +1,30 @@
 // File: @src/screens/Reports/commission_charges/components/GenericMasterTable.tsx
 import React, { useMemo } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Dimensions, TextInput } from 'react-native';
-import TableFilterRow from './TableFilterRow';
-import type { TableData } from '../commission_charges/types';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  TextInput,
+  ActivityIndicator,
+} from 'react-native';
 
-interface GenericMasterTableProps {
-  data: TableData[];
-  columns: (keyof TableData)[];
-  visibleColumns: Record<keyof TableData, boolean>;
+interface GenericMasterTableProps<T extends Record<string, any>> {
+  data: T[];
+  columns: (keyof T)[];
+  visibleColumns: Record<keyof T, boolean>;
   currentPage: number;
   itemsPerPage: number;
   onPageChange: (page: number) => void;
-  showFilters: boolean;
+  showFilters?: boolean;
   columnFilters?: Record<string, string>;
   onColumnFilterChange?: (column: string, value: string) => void;
+  totalElements?: number; // Add total elements from API response
+  isNextPageLoading?: boolean; // Show loader on next button
 }
 
-const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
+const GenericMasterTable = <T extends Record<string, any>>({
   data,
   columns,
   visibleColumns,
@@ -26,7 +34,9 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
   showFilters,
   columnFilters = {},
   onColumnFilterChange = () => {},
-}) => {
+  totalElements = 0, // Default to 0 if not provided
+  isNextPageLoading = false,
+}: GenericMasterTableProps<T>) => {
   const activeColumns = columns.filter(col => visibleColumns[col]);
   const screenWidth = Dimensions.get('window').width;
 
@@ -40,9 +50,17 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
   }, [activeColumns, screenWidth]);
 
   const tableWidth = columnWidths.reduce((a, b) => a + b, 0);
+
+  // Use totalElements from API if available, otherwise fall back to data.length
+  const total = totalElements > 0 ? totalElements : data.length;
+  const totalPages = Math.max(1, Math.ceil(total / itemsPerPage));
+
+  // Calculate item indices for display purposes
   const startIdx = (currentPage - 1) * itemsPerPage;
-  const paginatedData = data.slice(startIdx, startIdx + itemsPerPage);
-  const totalPages = Math.max(1, Math.ceil(data.length / itemsPerPage));
+  const endIdx = Math.min(startIdx + itemsPerPage, total);
+
+  // Data is already paginated from API, just display it as-is
+  const paginatedData = data;
 
   const formatCellValue = (value: any): string => {
     if (value === null || value === undefined) return '-';
@@ -74,7 +92,7 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
             <View className="flex-row">
               {activeColumns.map((col, idx) => (
                 <View
-                  key={col}
+                  key={String(col)}
                   style={{ width: columnWidths[idx] }}
                   className="border-r border-gray-300 justify-center px-2 py-3"
                 >
@@ -95,7 +113,7 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
               <View className="flex-row">
                 {activeColumns.map((col, idx) => (
                   <View
-                    key={col}
+                    key={String(col)}
                     style={{ width: columnWidths[idx] }}
                     className="border-r border-gray-200 justify-center px-2 py-2"
                   >
@@ -141,12 +159,11 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
       </ScrollView>
 
       {/* Pagination Footer */}
-      {data.length > 0 && (
+      {total > 0 && (
         <View className="bg-gray-50 border-t border-gray-200 px-4 py-3">
           <View className="flex-row items-center justify-between flex-wrap gap-3">
             <Text className="text-xs text-gray-600 font-medium">
-              Showing {startIdx + 1} to {Math.min(startIdx + itemsPerPage, data.length)} of{' '}
-              {data.length}
+              Showing {startIdx + 1} to {endIdx} of {total}
             </Text>
 
             <View className="flex-row gap-2 items-center">
@@ -173,15 +190,16 @@ const GenericMasterTable: React.FC<GenericMasterTableProps> = ({
               </View>
 
               <TouchableOpacity
-                disabled={currentPage === totalPages}
+                disabled={currentPage >= totalPages || isNextPageLoading}
                 onPress={() => onPageChange(currentPage + 1)}
-                className={`px-3 py-1.5 rounded transition-colors ${
-                  currentPage === totalPages ? 'bg-gray-200' : 'bg-gray-400 '
+                className={`px-3 py-1.5 rounded flex-row items-center gap-2 justify-center transition-colors ${
+                  currentPage >= totalPages ? 'bg-gray-200' : 'bg-gray-400'
                 }`}
               >
+                {isNextPageLoading ? <ActivityIndicator size="small" color="" /> : null}
                 <Text
                   className={`text-xs font-medium ${
-                    currentPage == totalPages ? 'text-gray-500' : 'text-white'
+                    currentPage >= totalPages ? 'text-gray-500' : 'text-white'
                   }`}
                 >
                   Next →

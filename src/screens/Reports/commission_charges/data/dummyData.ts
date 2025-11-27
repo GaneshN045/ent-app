@@ -24,7 +24,7 @@ export const generateCommissionChargesData = (count: number = 100): TableData[] 
     data.push({
       txId: `TXN-${String(i + 1).padStart(8, '0')}`,
       subProductName: PRODUCTS[i % PRODUCTS.length],
-      walletType: WALLET_TYPES[i % WALLET_TYPES.length], 
+      walletType: WALLET_TYPES[i % WALLET_TYPES.length],
       txType: TX_TYPES[i % TX_TYPES.length],
       operator: OPERATORS[i % OPERATORS.length],
       balBefore: formatCurrencyValue(balBefore),

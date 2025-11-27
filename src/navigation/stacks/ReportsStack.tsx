@@ -23,10 +23,10 @@ const Stack = createStackNavigator();
 export default function ReportsStack() {
   return (
     <Stack.Navigator
-      initialRouteName={SCREENS.REPORTS_HOME_SCREEN}
+      initialRouteName={SCREENS.PENDING_TRANSACTION_SCREEN}
       screenOptions={({ navigation }: any) => ({
         headerShown: true,
-        headerStyle: { backgroundColor: '#fff' },
+        headerStyle: { backgroundColor: '#fff' }, 
         headerTintColor: '#000',
         headerTitleStyle: { fontWeight: 'bold' },
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
 import { FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import ReportsFilterModal from '../components/ReportsFilterModal';
+import ReportsFilterModal from './ReportsFilterModal';
 import GenericMasterTable from '../components/GenericMasterTable';
 import Toolbar from '../components/Toolbar';
 import TableRowsSkeleton from '../components/TableRowsSkeleton';

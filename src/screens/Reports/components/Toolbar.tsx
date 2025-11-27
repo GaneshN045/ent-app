@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, Modal, Pressable, ScrollView } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import type { TableData } from '../commission_charges/types';
 import COLORS from '../../../constants/colors';
 
-interface ToolbarProps {
+interface ToolbarProps<T extends Record<string, any>> {
   onRefresh: () => void;
   onExport: () => void;
   onToggleFilters: () => void;
-  onToggleColumns: (column: keyof TableData) => void;
+  onToggleColumns: (column: keyof T) => void;
   onToggleAllColumns: () => void;
-  visibleColumns: Record<keyof TableData, boolean>;
-  columns: (keyof TableData)[];
+  visibleColumns: Record<keyof T, boolean>;
+  columns: (keyof T)[];
   onToggleSearch: () => void;
   searchActive: boolean;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({
+const Toolbar = <T extends Record<string, any>>({
   onRefresh,
   onExport,
   onToggleFilters,
@@ -27,12 +26,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
   columns,
   onToggleSearch,
   searchActive,
-}) => {
+}: ToolbarProps<T>) => {
   const [columnModal, setColumnModal] = useState(false);
-  const [tempSelection, setTempSelection] = useState(visibleColumns);
+  const [tempSelection, setTempSelection] = useState<Record<keyof T, boolean>>(visibleColumns);
 
   const handleSelectAll = () => {
-    const newState: any = {};
+    const newState: Record<keyof T, boolean> = {} as Record<keyof T, boolean>;
     columns.forEach(col => (newState[col] = true));
     setTempSelection(newState);
   };
@@ -40,7 +39,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const handleSubmit = () => {
     // Apply changes
     Object.keys(tempSelection).forEach(col => {
-      const key = col as keyof TableData;
+      const key = col as keyof T;
       if (tempSelection[key] !== visibleColumns[key]) {
         onToggleColumns(key);
       }
@@ -156,7 +155,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
             <ScrollView className="max-h-[80%] mt-2">
               {columns.map(col => (
                 <TouchableOpacity
-                  key={col}
+                  key={String(col)}
                   onPress={() =>
                     setTempSelection(prev => ({
                       ...prev,
@@ -165,7 +164,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
                   }
                   className="flex-row items-center justify-between py-3"
                 >
-                  <Text className="text-gray-800 capitalize">{col}</Text>
+                  <Text className="text-gray-800 capitalize">{String(col)}</Text>
 
                   <MaterialIcons
                     name={tempSelection[col] ? 'check-box' : 'check-box-outline-blank'}
