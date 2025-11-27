@@ -1,9 +1,11 @@
 // File: @src/screens/Reports/pending_transaction/PendingTransaction.tsx
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Alert, Text } from 'react-native';
+import { View, ScrollView, Alert, Text, Share, Platform, ActivityIndicator } from 'react-native';
 
 import { FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import RNFS from 'react-native-fs';
+import { request, checkMultiple, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import PendingTransactionFilterModal from './PendingTransactionFilterModal';
 import GenericMasterTable from '../components/GenericMasterTable';
 import Toolbar from '../components/Toolbar';
@@ -110,6 +112,7 @@ const PendingTransaction: React.FC = () => {
   const [filterFormValues, setFilterFormValues] =
     useState<PendingTransactionFilterValues>(initialValues);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
 
   const [getReportPendingTransactions, { data, error, isLoading: isQueryLoading }] =
     useLazyGetReportPendingTransactionsQuery();
@@ -126,7 +129,7 @@ const PendingTransaction: React.FC = () => {
     const total = data.data.totalElements ?? mappedData.length;
     setTotalRecords(total);
 
-    // Store ONLY current page data (API already returns paginated data)
+    // Store current page data
     setCurrentPageData(mappedData);
 
     // Reset column filters when new page loads
@@ -245,13 +248,135 @@ const PendingTransaction: React.FC = () => {
     setTotalRecords(0);
   };
 
-  const handleExport = () => {
-    if (currentPageData.length === 0) {
-      Alert.alert('No data', 'No records to export');
+  const handleExport = async () => {
+    if (!savedFetchArgs) {
+      Alert.alert('No filters applied', 'Please apply filters first');
       return;
     }
-    Alert.alert('Export', `Exporting ${totalRecords} records to CSV...`);
-    // Add your export logic here
+
+    const exportColumns = columnDefinitions.filter(def => visibleColumns[def.key]);
+    if (exportColumns.length === 0) {
+      Alert.alert('Export', 'Please make at least one column visible to export');
+      return;
+    }
+
+    setIsExporting(true);
+
+    try {
+      // Request permissions for Android
+      if (Platform.OS === 'android') {
+        console.log('Requesting Android storage permissions...');
+
+        // For Android 10+, request WRITE; for Android 11+, READ (scoped storage)
+        type AndroidStoragePermission =
+          | typeof PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE
+          | typeof PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+
+        const androidVersion = Platform.Version;
+        let permissionToRequest: AndroidStoragePermission =
+          PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE;
+
+        if (androidVersion >= 30) {
+          permissionToRequest = PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
+        }
+
+        const permissionResult = await request(permissionToRequest);
+        console.log('Permission result:', permissionResult);
+
+        if (permissionResult !== RESULTS.GRANTED) {
+          console.warn('Permission denied:', permissionResult);
+          Alert.alert(
+            'Permission Required',
+            'Storage permission is required to export files. Please enable it in app settings.',
+            [
+              { text: 'Cancel', onPress: () => setIsExporting(false) },
+              { text: 'OK', onPress: () => setIsExporting(false) },
+            ],
+          );
+          return;
+        }
+      }
+
+      // Fetch all pages to get complete dataset
+      const allData: PendingTransactionTableData[] = [];
+      const totalPages = Math.ceil(totalRecords / itemsPerPage);
+
+      console.log(`Fetching ${totalPages} pages for export...`);
+
+      for (let page = 1; page <= totalPages; page++) {
+        try {
+          const fetchArgs: PendingTransactionsFetchArgs = {
+            payload: savedFetchArgs.payload,
+            page: page - 1,
+            size: itemsPerPage,
+          };
+
+          const response = await getReportPendingTransactions(fetchArgs);
+          const content = response.data?.data?.content ?? [];
+          allData.push(...content.map(mapRecordToTableData));
+          console.log(`Fetched page ${page}: ${content.length} records`);
+        } catch (error) {
+          console.error(`Error fetching page ${page}:`, error);
+        }
+      }
+
+      if (allData.length === 0) {
+        Alert.alert('No data', 'No records to export');
+        setIsExporting(false);
+        return;
+      }
+
+      // Generate CSV
+      const csvPayload = buildCsvPayload(allData, exportColumns);
+
+      // Create filename
+      const fileName = `Pending-Transactions-${new Date().toISOString().split('T')[0]}.csv`;
+      let filePath: string;
+
+      // Determine file path based on platform
+      if (Platform.OS === 'android') {
+        // For Android 10+, use app cache directory
+        filePath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+      } else {
+        filePath = `${RNFS.CachesDirectoryPath}/${fileName}`;
+      }
+
+      console.log(`Writing file to: ${filePath}`);
+
+      // Write file
+      await RNFS.writeFile(filePath, csvPayload, 'utf8');
+
+      console.log(`File written successfully`);
+
+      // Share file
+      const shareOptions: any = {
+        url: Platform.OS === 'android' ? `file://${filePath}` : filePath,
+        title: 'Pending Transactions Report',
+        message: `Exported ${allData.length} records`,
+        filename: fileName,
+      };
+
+      console.log('Share options:', shareOptions);
+
+      const result = await Share.share(shareOptions);
+
+      if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      } else {
+        Alert.alert(
+          'Success',
+          `Successfully exported ${allData.length} records\n\nFile: ${fileName}`,
+        );
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      Alert.alert(
+        'Export Failed',
+        `Error: ${error instanceof Error ? error.message : 'Unable to export pending transactions'}`,
+      );
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleColumnFilterChange = (column: string, value: string) => {
@@ -341,6 +466,13 @@ const PendingTransaction: React.FC = () => {
         </View>
       )}
 
+      {isExporting && (
+        <View className="px-4 py-3 bg-blue-50 flex-row items-center gap-2">
+          <ActivityIndicator size="small" color="#2563eb" />
+          <Text className="text-sm text-blue-600 flex-1">Exporting {totalRecords} records...</Text>
+        </View>
+      )}
+
       <PendingTransactionFilterModal
         visible={showFilterModal}
         onClose={() => requestCloseFilters()}
@@ -374,3 +506,39 @@ const PendingTransaction: React.FC = () => {
 };
 
 export default PendingTransaction;
+
+const buildCsvPayload = (
+  rows: PendingTransactionTableData[],
+  columns: { key: keyof PendingTransactionTableData; label: string }[],
+): string => {
+  if (rows.length === 0) return '';
+
+  // Build header row with column labels
+  const header = columns.map(col => escapeCsvValue(col.label)).join(',');
+
+  // Build data rows with values mapped to columns
+  const dataRows = rows.map(row =>
+    columns
+      .map(col => {
+        const value = row[col.key];
+        return escapeCsvValue(value ?? '');
+      })
+      .join(','),
+  );
+
+  // Combine header and data rows
+  return [header, ...dataRows].join('\n');
+};
+
+const escapeCsvValue = (value: any): string => {
+  const stringValue = String(value ?? '').trim();
+  
+  // Check if value needs to be quoted
+  if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+    // Escape double quotes by doubling them
+    const escaped = stringValue.replace(/"/g, '""');
+    return `"${escaped}"`;
+  }
+  
+  return stringValue;
+};

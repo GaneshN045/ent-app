@@ -90,7 +90,7 @@ export default function ReportsStack() {
       <Stack.Screen
         name={SCREENS.PENDING_TRANSACTION_SCREEN}
         component={PendingTransactionScreen}
-        options={{ title: 'Pending Transaction' }}
+        options={{ title: 'Pending Transactions' }}
       />
 
       <Stack.Screen
