@@ -19,6 +19,7 @@ import SelectInput from '../components/SelectInput';
 import type { PendingTransactionFilterValues, PendingTransactionFilterModalProps } from './types';
 import { useActiveProductsListHook } from '../../../hooks/useActiveProductsListHook';
 import { useActiveSubProductsListHook } from '../../../hooks/useActiveSubProductsListHook';
+import COLORS from '../../../constants/colors';
 
 interface DropdownOption {
   label: string;
@@ -138,13 +139,11 @@ const PendingTransactionFilterModal: React.FC<PendingTransactionFilterModalProps
                   >
                     {/* Date Range Section */}
                     <View className="mb-6">
-                      <View className="flex-row items-center justify-between mb-3">
+                      <View className="flex-row items-center mb-3">
                         <Text className="text-xs font-bold text-gray-500 uppercase tracking-wide">
                           Date Range
                         </Text>
-                        <View className="bg-red-100 px-2 py-1 rounded">
-                          <Text className="text-red-700 text-xs font-bold">REQUIRED</Text>
-                        </View>
+                        <Text className="text-red-600 text-base ml-1">*</Text>
                       </View>
                       <View className="flex-row gap-3">
                         <View className="flex-1">
@@ -177,12 +176,10 @@ const PendingTransactionFilterModal: React.FC<PendingTransactionFilterModalProps
                       </Text>
 
                       {/* Product - Required */}
-                      <View className="mb-4">
-                        <View className="flex-row items-center justify-between mb-2">
+                      <View className="mb-4 mx-1">
+                        <View className="flex-row items-center mb-2">
                           <Text className="text-sm font-semibold text-gray-700">Product</Text>
-                          <View className="bg-red-100 px-2 py-0.5 rounded">
-                            <Text className="text-red-700 text-xs font-bold">REQUIRED</Text>
-                          </View>
+                          <Text className="text-red-600 text-base ml-1">*</Text>
                         </View>
 
                         {isLoadingProducts ? (
@@ -217,13 +214,10 @@ const PendingTransactionFilterModal: React.FC<PendingTransactionFilterModalProps
                       </View>
 
                       {/* Sub Product - Optional, dependent on Product */}
-                      <View className="mb-4">
-                        <View className="flex-row items-center justify-between mb-2">
-                          <Text className="text-sm font-semibold text-gray-700">Sub Product</Text>
-                          <View className="bg-gray-100 px-2 py-0.5 rounded">
-                            <Text className="text-gray-600 text-xs font-bold">OPTIONAL</Text>
-                          </View>
-                        </View>
+                      <View className="mb-4 mx-1">
+                        <Text className="text-sm font-semibold text-gray-700 mb-2">
+                          Sub Product
+                        </Text>
 
                         {!values.product ? (
                           <View className="bg-gray-50 border border-gray-200 rounded-lg p-3">
@@ -267,13 +261,10 @@ const PendingTransactionFilterModal: React.FC<PendingTransactionFilterModalProps
                       </View>
 
                       {/* Wallet Type - Optional */}
-                      <View className="mb-4">
-                        <View className="flex-row items-center justify-between mb-2">
-                          <Text className="text-sm font-semibold text-gray-700">Wallet Type</Text>
-                          <View className="bg-gray-100 px-2 py-0.5 rounded">
-                            <Text className="text-gray-600 text-xs font-bold">OPTIONAL</Text>
-                          </View>
-                        </View>
+                      <View className="mb-4 mx-1">
+                        <Text className="text-sm font-semibold text-gray-700 mb-2">
+                          Wallet Type
+                        </Text>
                         <SelectInput
                           label=""
                           value={values.walletType}
@@ -337,7 +328,7 @@ const PendingTransactionFilterModal: React.FC<PendingTransactionFilterModalProps
                       >
                         {isSubmitting ? (
                           <View className="flex-row items-center justify-center gap-2">
-                            <ActivityIndicator size="small" color="#2563EB" />
+                            <ActivityIndicator size="small" color={COLORS.PRIMARY_COLOR} />
                             <Text className="text-primary text-center font-bold text-base">
                               LOADING...
                             </Text>
